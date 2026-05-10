@@ -4,6 +4,7 @@ import json
 import os
 import uuid
 import random
+import tempfile
 from datetime import datetime
 import streamlit_google_auth
 import google_auth_oauthlib.flow
@@ -17,30 +18,31 @@ import googleapiclient.http
 import tomllib
 
 def get_app_secrets():
-    secrets_path = os.path.join(os.path.dirname(__file__), 'app_secrets.json')
+    # In Streamlit Cloud, st.secrets is automatically populated from the App Settings.
+    # Locally, it reads from .streamlit/secrets.toml.
+    try:
+        if "web" in st.secrets:
+            return {
+                "ADMIN_EMAIL": st.secrets.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com"),
+                "EMAIL_PASSWORD": st.secrets.get("EMAIL_PASSWORD", ""),
+                "GDRIVE_SERVICE_ACCOUNT": dict(st.secrets.get("GDRIVE_SERVICE_ACCOUNT", {})),
+                "web": dict(st.secrets.get("web", {}))
+            }
+    except Exception:
+        pass
+        
+    # Fallback for completely local execution without Streamlit runner (e.g. debugging)
     toml_path = os.path.join(os.path.dirname(__file__), '.streamlit', 'secrets.toml')
-    
-    # Try reading existing JSON
-    if os.path.exists(secrets_path):
-        with open(secrets_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-            
-    # Fallback to reading TOML directly using tomllib (Python 3.11+)
     try:
         if os.path.exists(toml_path):
             with open(toml_path, "rb") as f:
                 toml_secrets = tomllib.load(f)
-                
-            secrets_dict = {
+            return {
                 "ADMIN_EMAIL": toml_secrets.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com"),
                 "EMAIL_PASSWORD": toml_secrets.get("EMAIL_PASSWORD", ""),
                 "GDRIVE_SERVICE_ACCOUNT": dict(toml_secrets.get("GDRIVE_SERVICE_ACCOUNT", {})),
                 "web": dict(toml_secrets.get("web", {}))
             }
-            # Write to JSON because streamlit_google_auth requires a file path
-            with open(secrets_path, 'w', encoding='utf-8') as f:
-                json.dump(secrets_dict, f, indent=4)
-            return secrets_dict
     except Exception as e:
         print(f"Failed to read TOML secrets: {e}")
         
@@ -49,6 +51,12 @@ def get_app_secrets():
 APP_SECRETS = get_app_secrets()
 ADMIN_EMAIL = APP_SECRETS.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com")
 ADMIN_EMAILS = [ADMIN_EMAIL]
+
+# streamlit_google_auth library *strictly* requires a file path for the client secrets.
+# We create a temporary JSON file from our TOML/st.secrets dictionary to satisfy this requirement.
+temp_secrets_file = tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json', encoding='utf-8')
+json.dump({"web": APP_SECRETS.get("web", {})}, temp_secrets_file)
+temp_secrets_file.close()
 
 def send_notification_email(receiver, subject, html_body):
     sender = ADMIN_EMAIL
@@ -293,7 +301,7 @@ if "checkout" not in st.session_state:
 
 # Initialize Google Authenticator
 authenticator = streamlit_google_auth.Authenticate(
-    secret_credentials_path='app_secrets.json',
+    secret_credentials_path=temp_secrets_file.name,
     cookie_name='ske_cookie',
     cookie_key='ske_secret_key_must_be_at_least_32_bytes_long',
     redirect_uri=APP_SECRETS.get("web", {}).get("redirect_uris", ["https://ske-recharge.streamlit.app"])[0] if "https://ske-recharge.streamlit.app" not in APP_SECRETS.get("web", {}).get("redirect_uris", []) else "https://ske-recharge.streamlit.app",
