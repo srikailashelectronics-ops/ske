@@ -296,7 +296,7 @@ authenticator = streamlit_google_auth.Authenticate(
     secret_credentials_path='app_secrets.json',
     cookie_name='ske_cookie',
     cookie_key='ske_secret_key_must_be_at_least_32_bytes_long',
-    redirect_uri='http://localhost:8501',
+    redirect_uri=APP_SECRETS.get("web", {}).get("redirect_uris", ["https://ske-recharge.streamlit.app"])[0] if "https://ske-recharge.streamlit.app" not in APP_SECRETS.get("web", {}).get("redirect_uris", []) else "https://ske-recharge.streamlit.app",
 )
 
 # Catch the Google redirect and check authentication
