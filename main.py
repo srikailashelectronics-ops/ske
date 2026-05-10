@@ -5,7 +5,6 @@ import os
 import uuid
 import random
 from datetime import datetime
-from dotenv import load_dotenv
 import streamlit_google_auth
 import google_auth_oauthlib.flow
 import smtplib
@@ -76,8 +75,6 @@ def patched_from_client_secrets_file(*args, **kwargs):
     return original_from_client_secrets_file(*args, **kwargs)
 
 google_auth_oauthlib.flow.Flow.from_client_secrets_file = patched_from_client_secrets_file
-
-load_dotenv()
 
 # Set page configuration for better mobile rendering
 st.set_page_config(
