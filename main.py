@@ -14,13 +14,37 @@ import io
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import googleapiclient.http
+import tomllib
 
 def get_app_secrets():
-    try:
-        with open(os.path.join(os.path.dirname(__file__), 'app_secrets.json'), 'r') as f:
+    secrets_path = os.path.join(os.path.dirname(__file__), 'app_secrets.json')
+    toml_path = os.path.join(os.path.dirname(__file__), '.streamlit', 'secrets.toml')
+    
+    # Try reading existing JSON
+    if os.path.exists(secrets_path):
+        with open(secrets_path, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except FileNotFoundError:
-        return {}
+            
+    # Fallback to reading TOML directly using tomllib (Python 3.11+)
+    try:
+        if os.path.exists(toml_path):
+            with open(toml_path, "rb") as f:
+                toml_secrets = tomllib.load(f)
+                
+            secrets_dict = {
+                "ADMIN_EMAIL": toml_secrets.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com"),
+                "EMAIL_PASSWORD": toml_secrets.get("EMAIL_PASSWORD", ""),
+                "GDRIVE_SERVICE_ACCOUNT": dict(toml_secrets.get("GDRIVE_SERVICE_ACCOUNT", {})),
+                "web": dict(toml_secrets.get("web", {}))
+            }
+            # Write to JSON because streamlit_google_auth requires a file path
+            with open(secrets_path, 'w', encoding='utf-8') as f:
+                json.dump(secrets_dict, f, indent=4)
+            return secrets_dict
+    except Exception as e:
+        print(f"Failed to read TOML secrets: {e}")
+        
+    return {}
 
 APP_SECRETS = get_app_secrets()
 ADMIN_EMAIL = APP_SECRETS.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com")
