@@ -119,35 +119,91 @@ st.set_page_config(
 # Custom CSS for better mobile appearance
 st.markdown("""
 <style>
-    .stButton>button {
-        width: 100%;
-        border-radius: 25px;
-        height: 50px;
-        font-weight: bold;
-        background-color: #1E88E5;
-        color: white;
+    /* Global Background and Fonts */
+    .stApp {
+        background-color: #f0f2f5;
     }
-    .stButton>button:hover {
-        background-color: #1565C0;
-        color: white;
-        border-color: #1565C0;
-    }
+    
+    /* Main Container (Mobile View Simulation) */
     .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 600px;
+        padding: 1.5rem 1rem;
+        max-width: 480px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 0 0 16px 16px;
+        min-height: 100vh;
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        color: #0F1111;
+        font-weight: 700;
     }
     h1 {
         text-align: center;
-        color: #1E88E5;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #2874F0;
+        padding-bottom: 0.5rem;
     }
+    
+    /* Buttons */
+    .stButton>button {
+        width: 100%;
+        border-radius: 8px;
+        height: 50px;
+        font-weight: 600;
+        font-size: 16px;
+        background-color: #2874F0;
+        color: white;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+    }
+    .stButton>button:hover {
+        background-color: #1a5ac6;
+        color: white;
+        border-color: #1a5ac6;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
+    .stButton>button:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Inputs */
+    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 12px 14px;
+        font-size: 15px;
+        background-color: #fafafa;
+    }
+    .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus {
+        border-color: #2874F0;
+        box-shadow: 0 0 0 1px #2874F0;
+        background-color: #fff;
+    }
+    
+    /* Cards (Orders, Complaints) */
     .order-card {
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        background-color: #f9f9f9;
-        color: #333;
+        border: 1px solid #eaeaec;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        transition: box-shadow 0.2s ease;
+    }
+    .order-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+    
+    /* Tabs styling */
+    div[data-testid="stTabs"] button {
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
