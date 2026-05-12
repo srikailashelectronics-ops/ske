@@ -90,14 +90,14 @@ def get_payment_confirmed_html(order):
 def get_recharge_completed_html(order):
     return f"<h2>Recharge Successful</h2><p>Your {order['type']} recharge on {order['target']} is complete!</p><p><b>TXN ID:</b> {order['txn_id']}</p><p><b>UTR:</b> {order.get('recharge_utr', 'N/A')}</p>"
 
-def get_grievance_created_html(grievance):
-    return f"<h2>Grievance Submitted</h2><p>Grievance for TXN {grievance['txn_id']} received.</p><p><b>ID:</b> {grievance['id']}</p><p><b>Issue:</b> {grievance['issue_type']}</p>"
+def get_complaint_created_html(complaint):
+    return f"<h2>Complaint Submitted</h2><p>Complaint for TXN {complaint['txn_id']} received.</p><p><b>ID:</b> {complaint['id']}</p><p><b>Issue:</b> {complaint['issue_type']}</p>"
 
-def get_grievance_resolved_html(grievance):
-    return f"<h2>Grievance Resolved</h2><p>Grievance {grievance['id']} is resolved.</p><p><b>Admin Reply:</b> {grievance['admin_reply']}</p>"
+def get_complaint_resolved_html(complaint):
+    return f"<h2>Complaint Resolved</h2><p>Complaint {complaint['id']} is resolved.</p><p><b>Admin Reply:</b> {complaint['admin_reply']}</p>"
 
-def get_grievance_reopened_html(grievance):
-    return f"<h2>Grievance Reopened</h2><p>Grievance {grievance['id']} has been reopened.</p><p>We will re-evaluate your issue.</p>"
+def get_complaint_reopened_html(complaint):
+    return f"<h2>Complaint Reopened</h2><p>Complaint {complaint['id']} has been reopened.</p><p>We will re-evaluate your issue.</p>"
 
 # Monkey patch to avoid "Missing code verifier" in streamlit-google-auth
 original_from_client_secrets_file = google_auth_oauthlib.flow.Flow.from_client_secrets_file
@@ -270,24 +270,24 @@ def update_order(user_phone, txn_id, updates):
                 break
         save_json_to_drive('orders.json', orders)
 
-def load_grievances():
-    return load_json_from_drive('grievances.json', {})
+def load_complaints():
+    return load_json_from_drive('complaints.json', {})
 
-def save_grievance(user_phone, grievance_details):
-    grievances = load_grievances()
-    if user_phone not in grievances:
-        grievances[user_phone] = []
-    grievances[user_phone].insert(0, grievance_details)
-    save_json_to_drive('grievances.json', grievances)
+def save_complaint(user_phone, complaint_details):
+    complaints = load_complaints()
+    if user_phone not in complaints:
+        complaints[user_phone] = []
+    complaints[user_phone].insert(0, complaint_details)
+    save_json_to_drive('complaints.json', complaints)
 
-def update_grievance(user_phone, grievance_id, updates):
-    grievances = load_grievances()
-    if user_phone in grievances:
-        for g in grievances[user_phone]:
-            if g['id'] == grievance_id:
+def update_complaint(user_phone, complaint_id, updates):
+    complaints = load_complaints()
+    if user_phone in complaints:
+        for g in complaints[user_phone]:
+            if g['id'] == complaint_id:
                 g.update(updates)
                 break
-        save_json_to_drive('grievances.json', grievances)
+        save_json_to_drive('complaints.json', complaints)
 
 data = load_operators()
 
@@ -377,84 +377,48 @@ if st.session_state.checkout:
     st.subheader("Secure Checkout")
     c = st.session_state.checkout
     
-    import re
-    
-    def get_validity_days(plan_str):
-        match = re.search(r'(\d+)\s*Day', plan_str, re.IGNORECASE)
-        if match: return int(match.group(1))
-        lower_plan = plan_str.lower()
-        if 'monthly' in lower_plan: return 30
-        if 'quarterly' in lower_plan: return 90
-        if 'half-yearly' in lower_plan: return 180
-        if 'annually' in lower_plan: return 365
-        if 'daily' in lower_plan: return 1
-        return 30
-
-    # Calculate Streak
-    orders_db = load_orders()
-    user_orders = orders_db.get(st.session_state.user_phone, [])
-    
-    target_orders = [o for o in user_orders if o.get('target') == c['target'] and o.get('status') == 'Recharge Completed']
-    streak_count = 0
-    
-    if target_orders:
-        last_order = target_orders[0]
-        last_plan = last_order.get('plan_str', '')
-        last_date_str = last_order.get('date', '')
-        
-        if last_plan == c.get('plan_str', '') and last_date_str:
-            try:
-                last_date = datetime.strptime(last_date_str, "%Y-%m-%d %H:%M:%S")
-                validity_days = get_validity_days(last_plan)
-                days_since_last = (datetime.now() - last_date).days
-                if abs(days_since_last - validity_days) <= 5:
-                    streak_count = last_order.get('streak', 0) + 1
-            except Exception:
-                pass
-
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
     
-    # 1% multiplier for streak (max 1%)
-    discount_percent = min(streak_count * 0.01, 0.01)
+    # Random discount between 0.1% and 0.5%
+    discount_percent = random.uniform(0.001, 0.005)
     discount = original_price * discount_percent
     final_price = max(0.0, original_price - discount)
     
     c['final_price'] = f"{final_price:.2f}"
     c['mrp'] = f"{original_price:.2f}"
     c['discount'] = f"{discount:.2f}"
-    c['streak'] = streak_count
     
     st.info(f"Recharging **{c['target']}** ({c['operator']}) for **MRP: ₹{original_price:.2f}**")
-    if streak_count > 0:
-        st.success(f"🔥 **Streak Bonus Active!** Streak count: {streak_count}. You got a {discount_percent*100:.1f}% discount of ₹{discount:.2f}!")
-        st.write(f"**Final Amount to Pay: ₹{c['final_price']}**")
+    st.success(f"🔥 **Lucky Discount Applied!** You got a {discount_percent*100:.2f}% discount of ₹{discount:.2f}!")
+    st.write(f"**Final Amount to Pay: ₹{c['final_price']}**")
     
-    payment_method = st.radio("Select Payment Method", ["Google Pay / UPI", "Credit / Debit Card"])
+    if "current_txn_id" not in st.session_state:
+        st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
+    txn_id = st.session_state.current_txn_id
     
-    if payment_method == "Google Pay / UPI":
-        st.write("Pay securely using Google Pay or any UPI app.")
+    merchant_vpa = "kailashmanpur-3@oksbi" 
+    merchant_name = "SriKailashElectronics"
+    transaction_note = f"Order+{txn_id}"
+    
+    # Explicit Google Pay intent for Android and universal UPI link for iOS
+    gpay_link = f"intent://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end"
+    ios_upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
+    
+    st.write(f"**Transaction Note / Order ID:** `{txn_id}`")
+    
+    order_already_saved = st.session_state.get("order_saved_for_txn") == txn_id
+    
+    if not order_already_saved:
+        st.write("Choose your device to pay. Your order will be automatically accepted upon selection.")
         
-        if "current_txn_id" not in st.session_state:
-            st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
-        txn_id = st.session_state.current_txn_id
-        
-        merchant_vpa = "akgaya99@okaxis" 
-        merchant_name = "SriKailashElectronics"
-        transaction_note = f"Order+{txn_id}"
-        upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
-        
-        st.markdown(f'<a href="{upi_link}" target="_blank" style="display:block; text-align:center; background-color:#1E88E5; color:white; padding:12px; border-radius:25px; text-decoration:none; font-weight:bold; margin-bottom: 20px;">Pay ₹{c["final_price"]} with UPI Apps</a>', unsafe_allow_html=True)
-        
-        st.write(f"**Transaction Note / Order ID:** `{txn_id}`")
-        st.caption("Click the button below once you have successfully completed the payment on your app.")
-        
-        with st.form("upi_verify_form"):
-            verify_btn = st.form_submit_button("I have made the payment")
+        col1, col2 = st.columns(2)
+        with col1:
+            android_btn = st.button("🤖 Android (GPay)", use_container_width=True)
+        with col2:
+            ios_btn = st.button("🍏 iOS (Any UPI)", use_container_width=True)
             
-            if verify_btn:
-                with st.spinner("Submitting your request..."):
-                    time.sleep(1.5)
-                
+        if android_btn or ios_btn:
+            with st.spinner("Accepting order..."):
                 order = {
                     "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "txn_id": txn_id,
@@ -464,9 +428,8 @@ if st.session_state.checkout:
                     "plan_str": c.get('plan_str', ''),
                     "mrp": c.get('mrp', c['final_price']),
                     "discount": c.get('discount', '0.00'),
-                    "streak": c.get('streak', 0),
                     "amount": c['final_price'],
-                    "method": "UPI",
+                    "method": "Google Pay (Android)" if android_btn else "UPI (iOS)",
                     "status": "Order Created"
                 }
                 save_order(st.session_state.user_phone, order)
@@ -474,68 +437,50 @@ if st.session_state.checkout:
                 for admin in ADMIN_EMAILS:
                     send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
                 
-                st.success(f"Order Submitted! Order ID: {txn_id}")
-                st.info("Your order is currently in 'Order Created' status. Please wait for an admin to verify your payment.")
-                time.sleep(3)
-                st.session_state.checkout = None
-                del st.session_state.current_txn_id
-                st.rerun()
+                st.session_state.order_saved_for_txn = txn_id
+                st.session_state.selected_payment_link = gpay_link if android_btn else ios_upi_link
+                st.session_state.selected_payment_name = "Google Pay" if android_btn else "UPI App"
+                st.session_state.selected_payment_color = "#1E88E5" if android_btn else "#000000"
+            st.rerun()
 
-    elif payment_method == "Credit / Debit Card":
-        with st.form("card_payment_form"):
-            st.text_input("Cardholder Name")
-            st.text_input("Card Number", max_chars=16)
-            col_a, col_b = st.columns(2)
-            col_a.text_input("Expiry (MM/YY)", max_chars=5)
-            col_b.text_input("CVV", max_chars=3, type="password")
-            
-            pay_btn = st.form_submit_button(f"Pay ₹{c['final_price']}")
-            if pay_btn:
-                with st.spinner("Processing payment securely..."):
-                    time.sleep(2)
-                
-                txn_id = f"CARD_{uuid.uuid4().hex[:10].upper()}"
-                order = {
-                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "txn_id": txn_id,
-                    "type": c['type'].capitalize(),
-                    "target": c['target'],
-                    "operator": c['operator'],
-                    "plan_str": c.get('plan_str', ''),
-                    "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'),
-                    "streak": c.get('streak', 0),
-                    "amount": c['final_price'],
-                    "method": "Card",
-                    "status": "Order Created"
-                }
-                save_order(st.session_state.user_phone, order)
-                send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
-                for admin in ADMIN_EMAILS:
-                    send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-                
-                st.success(f"Payment details submitted! TXN ID: {txn_id}")
-                st.info("Your order is currently in 'Order Created' status. Please wait for an admin to confirm.")
-                time.sleep(3)
-                st.session_state.checkout = None
-                st.rerun()
-                
+    if order_already_saved:
+        link = st.session_state.get("selected_payment_link", ios_upi_link)
+        pname = st.session_state.get("selected_payment_name", "UPI App")
+        pcolor = st.session_state.get("selected_payment_color", "#1E88E5")
+        
+        st.success(f"Order {txn_id} registered successfully!")
+        st.info(f"If your {pname} did not open automatically, please click the button below to complete your payment:")
+        
+        st.markdown(f'<a href="{link}" target="_blank" style="display:block; text-align:center; background-color:{pcolor}; color:white; padding:12px; border-radius:25px; text-decoration:none; font-weight:bold; margin-bottom: 20px;">Open {pname}</a>', unsafe_allow_html=True)
+        
+        import streamlit.components.v1 as components
+        components.html(f'<script>window.parent.location.href = "{link}";</script>', height=0)
+        
+        if st.button("Done / Return to Home", use_container_width=True):
+            st.session_state.checkout = None
+            if "current_txn_id" in st.session_state:
+                del st.session_state.current_txn_id
+            if "order_saved_for_txn" in st.session_state:
+                del st.session_state.order_saved_for_txn
+            st.rerun()
+
     st.markdown("---")
-    if st.button("Cancel & Go Back"):
-        st.session_state.checkout = None
-        if "current_txn_id" in st.session_state:
-            del st.session_state.current_txn_id
-        st.rerun()
+    if not order_already_saved:
+        if st.button("Cancel & Go Back"):
+            st.session_state.checkout = None
+            if "current_txn_id" in st.session_state:
+                del st.session_state.current_txn_id
+            st.rerun()
 
 # --- TABS: MOBILE, WIFI, MY ORDERS, GRIEVANCES, CONTROL TOWER ---
 else:
     is_admin = st.session_state.user_phone in ADMIN_EMAILS
     
     if is_admin:
-        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Grievances", "🛠️ Control Tower"])
+        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Complaints", "🛠️ Control Tower"])
         tab1, tab2, tab3, tab4, tab5 = tabs
     else:
-        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Grievances"])
+        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Complaints"])
         tab1, tab2, tab3, tab4 = tabs
 
     def get_operator(phone):
@@ -604,50 +549,6 @@ else:
                 }
                 st.rerun()
 
-    # --- TAB 2: WI-FI ---
-    with tab2:
-        st.subheader("Wi-Fi / Broadband Recharge")
-        
-        account_id = st.text_input("Account Number / User ID", placeholder="e.g., ACCT-12345")
-        
-        wifi_ops_data = data.get("wifi", {}).get("providers", {})
-        if isinstance(wifi_ops_data, dict):
-            wifi_ops = ["Select Provider"] + list(wifi_ops_data.keys())
-        else:
-            wifi_ops = ["Select Provider"] + wifi_ops_data
-            
-        provider = st.selectbox("Service Provider", wifi_ops)
-        
-        if provider != "Select Provider" and isinstance(wifi_ops_data, dict) and provider in wifi_ops_data:
-            wifi_plans = wifi_ops_data[provider].get("plans", [])
-        else:
-            wifi_plans = []
-            
-        wifi_plan_options = [f"{p['type']} - {p['description']} (₹{p['price']})" for p in wifi_plans]
-        wifi_plan_options.insert(0, "Select a Plan")
-        
-        selected_wifi_plan_str = st.selectbox("Select Plan", wifi_plan_options)
-        
-        wifi_submit = st.button("Proceed to Pay", key="wifi_btn", use_container_width=True)
-        
-        if wifi_submit:
-            if not account_id:
-                st.error("Please enter your account number.")
-            elif provider == "Select Provider":
-                st.error("Please select a provider.")
-            elif selected_wifi_plan_str == "Select a Plan":
-                st.error("Please select a recharge plan.")
-            else:
-                price_str = selected_wifi_plan_str.split(" ")[-1][1:-1]
-                st.session_state.checkout = {
-                    "type": "wifi",
-                    "target": account_id,
-                    "operator": provider,
-                    "price": price_str,
-                    "plan_str": selected_wifi_plan_str
-                }
-                st.rerun()
-
     # --- TAB 3: MY ORDERS ---
     with tab3:
         st.subheader(f"Orders for {st.session_state.user_phone}")
@@ -666,20 +567,20 @@ else:
                 with st.container():
                     st.markdown(f"**{o['type']} Recharge - {o['operator']}** &nbsp; | &nbsp; <span style='color: {status_color}; font-weight: bold;'>{o['status']}</span>", unsafe_allow_html=True)
                     st.caption(f"Target: {o['target']} | MRP: ₹{o.get('mrp', o['amount'])} | Discount: ₹{o.get('discount', '0.00')} | Paid: ₹{o['amount']}")
-                    st.caption(f"{o['date']} | TXN: {o['txn_id']} | Method: {o['method']} | Streak: x{o.get('streak', 0)}")
+                    st.caption(f"{o['date']} | TXN: {o['txn_id']} | Method: {o['method']}")
                     if "payment_utr" in o:
                         st.caption(f"Payment UTR: {o['payment_utr']}")
                     if "recharge_utr" in o:
                         st.caption(f"Recharge UTR: {o['recharge_utr']}")
                     st.markdown("---")
                 
-                with st.expander(f"Raise Grievance for {o['txn_id']}"):
-                    with st.form(f"grievance_form_{o['txn_id']}"):
+                with st.expander(f"Raise Complaint for {o['txn_id']}"):
+                    with st.form(f"complaint_form_{o['txn_id']}"):
                         issue_type = st.selectbox("Issue Type", ["Recharge Not Received", "Amount Deducted but Order Failed", "Wrong Target Recharge", "Other"])
                         details = st.text_area("Details", placeholder="Describe the issue...")
-                        submit_grievance = st.form_submit_button("Submit Grievance")
-                        if submit_grievance:
-                            grievance = {
+                        submit_complaint = st.form_submit_button("Submit Complaint")
+                        if submit_complaint:
+                            complaint = {
                                 "id": f"GRV_{uuid.uuid4().hex[:8].upper()}",
                                 "txn_id": o['txn_id'],
                                 "issue_type": issue_type,
@@ -688,26 +589,26 @@ else:
                                 "status": "Open",
                                 "admin_reply": ""
                             }
-                            save_grievance(st.session_state.user_phone, grievance)
-                            send_notification_email(st.session_state.user_phone, f"Grievance Submitted: {grievance['id']}", get_grievance_created_html(grievance))
+                            save_complaint(st.session_state.user_phone, complaint)
+                            send_notification_email(st.session_state.user_phone, f"Complaint Submitted: {complaint['id']}", get_complaint_created_html(complaint))
                             for admin in ADMIN_EMAILS:
-                                send_notification_email(admin, f"New Grievance: {grievance['id']}", get_grievance_created_html(grievance))
-                            st.success("Grievance raised successfully. Check 'Grievances' tab.")
+                                send_notification_email(admin, f"New Complaint: {complaint['id']}", get_complaint_created_html(complaint))
+                            st.success("Complaint raised successfully. Check 'Complaints' tab.")
                             time.sleep(2)
                             st.rerun()
 
-    # --- TAB 4: GRIEVANCES ---
+    # --- TAB 4: COMPLAINTS ---
     with tab4:
-        st.subheader("My Grievances")
-        grievances_db = load_grievances()
-        user_grievances = grievances_db.get(st.session_state.user_phone, [])
+        st.subheader("My Complaints")
+        complaints_db = load_complaints()
+        user_complaints = complaints_db.get(st.session_state.user_phone, [])
         
-        if not user_grievances:
-            st.info("No grievances found.")
+        if not user_complaints:
+            st.info("No complaints found.")
         else:
-            for g in user_grievances:
+            for g in user_complaints:
                 html_content = f"""<div class="order-card">
-<strong>Grievance ID: {g['id']}</strong> (For TXN: {g['txn_id']})<br>
+<strong>Complaint ID: {g['id']}</strong> (For TXN: {g['txn_id']})<br>
 <span style="color: {'green' if g['status'] == 'Resolved' else 'red'}; font-weight: bold;">Status: {g['status']}</span><br>
 <em>{g['issue_type']}</em>: {g['details']}<br>
 <small>{g['date']}</small><hr>
@@ -721,9 +622,9 @@ else:
             st.subheader("🛠️ Admin Control Tower")
             
             orders_db = load_orders()
-            grievances_db = load_grievances()
+            complaints_db = load_complaints()
             
-            admin_tab1, admin_tab2, admin_tab3, admin_tab4, admin_tab5 = st.tabs(["⏳ Pending Orders", "📋 All Orders", "🚨 Open Grievances", "📂 All Grievances", "⚙️ Operators Config"])
+            admin_tab1, admin_tab2, admin_tab3, admin_tab4, admin_tab5 = st.tabs(["⏳ Pending Orders", "📋 All Orders", "🚨 Open Complaints", "📂 All Complaints", "⚙️ Operators Config"])
             
             with admin_tab1:
                 st.write("### Pending Orders")
@@ -797,7 +698,6 @@ else:
                             "MRP": f"₹{o.get('mrp', o['amount'])}",
                             "Discount": f"₹{o.get('discount', '0.00')}",
                             "Paid": f"₹{o['amount']}",
-                            "Streak": o.get('streak', 0),
                             "Method": o['method'],
                             "Status": o['status'],
                             "Pay UTR": o.get('payment_utr', 'N/A'),
@@ -812,49 +712,49 @@ else:
                     st.info("No orders found.")
             
             with admin_tab3:
-                st.write("### Open Grievances")
+                st.write("### Open Complaints")
                 open_g_count = 0
-                for user, user_grievances in grievances_db.items():
-                    for g in user_grievances:
+                for user, user_complaints in complaints_db.items():
+                    for g in user_complaints:
                         if g['status'] == "Open":
                             open_g_count += 1
-                            st.markdown(f"#### Grievance: {g['id']} by {user}")
+                            st.markdown(f"#### Complaint: {g['id']} by {user}")
                             st.write(f"**TXN ID:** {g['txn_id']} | **Type:** {g['issue_type']}")
                             st.write(f"**Details:** {g['details']}")
-                            with st.form(f"resolve_grievance_{g['id']}"):
+                            with st.form(f"resolve_complaint_{g['id']}"):
                                 reply = st.text_area("Reply to User")
                                 if st.form_submit_button("Mark Resolved"):
                                     update_data = {"status": "Resolved", "admin_reply": reply}
-                                    update_grievance(user, g['id'], update_data)
+                                    update_complaint(user, g['id'], update_data)
                                     g_updated = g.copy()
                                     g_updated.update(update_data)
-                                    send_notification_email(user, f"Grievance Resolved: {g['id']}", get_grievance_resolved_html(g_updated))
-                                    st.success("Grievance Resolved!")
+                                    send_notification_email(user, f"Complaint Resolved: {g['id']}", get_complaint_resolved_html(g_updated))
+                                    st.success("Complaint Resolved!")
                                     time.sleep(1)
                                     st.rerun()
                             st.markdown("---")
                 if open_g_count == 0:
-                    st.info("No open grievances.")
+                    st.info("No open complaints.")
 
             with admin_tab4:
-                st.write("### All Grievances")
-                all_grievances_list = []
-                for user, user_grievances in grievances_db.items():
-                    for g in user_grievances:
-                        all_grievances_list.append({
+                st.write("### All Complaints")
+                all_complaints_list = []
+                for user, user_complaints in complaints_db.items():
+                    for g in user_complaints:
+                        all_complaints_list.append({
                             "User": user,
                             "Date": g.get('date', 'N/A'),
-                            "Grievance ID": g['id'],
+                            "Complaint ID": g['id'],
                             "TXN ID": g['txn_id'],
                             "Issue Type": g['issue_type'],
                             "Status": g['status']
                         })
                 
-                if all_grievances_list:
-                    all_grievances_list.sort(key=lambda x: x["Date"], reverse=True)
-                    st.dataframe(all_grievances_list, use_container_width=True)
+                if all_complaints_list:
+                    all_complaints_list.sort(key=lambda x: x["Date"], reverse=True)
+                    st.dataframe(all_complaints_list, use_container_width=True)
                 else:
-                    st.info("No grievances found.")
+                    st.info("No complaints found.")
 
             with admin_tab5:
                 st.write("### Operators Configuration")
@@ -864,101 +764,53 @@ else:
                 if "mobile" not in operators_data: operators_data["mobile"] = {"operators": {}}
                 if "wifi" not in operators_data: operators_data["wifi"] = {"providers": {}}
                 
-                config_type = st.radio("Select Category", ["Mobile Operators", "Wi-Fi Providers"], horizontal=True)
+                mobile_ops = operators_data["mobile"]["operators"]
+                op_names = list(mobile_ops.keys())
                 
-                if config_type == "Mobile Operators":
-                    mobile_ops = operators_data["mobile"]["operators"]
-                    op_names = list(mobile_ops.keys())
+                st.write("#### Add New Operator")
+                with st.form("add_op_form", clear_on_submit=True):
+                    col1, col2 = st.columns([3, 1])
+                    new_op_name = col1.text_input("New Operator Name")
+                    submitted = col2.form_submit_button("Add")
+                    if submitted and new_op_name and new_op_name not in mobile_ops:
+                        operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
+                        save_json_to_drive('operators.json', operators_data)
+                        st.cache_data.clear()
+                        st.rerun()
+                        
+                st.write("#### Edit Existing Operator")
+                if op_names:
+                    selected_op = st.selectbox("Select Operator", op_names)
+                    op_data = mobile_ops[selected_op]
                     
-                    st.write("#### Add New Operator")
-                    with st.form("add_op_form", clear_on_submit=True):
-                        col1, col2 = st.columns([3, 1])
-                        new_op_name = col1.text_input("New Operator Name")
-                        submitted = col2.form_submit_button("Add")
-                        if submitted and new_op_name and new_op_name not in mobile_ops:
-                            operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                            
-                    st.write("#### Edit Existing Operator")
-                    if op_names:
-                        selected_op = st.selectbox("Select Operator", op_names)
-                        op_data = mobile_ops[selected_op]
+                    with st.form(f"edit_op_form_{selected_op}"):
+                        current_prefixes = ", ".join(op_data.get("prefixes", []))
+                        new_prefixes = st.text_input("Prefixes (comma-separated)", current_prefixes)
                         
-                        with st.form(f"edit_op_form_{selected_op}"):
-                            current_prefixes = ", ".join(op_data.get("prefixes", []))
-                            new_prefixes = st.text_input("Prefixes (comma-separated)", current_prefixes)
-                            
-                            st.write("**Plans**")
-                            current_plans = op_data.get("plans", [])
-                            if not current_plans:
-                                current_plans = [{"type": "", "description": "", "price": 0}]
-                            edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
-                            
-                            if st.form_submit_button("Save Changes"):
-                                op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
-                                cleaned_plans = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                op_data["plans"] = cleaned_plans
-                                operators_data["mobile"]["operators"][selected_op] = op_data
-                                save_json_to_drive('operators.json', operators_data)
-                                st.cache_data.clear()
-                                st.success(f"Saved {selected_op}!")
-                                time.sleep(1)
-                                st.rerun()
-                                
-                        if st.button(f"Delete {selected_op}"):
-                            del operators_data["mobile"]["operators"][selected_op]
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                    else:
-                        st.info("No mobile operators found.")
+                        st.write("**Plans**")
+                        current_plans = op_data.get("plans", [])
+                        if not current_plans:
+                            current_plans = [{"type": "", "description": "", "price": 0}]
+                        edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
                         
-                elif config_type == "Wi-Fi Providers":
-                    wifi_ops = operators_data["wifi"]["providers"]
-                    prov_names = list(wifi_ops.keys())
-                    
-                    st.write("#### Add New Provider")
-                    with st.form("add_prov_form", clear_on_submit=True):
-                        col1, col2 = st.columns([3, 1])
-                        new_prov_name = col1.text_input("New Provider Name")
-                        submitted = col2.form_submit_button("Add")
-                        if submitted and new_prov_name and new_prov_name not in wifi_ops:
-                            operators_data["wifi"]["providers"][new_prov_name] = {"plans": []}
+                        if st.form_submit_button("Save Changes"):
+                            op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
+                            cleaned_plans = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
+                            op_data["plans"] = cleaned_plans
+                            operators_data["mobile"]["operators"][selected_op] = op_data
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
+                            st.success(f"Saved {selected_op}!")
+                            time.sleep(1)
                             st.rerun()
                             
-                    st.write("#### Edit Existing Provider")
-                    if prov_names:
-                        selected_prov = st.selectbox("Select Provider", prov_names)
-                        prov_data = wifi_ops[selected_prov]
-                        
-                        with st.form(f"edit_prov_form_{selected_prov}"):
-                            st.write("**Plans**")
-                            current_plans = prov_data.get("plans", [])
-                            if not current_plans:
-                                current_plans = [{"type": "", "description": "", "price": 0}]
-                            edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_wifi_{selected_prov}")
-                            
-                            if st.form_submit_button("Save Changes"):
-                                cleaned_plans = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                prov_data["plans"] = cleaned_plans
-                                operators_data["wifi"]["providers"][selected_prov] = prov_data
-                                save_json_to_drive('operators.json', operators_data)
-                                st.cache_data.clear()
-                                st.success(f"Saved {selected_prov}!")
-                                time.sleep(1)
-                                st.rerun()
-                                
-                        if st.button(f"Delete {selected_prov}"):
-                            del operators_data["wifi"]["providers"][selected_prov]
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                    else:
-                        st.info("No Wi-Fi providers found.")
+                    if st.button(f"Delete {selected_op}"):
+                        del operators_data["mobile"]["operators"][selected_op]
+                        save_json_to_drive('operators.json', operators_data)
+                        st.cache_data.clear()
+                        st.rerun()
+                else:
+                    st.info("No mobile operators found.")
 
 st.markdown("---")
 st.caption("🔒 256-bit secure encryption. Your details are safe with us.")
