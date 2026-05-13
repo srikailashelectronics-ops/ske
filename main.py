@@ -20,12 +20,10 @@ def get_app_secrets():
     secrets_path = os.path.join(os.path.dirname(__file__), 'app_secrets.json')
     toml_path = os.path.join(os.path.dirname(__file__), '.streamlit', 'secrets.toml')
     
-    # Try reading existing JSON
     if os.path.exists(secrets_path):
         with open(secrets_path, 'r', encoding='utf-8') as f:
             return json.load(f)
             
-    # Fallback to reading TOML directly using tomllib (Python 3.11+)
     try:
         if os.path.exists(toml_path):
             with open(toml_path, "rb") as f:
@@ -37,7 +35,6 @@ def get_app_secrets():
                 "GDRIVE_SERVICE_ACCOUNT": dict(toml_secrets.get("GDRIVE_SERVICE_ACCOUNT", {})),
                 "web": dict(toml_secrets.get("web", {}))
             }
-            # Write to JSON because streamlit_google_auth requires a file path
             with open(secrets_path, 'w', encoding='utf-8') as f:
                 json.dump(secrets_dict, f, indent=4)
             return secrets_dict
@@ -53,25 +50,19 @@ ADMIN_EMAILS = [ADMIN_EMAIL]
 def send_notification_email(receiver, subject, html_body):
     sender = ADMIN_EMAIL
     sender_pwd = APP_SECRETS.get("EMAIL_PASSWORD", "")
-    
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = sender
     msg["To"] = receiver
-    
-    part1 = MIMEText(html_body, "html")
-    msg.attach(part1)
-    
+    msg.attach(MIMEText(html_body, "html"))
     try:
         if sender_pwd:
             server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
             server.login(sender, sender_pwd)
             server.sendmail(sender, receiver, msg.as_string())
             server.quit()
-        else:
-            print(f"Mock Email Sent -> Subject: {subject} | To: {receiver}")
-    except Exception as e:
-        print(f"Error sending email: {e}")
+    except Exception:
+        pass
 
 def get_order_created_html(order):
     return f"<h2>Order Received</h2><p>Your {order['type']} recharge on {order['target']} has been received.</p><p><b>TXN ID:</b> {order['txn_id']}</p><p><b>Amount:</b> ₹{order['amount']}</p>"
@@ -91,60 +82,133 @@ def get_grievance_resolved_html(grievance):
 def get_grievance_reopened_html(grievance):
     return f"<h2>Grievance Reopened</h2><p>Grievance {grievance['id']} has been reopened.</p><p>We will re-evaluate your issue.</p>"
 
-# Monkey patch to avoid "Missing code verifier" in streamlit-google-auth
 original_from_client_secrets_file = google_auth_oauthlib.flow.Flow.from_client_secrets_file
-
 def patched_from_client_secrets_file(*args, **kwargs):
     kwargs['autogenerate_code_verifier'] = False
     return original_from_client_secrets_file(*args, **kwargs)
-
 google_auth_oauthlib.flow.Flow.from_client_secrets_file = patched_from_client_secrets_file
 
-# Set page configuration for better mobile rendering
 st.set_page_config(
-    page_title="SKE Recharge",
-    page_icon="⚡",
+    page_title="SKE Pay - Digital India",
+    page_icon="🇮🇳",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for better mobile appearance
 st.markdown("""
 <style>
-    .stButton>button {
-        width: 100%;
-        border-radius: 25px;
-        height: 50px;
-        font-weight: bold;
-        background-color: #1E88E5;
-        color: white;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
+    
+    .stApp {
+        background-color: #F8F9FA;
+        font-family: 'Inter', sans-serif;
     }
-    .stButton>button:hover {
-        background-color: #1565C0;
-        color: white;
-        border-color: #1565C0;
-    }
+    
+    h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: #0A1931; }
+    #MainMenu, footer, header { visibility: hidden; }
+    
     .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 600px;
+        padding: 0rem 0rem 2rem 0rem !important;
+        max-width: 500px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.05);
+        border-radius: 0 0 24px 24px;
+        min-height: 100vh;
+        overflow-x: hidden;
     }
-    h1 {
-        text-align: center;
-        color: #1E88E5;
+
+    .fintech-navbar {
+        background: rgba(10, 25, 49, 0.98);
+        backdrop-filter: blur(12px);
+        padding: 24px 20px 20px 20px;
+        border-radius: 0 0 24px 24px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: -15px;
+        z-index: 50;
+        box-shadow: 0 10px 30px rgba(10, 25, 49, 0.15);
     }
+    .fintech-navbar::before {
+        content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(255,107,0,0.15) 0%, transparent 70%); border-radius: 50%;
+    }
+    .fintech-navbar::after {
+        content: ''; position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px;
+        background: radial-gradient(circle, rgba(19,136,8,0.15) 0%, transparent 70%); border-radius: 50%;
+    }
+    .brand-title { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+    .brand-subtitle { font-size: 13px; opacity: 0.85; margin-top: 4px; font-weight: 500; color: #E5E7EB; }
+    
+    .hero-card {
+        background: linear-gradient(135deg, #FF6B00 0%, #E65C00 100%);
+        border-radius: 16px; padding: 24px; color: white; margin: 20px;
+        box-shadow: 0 8px 25px rgba(255, 107, 0, 0.25);
+        position: relative; overflow: hidden; z-index: 1;
+    }
+    .hero-card::after {
+        content: '₹'; position: absolute; right: 15px; bottom: -35px;
+        font-size: 120px; opacity: 0.1; font-family: 'Poppins', sans-serif;
+        font-weight: 800; transform: rotate(-15deg);
+    }
+    .hero-label { font-size: 14px; opacity: 0.95; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .hero-amount { font-size: 28px; font-weight: 800; font-family: 'Poppins', sans-serif; margin: 8px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    
+    .stButton>button {
+        width: 100%; border-radius: 12px; height: 54px; font-weight: 600; font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%);
+        color: white !important; border: none !important;
+        box-shadow: 0 4px 15px rgba(10, 25, 49, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(10, 25, 49, 0.3); }
+    
+    button[key="mobile_btn"], button[key="wifi_btn"], button[kind="primary"] {
+        background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+        box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+    }
+    button[key="mobile_btn"]:hover, button[key="wifi_btn"]:hover, button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #FF8533 0%, #FF6B00 100%);
+        box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+    }
+    
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
+        border-radius: 12px; border: 2px solid #EAECEF; padding: 14px 16px; font-size: 15px;
+        background-color: #F8F9FA; transition: all 0.3s ease; font-weight: 500; color: #0A1931;
+    }
+    .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus, .stTextArea>div>div>textarea:focus {
+        border-color: #FF6B00; box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1); background-color: #FFFFFF;
+    }
+    
     .order-card {
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        background-color: #f9f9f9;
-        color: #333;
+        background: #ffffff; border: 1px solid #F0F2F5; border-radius: 16px; padding: 20px;
+        margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s ease;
+        position: relative; overflow: hidden;
     }
+    .order-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 5px; background: #0A1931; border-radius: 16px 0 0 16px; }
+    .order-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .order-card.success::before { background: #138808; }
+    .order-card.pending::before { background: #FF6B00; }
+    
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Poppins', sans-serif; }
+    .status-success { background: rgba(19,136,8,0.1); color: #138808; }
+    .status-pending { background: rgba(255,107,0,0.1); color: #E67E22; }
+    
+    div[data-testid="stTabs"] { padding: 0 15px; }
+    div[data-testid="stTabs"] button { font-weight: 600; font-family: 'Poppins', sans-serif; color: #6B7280; padding-bottom: 12px; transition: all 0.2s; }
+    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] { color: #0A1931 !important; border-bottom: 3px solid #FF6B00 !important; }
+    
+    .trust-container { display: flex; justify-content: center; gap: 20px; margin: 25px 20px; padding: 15px; background: #F8F9FA; border-radius: 12px; border: 1px dashed #EAECEF; }
+    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .trust-icon { font-size: 24px; background: white; padding: 8px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .trust-text { font-size: 11px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .streamlit-expanderHeader { font-weight: 600 !important; font-family: 'Inter', sans-serif !important; border-radius: 12px !important; background-color: #F8F9FA !important; border: 1px solid #EAECEF !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# Helper functions for data management & Google Drive Sync
 DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive']
 
 def get_drive_service():
@@ -156,8 +220,7 @@ def get_drive_service():
 
 def find_file_in_drive(service, file_name, parent_folder_id=None):
     query = f"name='{file_name}' and trashed=false"
-    if parent_folder_id:
-        query += f" and '{parent_folder_id}' in parents"
+    if parent_folder_id: query += f" and '{parent_folder_id}' in parents"
     results = service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
     items = results.get('files', [])
     return items[0]['id'] if items else None
@@ -167,92 +230,59 @@ def get_or_create_app_folder(service):
     query = f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder' and trashed=false"
     results = service.files().list(q=query, spaces='drive', fields='files(id)').execute()
     items = results.get('files', [])
-    
-    if items:
-        return items[0]['id']
-        
-    # Create folder if it doesn't exist
-    folder_metadata = {
-        'name': folder_name,
-        'mimeType': 'application/vnd.google-apps.folder'
-    }
+    if items: return items[0]['id']
+    folder_metadata = { 'name': folder_name, 'mimeType': 'application/vnd.google-apps.folder' }
     folder = service.files().create(body=folder_metadata, fields='id').execute()
     folder_id = folder.get('id')
-    
-    # Share folder with admin
-    permission = {
-        'type': 'user',
-        'role': 'writer',
-        'emailAddress': ADMIN_EMAIL
-    }
+    permission = { 'type': 'user', 'role': 'writer', 'emailAddress': ADMIN_EMAIL }
     service.permissions().create(fileId=folder_id, body=permission).execute()
     return folder_id
 
 def load_json_from_drive(file_name, default_val):
     try:
         service = get_drive_service()
-        if not service:
-            st.error("Google Drive service is unavailable. Cannot load data.")
-            return default_val
-            
+        if not service: return default_val
         folder_id = get_or_create_app_folder(service)
         file_id = find_file_in_drive(service, file_name, folder_id)
-        
-        if not file_id:
-            return default_val
-            
+        if not file_id: return default_val
         request = service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
         downloader = googleapiclient.http.MediaIoBaseDownload(fh, request)
         done = False
-        while not done:
-            status, done = downloader.next_chunk()
-        
+        while not done: status, done = downloader.next_chunk()
         fh.seek(0)
         return json.loads(fh.read().decode('utf-8'))
-    except Exception as e:
-        st.error(f"Error loading {file_name} from Drive: {e}. Using default/empty data.")
+    except Exception:
         return default_val
 
 def save_json_to_drive(file_name, data):
     try:
         service = get_drive_service()
-        if not service:
-            st.error(f"Google Drive service unavailable. Could not save {file_name}.")
-            return
-            
+        if not service: return
         folder_id = get_or_create_app_folder(service)
         file_id = find_file_in_drive(service, file_name, folder_id)
-        
         file_metadata = {'name': file_name}
         media = googleapiclient.http.MediaIoBaseUpload(
             io.BytesIO(json.dumps(data, indent=4).encode('utf-8')),
-            mimetype='application/json',
-            resumable=True
+            mimetype='application/json', resumable=True
         )
-        
-        if file_id:
-            service.files().update(fileId=file_id, media_body=media).execute()
+        if file_id: service.files().update(fileId=file_id, media_body=media).execute()
         else:
             file_metadata['parents'] = [folder_id]
             service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-    except Exception as e:
-        st.error(f"Drive upload error for {file_name}: {e}")
+    except Exception:
+        pass
 
 @st.cache_data
 def load_operators():
     return load_json_from_drive('operators.json', {"mobile": {"operators": {}}, "wifi": {"providers": {}}})
 
-def load_orders():
-    return load_json_from_drive('orders.json', {})
-
+def load_orders(): return load_json_from_drive('orders.json', {})
 def save_order(user_phone, order_details):
     orders = load_orders()
-    if user_phone not in orders:
-        orders[user_phone] = []
+    if user_phone not in orders: orders[user_phone] = []
     orders[user_phone].insert(0, order_details)
     save_json_to_drive('orders.json', orders)
-
 def update_order(user_phone, txn_id, updates):
     orders = load_orders()
     if user_phone in orders:
@@ -262,16 +292,12 @@ def update_order(user_phone, txn_id, updates):
                 break
         save_json_to_drive('orders.json', orders)
 
-def load_grievances():
-    return load_json_from_drive('grievances.json', {})
-
+def load_grievances(): return load_json_from_drive('grievances.json', {})
 def save_grievance(user_phone, grievance_details):
     grievances = load_grievances()
-    if user_phone not in grievances:
-        grievances[user_phone] = []
+    if user_phone not in grievances: grievances[user_phone] = []
     grievances[user_phone].insert(0, grievance_details)
     save_json_to_drive('grievances.json', grievances)
-
 def update_grievance(user_phone, grievance_id, updates):
     grievances = load_grievances()
     if user_phone in grievances:
@@ -283,15 +309,10 @@ def update_grievance(user_phone, grievance_id, updates):
 
 data = load_operators()
 
-# Initialize session states
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-if "user_phone" not in st.session_state:
-    st.session_state.user_phone = ""
-if "checkout" not in st.session_state:
-    st.session_state.checkout = None
+if "logged_in" not in st.session_state: st.session_state.logged_in = False
+if "user_phone" not in st.session_state: st.session_state.user_phone = ""
+if "checkout" not in st.session_state: st.session_state.checkout = None
 
-# Initialize Google Authenticator
 authenticator = streamlit_google_auth.Authenticate(
     secret_credentials_path='app_secrets.json',
     cookie_name='ske_cookie',
@@ -306,14 +327,11 @@ def patched_login(color='blue', justify_content="center"):
             scopes=["openid", "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
             redirect_uri=authenticator.redirect_uri,
         )
-        authorization_url, state = flow.authorization_url(
-            access_type="offline",
-            include_granted_scopes="true",
-        )
+        authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
 <div style="display: flex; justify-content: {justify_content}; margin-top: 30px;">
-    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(10, 25, 49, 0.25); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Poppins', sans-serif; font-weight: 600;">
-        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google logo" style="margin-right: 14px; width: 28px; height: 28px; background-color: white; border-radius: 50%; padding: 4px;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(10, 25, 49, 0.25); transition: transform 0.3s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
     </a>
 </div>
@@ -327,39 +345,39 @@ def patched_login(color='blue', justify_content="center"):
         st.markdown(html_content, unsafe_allow_html=True)
 
 authenticator.login = patched_login
-
-# Catch the Google redirect and check authentication
 authenticator.check_authentification()
 
-# --- LOGIN FLOW ---
 if not st.session_state.get('connected'):
-    st.title("⚡ SKE Recharge")
-    st.markdown("<p style='text-align: center; color: gray;'><strong>Sri Kailash Electronics</strong><br>Fast and secure mobile and Wi-Fi recharges.</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    
-    st.subheader("Login / Register")
-    st.write("Please sign in with your Google account to continue.")
-    
-    # Render the Google login button
+    st.markdown("""
+    <div style="text-align: center; padding: 40px 20px 20px 20px;">
+        <div style="font-size: 60px; margin-bottom: 10px; text-shadow: 0 10px 20px rgba(0,0,0,0.1);">🇮🇳</div>
+        <h1 style="color: #0A1931; font-weight: 800; font-size: 32px; margin-bottom: 5px;">SKE Pay</h1>
+        <p style="color: #FF6B00; font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
+        <p style="color: #6B7280; font-size: 14px; margin-top: 15px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
+    </div>
+    """, unsafe_allow_html=True)
     authenticator.login()
-    
-    st.stop() # Stop rendering the rest of the app until logged in
+    st.stop()
 else:
-    # If Google auth is successful, update our own session state flags
     st.session_state.logged_in = True
-    # Retrieve user info provided by google-auth
     user_info = st.session_state.get('user_info', {})
-    # Use their email as the identifier since we aren't collecting phone number via OTP anymore
     st.session_state.user_phone = user_info.get('email', 'unknown@google.com')
 
-# --- MAIN APP FLOW (LOGGED IN) ---
+# --- MAIN APP FLOW ---
+st.markdown("""
+<div class="fintech-navbar">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; position: relative;">
+        <div>
+            <div class="brand-title">🇮🇳 SKE Pay</div>
+            <div class="brand-subtitle">Bharat's Trusted Recharge App</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-# Header with Logout
-col1, col2 = st.columns([3, 1])
-with col1:
-    st.title("⚡ SKE Recharge")
-with col2:
-    st.write("") # Spacing
+col_space, col_logout = st.columns([4, 1.2])
+with col_logout:
+    st.write("")
     if st.button("Logout", key="logout_btn"):
         authenticator.logout()
         st.session_state.logged_in = False
@@ -367,16 +385,24 @@ with col2:
         st.session_state.checkout = None
         st.rerun()
 
-st.markdown("<p style='text-align: center; color: gray;'><strong>Sri Kailash Electronics</strong></p>", unsafe_allow_html=True)
-st.markdown("---")
+st.markdown("""
+<div class="hero-card">
+    <div class="hero-label">Digital India Initiative</div>
+    <div class="hero-amount">Fast & Secure</div>
+    <div style="font-size: 13px; margin-top: 8px; opacity: 0.9; font-weight: 500;">Zero Convenience Fees • UPI Ready</div>
+</div>
+<div class="trust-container">
+    <div class="trust-item"><div class="trust-icon">🛡️</div><div class="trust-text">Secure</div></div>
+    <div class="trust-item"><div class="trust-icon">⚡</div><div class="trust-text">Instant</div></div>
+    <div class="trust-item"><div class="trust-icon">📱</div><div class="trust-text">All Networks</div></div>
+</div>
+""", unsafe_allow_html=True)
 
-# --- CHECKOUT FLOW ---
 if st.session_state.checkout:
-    st.subheader("Secure Checkout")
+    st.markdown("<h3 style='padding: 0 20px; font-family: Poppins;'>💳 Secure Checkout</h3>", unsafe_allow_html=True)
     c = st.session_state.checkout
     
     import re
-    
     def get_validity_days(plan_str):
         match = re.search(r'(\d+)\s*Day', plan_str, re.IGNORECASE)
         if match: return int(match.group(1))
@@ -388,10 +414,8 @@ if st.session_state.checkout:
         if 'daily' in lower_plan: return 1
         return 30
 
-    # Calculate Streak
     orders_db = load_orders()
     user_orders = orders_db.get(st.session_state.user_phone, [])
-    
     target_orders = [o for o in user_orders if o.get('target') == c['target'] and o.get('status') == 'Recharge Completed']
     streak_count = 0
     
@@ -399,7 +423,6 @@ if st.session_state.checkout:
         last_order = target_orders[0]
         last_plan = last_order.get('plan_str', '')
         last_date_str = last_order.get('date', '')
-        
         if last_plan == c.get('plan_str', '') and last_date_str:
             try:
                 last_date = datetime.strptime(last_date_str, "%Y-%m-%d %H:%M:%S")
@@ -407,12 +430,9 @@ if st.session_state.checkout:
                 days_since_last = (datetime.now() - last_date).days
                 if abs(days_since_last - validity_days) <= 5:
                     streak_count = last_order.get('streak', 0) + 1
-            except Exception:
-                pass
+            except Exception: pass
 
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
-    
-    # 1% multiplier for streak (max 1%)
     discount_percent = min(streak_count * 0.01, 0.01)
     discount = original_price * discount_percent
     final_price = max(0.0, original_price - discount)
@@ -422,16 +442,38 @@ if st.session_state.checkout:
     c['discount'] = f"{discount:.2f}"
     c['streak'] = streak_count
     
-    st.info(f"Recharging **{c['target']}** ({c['operator']}) for **MRP: ₹{original_price:.2f}**")
-    if streak_count > 0:
-        st.success(f"🔥 **Streak Bonus Active!** Streak count: {streak_count}. You got a {discount_percent*100:.1f}% discount of ₹{discount:.2f}!")
-        st.write(f"**Final Amount to Pay: ₹{c['final_price']}**")
+    st.markdown(f"""
+    <div style="padding: 0 20px;">
+        <div style="background: #F8F9FA; border-radius: 16px; padding: 20px; border: 1px solid #EAECEF; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span style="color: #6B7280; font-weight: 500;">Recharge Number</span>
+                <span style="font-weight: 600; color: #0A1931;">{c['target']}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span style="color: #6B7280; font-weight: 500;">Operator</span>
+                <span style="font-weight: 600; color: #0A1931;">{c['operator']}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span style="color: #6B7280; font-weight: 500;">MRP</span>
+                <span style="font-weight: 600; color: #0A1931;">₹{original_price:.2f}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; color: #138808; font-weight: 600;">
+                <span>🔥 Streak Bonus (x{streak_count})</span>
+                <span>- ₹{discount:.2f}</span>
+            </div>
+            <hr style="margin: 0 0 16px 0; border-top: 1px dashed #EAECEF;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 18px; font-weight: 700; color: #0A1931;">Total Payable</span>
+                <span style="font-size: 24px; font-weight: 800; color: #FF6B00;">₹{c['final_price']}</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     payment_method = st.radio("Select Payment Method", ["Google Pay / UPI", "Credit / Debit Card"])
     
     if payment_method == "Google Pay / UPI":
         st.write("Pay securely using Google Pay or any UPI app.")
-        
         if "current_txn_id" not in st.session_state:
             st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
         txn_id = st.session_state.current_txn_id
@@ -441,37 +483,26 @@ if st.session_state.checkout:
         transaction_note = f"Order+{txn_id}"
         upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
         
-        st.markdown(f'<a href="{upi_link}" target="_blank" style="display:block; text-align:center; background-color:#1E88E5; color:white; padding:12px; border-radius:25px; text-decoration:none; font-weight:bold; margin-bottom: 20px;">Pay ₹{c["final_price"]} with UPI Apps</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="{upi_link}" target="_blank" style="display:block; text-align:center; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); color:white; padding:16px; border-radius:12px; text-decoration:none; font-weight:600; font-family:\'Poppins\'; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(30,136,229,0.3);">Pay ₹{c["final_price"]} with UPI Apps</a>', unsafe_allow_html=True)
         
-        st.write(f"**Transaction Note / Order ID:** `{txn_id}`")
-        st.caption("Click the button below once you have successfully completed the payment on your app.")
+        st.write(f"**Order ID:** `{txn_id}`")
+        st.caption("Click the button below once you have successfully completed the payment.")
         
         with st.form("upi_verify_form"):
             verify_btn = st.form_submit_button("I have made the payment")
-            
             if verify_btn:
-                with st.spinner("Submitting your request..."):
-                    time.sleep(1.5)
-                
+                with st.spinner("Submitting your request..."): time.sleep(1.5)
                 order = {
                     "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "txn_id": txn_id,
-                    "type": c['type'].capitalize(),
-                    "target": c['target'],
-                    "operator": c['operator'],
-                    "plan_str": c.get('plan_str', ''),
-                    "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'),
-                    "streak": c.get('streak', 0),
-                    "amount": c['final_price'],
-                    "method": "UPI",
-                    "status": "Order Created"
+                    "txn_id": txn_id, "type": c['type'].capitalize(),
+                    "target": c['target'], "operator": c['operator'],
+                    "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
+                    "discount": c.get('discount', '0.00'), "streak": c.get('streak', 0),
+                    "amount": c['final_price'], "method": "UPI", "status": "Order Created"
                 }
                 save_order(st.session_state.user_phone, order)
                 send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
-                for admin in ADMIN_EMAILS:
-                    send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-                
+                for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
                 st.success(f"Order Submitted! Order ID: {txn_id}")
                 st.info("Your order is currently in 'Order Created' status. Please wait for an admin to verify your payment.")
                 time.sleep(3)
@@ -489,29 +520,19 @@ if st.session_state.checkout:
             
             pay_btn = st.form_submit_button(f"Pay ₹{c['final_price']}")
             if pay_btn:
-                with st.spinner("Processing payment securely..."):
-                    time.sleep(2)
-                
+                with st.spinner("Processing payment securely..."): time.sleep(2)
                 txn_id = f"CARD_{uuid.uuid4().hex[:10].upper()}"
                 order = {
                     "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "txn_id": txn_id,
-                    "type": c['type'].capitalize(),
-                    "target": c['target'],
-                    "operator": c['operator'],
-                    "plan_str": c.get('plan_str', ''),
-                    "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'),
-                    "streak": c.get('streak', 0),
-                    "amount": c['final_price'],
-                    "method": "Card",
-                    "status": "Order Created"
+                    "txn_id": txn_id, "type": c['type'].capitalize(),
+                    "target": c['target'], "operator": c['operator'],
+                    "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
+                    "discount": c.get('discount', '0.00'), "streak": c.get('streak', 0),
+                    "amount": c['final_price'], "method": "Card", "status": "Order Created"
                 }
                 save_order(st.session_state.user_phone, order)
                 send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
-                for admin in ADMIN_EMAILS:
-                    send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-                
+                for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
                 st.success(f"Payment details submitted! TXN ID: {txn_id}")
                 st.info("Your order is currently in 'Order Created' status. Please wait for an admin to confirm.")
                 time.sleep(3)
@@ -521,11 +542,9 @@ if st.session_state.checkout:
     st.markdown("---")
     if st.button("Cancel & Go Back"):
         st.session_state.checkout = None
-        if "current_txn_id" in st.session_state:
-            del st.session_state.current_txn_id
+        if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
         st.rerun()
 
-# --- TABS: MOBILE, WIFI, MY ORDERS, GRIEVANCES, CONTROL TOWER ---
 else:
     is_admin = st.session_state.user_phone in ADMIN_EMAILS
     
@@ -542,200 +561,143 @@ else:
         mobile_ops_data = data.get("mobile", {}).get("operators", {})
         if isinstance(mobile_ops_data, dict):
             for op, op_info in mobile_ops_data.items():
-                if prefix in op_info.get("prefixes", []):
-                    return op
+                if prefix in op_info.get("prefixes", []): return op
         return "Select Operator"
 
-    # --- TAB 1: MOBILE ---
     with tab1:
-        st.subheader("Mobile Recharge")
-        
-        if "last_phone_prefix" not in st.session_state:
-            st.session_state.last_phone_prefix = ""
-            
-        phone_number = st.text_input("Phone Number", placeholder="e.g., 9876543210", max_chars=10, key="mobile_phone")
+        st.markdown("<h3 style='margin-bottom:20px;'>Mobile Recharge</h3>", unsafe_allow_html=True)
+        if "last_phone_prefix" not in st.session_state: st.session_state.last_phone_prefix = ""
+        phone_number = st.text_input("Mobile Number", placeholder="e.g., 9876543210", max_chars=10, key="mobile_phone")
         
         mobile_ops_data = data.get("mobile", {}).get("operators", {})
-        if isinstance(mobile_ops_data, dict):
-            mobile_ops = ["Select Operator"] + list(mobile_ops_data.keys())
-        else:
-            mobile_ops = ["Select Operator"] + mobile_ops_data
+        if isinstance(mobile_ops_data, dict): mobile_ops = ["Select Operator"] + list(mobile_ops_data.keys())
+        else: mobile_ops = ["Select Operator"] + mobile_ops_data
             
         current_prefix = phone_number[:2] if phone_number else ""
         if current_prefix != st.session_state.last_phone_prefix:
             st.session_state.last_phone_prefix = current_prefix
             detected_op = get_operator(phone_number)
-            if detected_op in mobile_ops:
-                st.session_state.mobile_op = detected_op
-            else:
-                st.session_state.mobile_op = "Select Operator"
+            st.session_state.mobile_op = detected_op if detected_op in mobile_ops else "Select Operator"
                 
-        operator = st.selectbox("Operator", mobile_ops, key="mobile_op")
+        operator = st.selectbox("Select Operator", mobile_ops, key="mobile_op")
         
-        if operator != "Select Operator" and isinstance(mobile_ops_data, dict) and operator in mobile_ops_data:
-            mobile_plans = mobile_ops_data[operator].get("plans", [])
-        else:
-            mobile_plans = []
-            
+        mobile_plans = mobile_ops_data[operator].get("plans", []) if operator != "Select Operator" and isinstance(mobile_ops_data, dict) and operator in mobile_ops_data else []
         plan_options = [f"{p['type']} - {p['description']} (₹{p['price']})" for p in mobile_plans]
         plan_options.insert(0, "Select a Plan")
-        
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
-        mobile_submit = st.button("Proceed to Pay", key="mobile_btn", use_container_width=True)
-        
-        if mobile_submit:
-            if not phone_number or not phone_number.isdigit() or len(phone_number) != 10:
-                st.error("Please enter a valid 10-digit Indian phone number.")
-            elif operator == "Select Operator":
-                st.error("Please select an operator.")
-            elif selected_plan_str == "Select a Plan":
-                st.error("Please select a recharge plan.")
+        if st.button("Proceed to Pay", key="mobile_btn"):
+            if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
+            elif operator == "Select Operator": st.error("Select an operator.")
+            elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
             else:
                 price_str = selected_plan_str.split(" ")[-1][1:-1]
-                st.session_state.checkout = {
-                    "type": "mobile",
-                    "target": phone_number,
-                    "operator": operator,
-                    "price": price_str,
-                    "plan_str": selected_plan_str
-                }
+                st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
                 st.rerun()
 
-    # --- TAB 2: WI-FI ---
     with tab2:
-        st.subheader("Wi-Fi / Broadband Recharge")
-        
-        account_id = st.text_input("Account Number / User ID", placeholder="e.g., ACCT-12345")
-        
+        st.markdown("<h3 style='margin-bottom:20px;'>Wi-Fi / Broadband</h3>", unsafe_allow_html=True)
+        account_id = st.text_input("Account ID / User ID", placeholder="e.g., ACCT-12345")
         wifi_ops_data = data.get("wifi", {}).get("providers", {})
-        if isinstance(wifi_ops_data, dict):
-            wifi_ops = ["Select Provider"] + list(wifi_ops_data.keys())
-        else:
-            wifi_ops = ["Select Provider"] + wifi_ops_data
+        if isinstance(wifi_ops_data, dict): wifi_ops = ["Select Provider"] + list(wifi_ops_data.keys())
+        else: wifi_ops = ["Select Provider"] + wifi_ops_data
             
         provider = st.selectbox("Service Provider", wifi_ops)
-        
-        if provider != "Select Provider" and isinstance(wifi_ops_data, dict) and provider in wifi_ops_data:
-            wifi_plans = wifi_ops_data[provider].get("plans", [])
-        else:
-            wifi_plans = []
-            
+        wifi_plans = wifi_ops_data[provider].get("plans", []) if provider != "Select Provider" and isinstance(wifi_ops_data, dict) and provider in wifi_ops_data else []
         wifi_plan_options = [f"{p['type']} - {p['description']} (₹{p['price']})" for p in wifi_plans]
         wifi_plan_options.insert(0, "Select a Plan")
-        
         selected_wifi_plan_str = st.selectbox("Select Plan", wifi_plan_options)
         
-        wifi_submit = st.button("Proceed to Pay", key="wifi_btn", use_container_width=True)
-        
-        if wifi_submit:
-            if not account_id:
-                st.error("Please enter your account number.")
-            elif provider == "Select Provider":
-                st.error("Please select a provider.")
-            elif selected_wifi_plan_str == "Select a Plan":
-                st.error("Please select a recharge plan.")
+        if st.button("Proceed to Pay", key="wifi_btn"):
+            if not account_id: st.error("Enter your account number.")
+            elif provider == "Select Provider": st.error("Select a provider.")
+            elif selected_wifi_plan_str == "Select a Plan": st.error("Select a recharge plan.")
             else:
                 price_str = selected_wifi_plan_str.split(" ")[-1][1:-1]
-                st.session_state.checkout = {
-                    "type": "wifi",
-                    "target": account_id,
-                    "operator": provider,
-                    "price": price_str,
-                    "plan_str": selected_wifi_plan_str
-                }
+                st.session_state.checkout = { "type": "wifi", "target": account_id, "operator": provider, "price": price_str, "plan_str": selected_wifi_plan_str }
                 st.rerun()
 
-    # --- TAB 3: MY ORDERS ---
     with tab3:
-        st.subheader(f"Orders for {st.session_state.user_phone}")
+        st.markdown("<h3 style='margin-bottom:20px;'>My Orders</h3>", unsafe_allow_html=True)
         orders_db = load_orders()
         user_orders = orders_db.get(st.session_state.user_phone, [])
-        
         if not user_orders:
             st.info("You have no past recharges. Make a recharge to see it here!")
         else:
-            if st.button("Refresh Orders"):
-                st.rerun()
-                
+            if st.button("Refresh Orders"): st.rerun()
             for o in user_orders:
-                status_color = "orange" if o['status'] == "Order Created" else ("blue" if o['status'] == "Payment Confirmed" else "green")
-                
                 with st.container():
-                    st.markdown(f"**{o['type']} Recharge - {o['operator']}** &nbsp; | &nbsp; <span style='color: {status_color}; font-weight: bold;'>{o['status']}</span>", unsafe_allow_html=True)
-                    st.caption(f"Target: {o['target']} | MRP: ₹{o.get('mrp', o['amount'])} | Discount: ₹{o.get('discount', '0.00')} | Paid: ₹{o['amount']}")
-                    st.caption(f"{o['date']} | TXN: {o['txn_id']} | Method: {o['method']} | Streak: x{o.get('streak', 0)}")
-                    if "payment_utr" in o:
-                        st.caption(f"Payment UTR: {o['payment_utr']}")
-                    if "recharge_utr" in o:
-                        st.caption(f"Recharge UTR: {o['recharge_utr']}")
-                    st.markdown("---")
+                    status_class = "success" if o['status'] == "Recharge Completed" else "pending"
+                    badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
+                    html = f"""
+                    <div class="order-card {status_class}">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: #0A1931; font-size: 16px;">{o['type']} • {o['operator']}</div>
+                                <div style="color: #6B7280; font-size: 13px; font-weight: 500; margin-top: 2px;">Target: {o['target']}</div>
+                            </div>
+                            <div class="status-badge {badge_class}">{o['status']}</div>
+                        </div>
+                        <div style="background: #F8F9FA; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                <span style="color: #6B7280;">MRP</span><span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                <span style="color: #6B7280;">Discount (x{o.get('streak', 0)})</span><span style="color: #138808; font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 8px; border-top: 1px solid #EAECEF; padding-top: 8px;">
+                                <span style="color: #0A1931; font-weight: 600;">Amount Paid</span><span style="color: #FF6B00; font-weight: 700;">₹{o['amount']}</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 11px; color: #9CA3AF; display: flex; flex-direction: column; gap: 2px;">
+                            <div>Txn: {o['txn_id']} • {o['date']}</div><div>Method: {o['method']}</div>
+                    """
+                    if "payment_utr" in o: html += f"<div>Pay UTR: {o['payment_utr']}</div>"
+                    if "recharge_utr" in o: html += f"<div>Recharge UTR: {o['recharge_utr']}</div>"
+                    html += "</div></div>"
+                    st.markdown(html, unsafe_allow_html=True)
                 
                 with st.expander(f"Raise Grievance for {o['txn_id']}"):
                     with st.form(f"grievance_form_{o['txn_id']}"):
                         issue_type = st.selectbox("Issue Type", ["Recharge Not Received", "Amount Deducted but Order Failed", "Wrong Target Recharge", "Other"])
                         details = st.text_area("Details", placeholder="Describe the issue...")
-                        submit_grievance = st.form_submit_button("Submit Grievance")
-                        if submit_grievance:
+                        if st.form_submit_button("Submit Grievance"):
                             grievance = {
-                                "id": f"GRV_{uuid.uuid4().hex[:8].upper()}",
-                                "txn_id": o['txn_id'],
-                                "issue_type": issue_type,
-                                "details": details,
-                                "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                "status": "Open",
-                                "admin_reply": ""
+                                "id": f"GRV_{uuid.uuid4().hex[:8].upper()}", "txn_id": o['txn_id'], "issue_type": issue_type,
+                                "details": details, "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "status": "Open", "admin_reply": ""
                             }
                             save_grievance(st.session_state.user_phone, grievance)
                             send_notification_email(st.session_state.user_phone, f"Grievance Submitted: {grievance['id']}", get_grievance_created_html(grievance))
-                            for admin in ADMIN_EMAILS:
-                                send_notification_email(admin, f"New Grievance: {grievance['id']}", get_grievance_created_html(grievance))
+                            for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Grievance: {grievance['id']}", get_grievance_created_html(grievance))
                             st.success("Grievance raised successfully. Check 'Grievances' tab.")
                             time.sleep(2)
                             st.rerun()
 
-    # --- TAB 4: GRIEVANCES ---
     with tab4:
-        st.subheader("My Grievances")
+        st.markdown("<h3 style='margin-bottom:20px;'>My Grievances</h3>", unsafe_allow_html=True)
         grievances_db = load_grievances()
         user_grievances = grievances_db.get(st.session_state.user_phone, [])
-        
-        if not user_grievances:
-            st.info("No grievances found.")
+        if not user_grievances: st.info("No grievances found.")
         else:
             for g in user_grievances:
                 html_content = f"""<div class="order-card">
 <strong>Grievance ID: {g['id']}</strong> (For TXN: {g['txn_id']})<br>
 <span style="color: {'green' if g['status'] == 'Resolved' else 'red'}; font-weight: bold;">Status: {g['status']}</span><br>
-<em>{g['issue_type']}</em>: {g['details']}<br>
-<small>{g['date']}</small><hr>
+<em>{g['issue_type']}</em>: {g['details']}<br><small>{g['date']}</small><hr>
 <strong>Admin Reply:</strong> {g['admin_reply'] if g['admin_reply'] else 'Pending'}
 </div>"""
                 st.markdown(html_content, unsafe_allow_html=True)
 
-    # --- TAB 5: CONTROL TOWER (ADMIN ONLY) ---
     if is_admin:
         with tab5:
-            st.subheader("🛠️ Admin Control Tower")
-            
+            st.markdown("<h3 style='margin-bottom:20px;'>🛠️ Admin Control Tower</h3>", unsafe_allow_html=True)
             orders_db = load_orders()
             grievances_db = load_grievances()
+            admin_tabs = st.tabs(["⏳ Pending Orders", "📋 All Orders", "🚨 Open Grievances", "📂 All Grievances", "⚙️ Operators Config"])
             
-            admin_tab1, admin_tab2, admin_tab3, admin_tab4, admin_tab5 = st.tabs(["⏳ Pending Orders", "📋 All Orders", "🚨 Open Grievances", "📂 All Grievances", "⚙️ Operators Config"])
-            
-            with admin_tab1:
+            with admin_tabs[0]:
                 st.write("### Pending Orders")
-                
-                # Table Header
-                head_cols = st.columns([1.5, 1.5, 1, 1, 1.5, 2])
-                head_cols[0].write("**User**")
-                head_cols[1].write("**TXN ID**")
-                head_cols[2].write("**Target**")
-                head_cols[3].write("**Amount**")
-                head_cols[4].write("**Status**")
-                head_cols[5].write("**Action**")
                 st.markdown("---")
-                
                 pending_count = 0
                 for user, user_orders in orders_db.items():
                     for o in user_orders:
@@ -747,7 +709,6 @@ else:
                             cols[2].write(o['target'])
                             cols[3].write(f"₹{o['amount']}")
                             cols[4].write(o['status'])
-                            
                             with cols[5]:
                                 if o['status'] == "Order Created":
                                     with st.form(f"pay_form_{o['txn_id']}", clear_on_submit=True):
@@ -766,8 +727,7 @@ else:
                                     with st.form(f"rech_form_{o['txn_id']}", clear_on_submit=True):
                                         recharge_utr = st.text_input("Recharge UTR", placeholder="Required")
                                         if st.form_submit_button("Complete Recharge"):
-                                            if not recharge_utr:
-                                                st.error("UTR Required")
+                                            if not recharge_utr: st.error("UTR Required")
                                             else:
                                                 update_data = {"status": "Recharge Completed", "recharge_utr": recharge_utr}
                                                 update_order(user, o['txn_id'], update_data)
@@ -778,38 +738,26 @@ else:
                                                 time.sleep(1)
                                                 st.rerun()
                             st.markdown("---")
-                if pending_count == 0:
-                    st.info("No pending orders.")
+                if pending_count == 0: st.info("No pending orders.")
 
-            with admin_tab2:
+            with admin_tabs[1]:
                 st.write("### All Orders")
                 all_orders_list = []
                 for user, user_orders in orders_db.items():
                     for o in user_orders:
                         all_orders_list.append({
-                            "User": user,
-                            "Date": o['date'],
-                            "TXN ID": o['txn_id'],
-                            "Target": o['target'],
-                            "Operator": o['operator'],
-                            "MRP": f"₹{o.get('mrp', o['amount'])}",
-                            "Discount": f"₹{o.get('discount', '0.00')}",
-                            "Paid": f"₹{o['amount']}",
-                            "Streak": o.get('streak', 0),
-                            "Method": o['method'],
-                            "Status": o['status'],
-                            "Pay UTR": o.get('payment_utr', 'N/A'),
-                            "Rech UTR": o.get('recharge_utr', 'N/A')
+                            "User": user, "Date": o['date'], "TXN ID": o['txn_id'], "Target": o['target'],
+                            "Operator": o['operator'], "MRP": f"₹{o.get('mrp', o['amount'])}",
+                            "Discount": f"₹{o.get('discount', '0.00')}", "Paid": f"₹{o['amount']}",
+                            "Streak": o.get('streak', 0), "Method": o['method'], "Status": o['status'],
+                            "Pay UTR": o.get('payment_utr', 'N/A'), "Rech UTR": o.get('recharge_utr', 'N/A')
                         })
-                
                 if all_orders_list:
-                    # Sort by date descending
                     all_orders_list.sort(key=lambda x: x["Date"], reverse=True)
                     st.dataframe(all_orders_list, use_container_width=True)
-                else:
-                    st.info("No orders found.")
+                else: st.info("No orders found.")
             
-            with admin_tab3:
+            with admin_tabs[2]:
                 st.write("### Open Grievances")
                 open_g_count = 0
                 for user, user_grievances in grievances_db.items():
@@ -831,34 +779,25 @@ else:
                                     time.sleep(1)
                                     st.rerun()
                             st.markdown("---")
-                if open_g_count == 0:
-                    st.info("No open grievances.")
+                if open_g_count == 0: st.info("No open grievances.")
 
-            with admin_tab4:
+            with admin_tabs[3]:
                 st.write("### All Grievances")
                 all_grievances_list = []
                 for user, user_grievances in grievances_db.items():
                     for g in user_grievances:
                         all_grievances_list.append({
-                            "User": user,
-                            "Date": g.get('date', 'N/A'),
-                            "Grievance ID": g['id'],
-                            "TXN ID": g['txn_id'],
-                            "Issue Type": g['issue_type'],
-                            "Status": g['status']
+                            "User": user, "Date": g.get('date', 'N/A'), "Grievance ID": g['id'],
+                            "TXN ID": g['txn_id'], "Issue Type": g['issue_type'], "Status": g['status']
                         })
-                
                 if all_grievances_list:
                     all_grievances_list.sort(key=lambda x: x["Date"], reverse=True)
                     st.dataframe(all_grievances_list, use_container_width=True)
-                else:
-                    st.info("No grievances found.")
+                else: st.info("No grievances found.")
 
-            with admin_tab5:
+            with admin_tabs[4]:
                 st.write("### Operators Configuration")
                 operators_data = load_operators()
-                
-                # Initialize base structure if missing
                 if "mobile" not in operators_data: operators_data["mobile"] = {"operators": {}}
                 if "wifi" not in operators_data: operators_data["wifi"] = {"providers": {}}
                 
@@ -867,13 +806,11 @@ else:
                 if config_type == "Mobile Operators":
                     mobile_ops = operators_data["mobile"]["operators"]
                     op_names = list(mobile_ops.keys())
-                    
                     st.write("#### Add New Operator")
                     with st.form("add_op_form", clear_on_submit=True):
                         col1, col2 = st.columns([3, 1])
                         new_op_name = col1.text_input("New Operator Name")
-                        submitted = col2.form_submit_button("Add")
-                        if submitted and new_op_name and new_op_name not in mobile_ops:
+                        if col2.form_submit_button("Add") and new_op_name and new_op_name not in mobile_ops:
                             operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
@@ -883,46 +820,35 @@ else:
                     if op_names:
                         selected_op = st.selectbox("Select Operator", op_names)
                         op_data = mobile_ops[selected_op]
-                        
                         with st.form(f"edit_op_form_{selected_op}"):
-                            current_prefixes = ", ".join(op_data.get("prefixes", []))
-                            new_prefixes = st.text_input("Prefixes (comma-separated)", current_prefixes)
-                            
+                            new_prefixes = st.text_input("Prefixes (comma-separated)", ", ".join(op_data.get("prefixes", [])))
                             st.write("**Plans**")
-                            current_plans = op_data.get("plans", [])
-                            if not current_plans:
-                                current_plans = [{"type": "", "description": "", "price": 0}]
+                            current_plans = op_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
                             edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
-                            
                             if st.form_submit_button("Save Changes"):
                                 op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
-                                cleaned_plans = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                op_data["plans"] = cleaned_plans
+                                op_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
                                 operators_data["mobile"]["operators"][selected_op] = op_data
                                 save_json_to_drive('operators.json', operators_data)
                                 st.cache_data.clear()
                                 st.success(f"Saved {selected_op}!")
                                 time.sleep(1)
                                 st.rerun()
-                                
                         if st.button(f"Delete {selected_op}"):
                             del operators_data["mobile"]["operators"][selected_op]
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
                             st.rerun()
-                    else:
-                        st.info("No mobile operators found.")
+                    else: st.info("No mobile operators found.")
                         
                 elif config_type == "Wi-Fi Providers":
                     wifi_ops = operators_data["wifi"]["providers"]
                     prov_names = list(wifi_ops.keys())
-                    
                     st.write("#### Add New Provider")
                     with st.form("add_prov_form", clear_on_submit=True):
                         col1, col2 = st.columns([3, 1])
                         new_prov_name = col1.text_input("New Provider Name")
-                        submitted = col2.form_submit_button("Add")
-                        if submitted and new_prov_name and new_prov_name not in wifi_ops:
+                        if col2.form_submit_button("Add") and new_prov_name and new_prov_name not in wifi_ops:
                             operators_data["wifi"]["providers"][new_prov_name] = {"plans": []}
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
@@ -932,31 +858,21 @@ else:
                     if prov_names:
                         selected_prov = st.selectbox("Select Provider", prov_names)
                         prov_data = wifi_ops[selected_prov]
-                        
                         with st.form(f"edit_prov_form_{selected_prov}"):
                             st.write("**Plans**")
-                            current_plans = prov_data.get("plans", [])
-                            if not current_plans:
-                                current_plans = [{"type": "", "description": "", "price": 0}]
+                            current_plans = prov_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
                             edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_wifi_{selected_prov}")
-                            
                             if st.form_submit_button("Save Changes"):
-                                cleaned_plans = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                prov_data["plans"] = cleaned_plans
+                                prov_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
                                 operators_data["wifi"]["providers"][selected_prov] = prov_data
                                 save_json_to_drive('operators.json', operators_data)
                                 st.cache_data.clear()
                                 st.success(f"Saved {selected_prov}!")
                                 time.sleep(1)
                                 st.rerun()
-                                
                         if st.button(f"Delete {selected_prov}"):
                             del operators_data["wifi"]["providers"][selected_prov]
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
                             st.rerun()
-                    else:
-                        st.info("No Wi-Fi providers found.")
-
-st.markdown("---")
-st.caption("🔒 256-bit secure encryption. Your details are safe with us.")
+                    else: st.info("No Wi-Fi providers found.")
