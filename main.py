@@ -99,113 +99,176 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
     
+    :root {
+        --saffron: #FF6B00;
+        --saffron-hover: #E65C00;
+        --india-green: #138808;
+        --navy: #0A1931;
+        --bg-color: #F4F7FE;
+        --card-bg: #FFFFFF;
+        --border-color: #EAECEF;
+    }
+
     .stApp {
-        background-color: #F8F9FA;
+        background-color: var(--bg-color);
         font-family: 'Inter', sans-serif;
     }
     
-    h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: #0A1931; }
-    #MainMenu, footer, header { visibility: hidden; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: var(--navy); }
+    #MainMenu, footer, header { display: none !important; }
     
     .main .block-container {
-        padding: 0rem 0rem 2rem 0rem !important;
-        max-width: 500px;
-        margin: auto;
-        background-color: #ffffff;
-        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.05);
-        border-radius: 0 0 24px 24px;
+        padding: 0 !important;
+        max-width: 480px;
+        margin: 0 auto;
+        background-color: var(--card-bg);
+        box-shadow: 0 4px 40px rgba(0, 0, 0, 0.05);
         min-height: 100vh;
+        border-radius: 0;
         overflow-x: hidden;
     }
 
+    @media (min-width: 640px) {
+        .main .block-container {
+            margin: 40px auto;
+            border-radius: 24px;
+            min-height: calc(100vh - 80px);
+        }
+    }
+
+    /* Premium Navbar */
     .fintech-navbar {
         background: rgba(10, 25, 49, 0.98);
         backdrop-filter: blur(12px);
-        padding: 24px 20px 20px 20px;
-        border-radius: 0 0 24px 24px;
+        padding: 16px 20px;
         color: white;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 4px 20px rgba(10, 25, 49, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    @media (min-width: 640px) {
+        .fintech-navbar { border-radius: 24px 24px 0 0; }
+    }
+    
+    .brand-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    
+    /* Compact Hero Section */
+    .hero-card {
+        background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron-hover) 100%);
+        border-radius: 16px;
+        padding: 20px;
+        color: white;
+        margin: 20px;
+        box-shadow: 0 8px 25px rgba(255, 107, 0, 0.25);
         position: relative;
         overflow: hidden;
-        margin-bottom: -15px;
-        z-index: 50;
-        box-shadow: 0 10px 30px rgba(10, 25, 49, 0.15);
-    }
-    .fintech-navbar::before {
-        content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
-        background: radial-gradient(circle, rgba(255,107,0,0.15) 0%, transparent 70%); border-radius: 50%;
-    }
-    .fintech-navbar::after {
-        content: ''; position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px;
-        background: radial-gradient(circle, rgba(19,136,8,0.15) 0%, transparent 70%); border-radius: 50%;
-    }
-    .brand-title { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-    .brand-subtitle { font-size: 13px; opacity: 0.85; margin-top: 4px; font-weight: 500; color: #E5E7EB; }
-    
-    .hero-card {
-        background: linear-gradient(135deg, #FF6B00 0%, #E65C00 100%);
-        border-radius: 16px; padding: 24px; color: white; margin: 20px;
-        box-shadow: 0 8px 25px rgba(255, 107, 0, 0.25);
-        position: relative; overflow: hidden; z-index: 1;
     }
     .hero-card::after {
-        content: '₹'; position: absolute; right: 15px; bottom: -35px;
-        font-size: 120px; opacity: 0.1; font-family: 'Poppins', sans-serif;
-        font-weight: 800; transform: rotate(-15deg);
+        content: '₹'; position: absolute; right: -10px; bottom: -30px;
+        font-size: 100px; opacity: 0.1; font-family: 'Poppins', sans-serif;
+        font-weight: 800; transform: rotate(-10deg);
     }
-    .hero-label { font-size: 14px; opacity: 0.95; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-    .hero-amount { font-size: 28px; font-weight: 800; font-family: 'Poppins', sans-serif; margin: 8px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .hero-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+    .hero-amount { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; margin: 4px 0; }
     
+    /* Buttons */
     .stButton>button {
-        width: 100%; border-radius: 12px; height: 54px; font-weight: 600; font-size: 16px;
+        width: 100%;
+        border-radius: 12px;
+        height: 50px;
+        font-weight: 600;
+        font-size: 15px;
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%);
-        color: white !important; border: none !important;
-        box-shadow: 0 4px 15px rgba(10, 25, 49, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: var(--navy);
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 4px 10px rgba(10, 25, 49, 0.15);
+        transition: all 0.2s ease;
     }
-    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(10, 25, 49, 0.3); }
+    .stButton>button:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(10, 25, 49, 0.2); background: #152c5b; }
     
-    button[key="mobile_btn"], button[key="wifi_btn"], button[kind="primary"] {
-        background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
-        box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+    button[key="mobile_btn"], button[kind="primary"] {
+        background: linear-gradient(135deg, var(--saffron) 0%, #FF8533 100%);
+        box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
     }
-    button[key="mobile_btn"]:hover, button[key="wifi_btn"]:hover, button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #FF8533 0%, #FF6B00 100%);
-        box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+    button[key="mobile_btn"]:hover, button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #FF8533 0%, var(--saffron) 100%);
+        box-shadow: 0 6px 16px rgba(255, 107, 0, 0.3);
     }
     
+    /* Inputs */
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
-        border-radius: 12px; border: 2px solid #EAECEF; padding: 14px 16px; font-size: 15px;
-        background-color: #F8F9FA; transition: all 0.3s ease; font-weight: 500; color: #0A1931;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        padding: 12px 14px;
+        font-size: 14px;
+        background-color: #FAFAFA;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        color: var(--navy);
     }
     .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus, .stTextArea>div>div>textarea:focus {
-        border-color: #FF6B00; box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1); background-color: #FFFFFF;
+        border-color: var(--saffron);
+        box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+        background-color: white;
     }
     
+    /* Order Cards */
     .order-card {
-        background: #ffffff; border: 1px solid #F0F2F5; border-radius: 16px; padding: 20px;
-        margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s ease;
-        position: relative; overflow: hidden;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 16px;
+        margin: 0 20px 16px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        transition: transform 0.2s ease;
+        position: relative;
     }
-    .order-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 5px; background: #0A1931; border-radius: 16px 0 0 16px; }
-    .order-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-    .order-card.success::before { background: #138808; }
-    .order-card.pending::before { background: #FF6B00; }
+    .order-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+    .order-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; border-radius: 16px 0 0 16px; }
+    .order-card.success::before { background: var(--india-green); }
+    .order-card.pending::before { background: var(--saffron); }
     
-    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Poppins', sans-serif; }
-    .status-success { background: rgba(19,136,8,0.1); color: #138808; }
-    .status-pending { background: rgba(255,107,0,0.1); color: #E67E22; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .status-success { background: rgba(19,136,8,0.1); color: var(--india-green); }
+    .status-pending { background: rgba(255,107,0,0.1); color: var(--saffron-hover); }
     
-    div[data-testid="stTabs"] { padding: 0 15px; }
-    div[data-testid="stTabs"] button { font-weight: 600; font-family: 'Poppins', sans-serif; color: #6B7280; padding-bottom: 12px; transition: all 0.2s; }
-    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] { color: #0A1931 !important; border-bottom: 3px solid #FF6B00 !important; }
+    /* Tabs Redesign (Pill Nav) */
+    div[data-testid="stTabs"] { padding: 0; }
+    div[data-testid="stTabs"] button {
+        font-weight: 600; font-family: 'Inter', sans-serif; color: #6B7280;
+        padding: 10px 16px; margin: 0 4px; border-radius: 20px;
+        background: transparent; transition: all 0.2s; border: none;
+    }
+    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
+        color: white !important; background: var(--navy) !important;
+        box-shadow: 0 2px 8px rgba(10,25,49,0.2);
+    }
+    div[data-baseweb="tab-list"] {
+        gap: 8px; padding: 12px 20px; border-bottom: 1px solid var(--border-color);
+        background: white; position: sticky; top: 65px; z-index: 40;
+        overflow-x: auto; flex-wrap: nowrap;
+    }
+    div[data-baseweb="tab-list"]::-webkit-scrollbar { display: none; }
     
-    .trust-container { display: flex; justify-content: center; gap: 20px; margin: 25px 20px; padding: 15px; background: #F8F9FA; border-radius: 12px; border: 1px dashed #EAECEF; }
-    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    .trust-icon { font-size: 24px; background: white; padding: 8px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .trust-text { font-size: 11px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    /* Trust Badges Compact */
+    .trust-container { display: flex; justify-content: center; gap: 16px; margin: 16px 20px 24px 20px; }
+    .trust-item { display: flex; align-items: center; gap: 6px; background: #F8F9FA; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); }
+    .trust-icon { font-size: 14px; }
+    .trust-text { font-size: 11px; color: #4B5563; font-weight: 600; text-transform: uppercase; }
     
-    .streamlit-expanderHeader { font-weight: 600 !important; font-family: 'Inter', sans-serif !important; border-radius: 12px !important; background-color: #F8F9FA !important; border: 1px solid #EAECEF !important; }
+    /* Expanders for Grievances */
+    .streamlit-expanderHeader { font-size: 13px !important; font-weight: 600 !important; color: var(--navy) !important; background: #FAFAFA !important; border-radius: 12px !important; margin-top: 8px; border: 1px solid var(--border-color) !important; }
+    
+    /* Global Padding Fix */
+    .stMarkdown { padding: 0 20px; }
+    .stSelectbox, .stTextInput, .stRadio { padding: 0 20px; margin-bottom: 16px; }
+    div[data-testid="stVerticalBlock"] > div:first-child { padding-top: 0 !important; }
+    div[data-testid="stForm"] { border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; background: white; margin: 0 20px 20px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -275,7 +338,7 @@ def save_json_to_drive(file_name, data):
 
 @st.cache_data
 def load_operators():
-    return load_json_from_drive('operators.json', {"mobile": {"operators": {}}, "wifi": {"providers": {}}})
+    return load_json_from_drive('operators.json', {"mobile": {"operators": {}}})
 
 def load_orders(): return load_json_from_drive('orders.json', {})
 def save_order(user_phone, order_details):
@@ -366,19 +429,13 @@ else:
 # --- MAIN APP FLOW ---
 st.markdown("""
 <div class="fintech-navbar">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; position: relative;">
-        <div>
-            <div class="brand-title">🇮🇳 SKE Pay</div>
-            <div class="brand-subtitle">Bharat's Trusted Recharge App</div>
-        </div>
-    </div>
+    <div class="brand-title">🇮🇳 SKE Pay</div>
 </div>
 """, unsafe_allow_html=True)
 
 col_space, col_logout = st.columns([4, 1.2])
 with col_logout:
-    st.write("")
-    if st.button("Logout", key="logout_btn"):
+    if st.button("Logout", key="logout_btn", help="Sign out of SKE Pay"):
         authenticator.logout()
         st.session_state.logged_in = False
         st.session_state.user_phone = ""
@@ -387,14 +444,13 @@ with col_logout:
 
 st.markdown("""
 <div class="hero-card">
-    <div class="hero-label">Digital India Initiative</div>
+    <div class="hero-label">Recharge & Pay Bills</div>
     <div class="hero-amount">Fast & Secure</div>
-    <div style="font-size: 13px; margin-top: 8px; opacity: 0.9; font-weight: 500;">Zero Convenience Fees • UPI Ready</div>
+    <div style="font-size: 12px; margin-top: 4px; opacity: 0.9; font-weight: 500;">Zero Convenience Fees • UPI Ready</div>
 </div>
 <div class="trust-container">
-    <div class="trust-item"><div class="trust-icon">🛡️</div><div class="trust-text">Secure</div></div>
-    <div class="trust-item"><div class="trust-icon">⚡</div><div class="trust-text">Instant</div></div>
-    <div class="trust-item"><div class="trust-icon">📱</div><div class="trust-text">All Networks</div></div>
+    <div class="trust-item"><span class="trust-icon">🛡️</span><span class="trust-text">Secure</span></div>
+    <div class="trust-item"><span class="trust-icon">⚡</span><span class="trust-text">Instant</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -402,45 +458,15 @@ if st.session_state.checkout:
     st.markdown("<h3 style='padding: 0 20px; font-family: Poppins;'>💳 Secure Checkout</h3>", unsafe_allow_html=True)
     c = st.session_state.checkout
     
-    import re
-    def get_validity_days(plan_str):
-        match = re.search(r'(\d+)\s*Day', plan_str, re.IGNORECASE)
-        if match: return int(match.group(1))
-        lower_plan = plan_str.lower()
-        if 'monthly' in lower_plan: return 30
-        if 'quarterly' in lower_plan: return 90
-        if 'half-yearly' in lower_plan: return 180
-        if 'annually' in lower_plan: return 365
-        if 'daily' in lower_plan: return 1
-        return 30
-
-    orders_db = load_orders()
-    user_orders = orders_db.get(st.session_state.user_phone, [])
-    target_orders = [o for o in user_orders if o.get('target') == c['target'] and o.get('status') == 'Recharge Completed']
-    streak_count = 0
-    
-    if target_orders:
-        last_order = target_orders[0]
-        last_plan = last_order.get('plan_str', '')
-        last_date_str = last_order.get('date', '')
-        if last_plan == c.get('plan_str', '') and last_date_str:
-            try:
-                last_date = datetime.strptime(last_date_str, "%Y-%m-%d %H:%M:%S")
-                validity_days = get_validity_days(last_plan)
-                days_since_last = (datetime.now() - last_date).days
-                if abs(days_since_last - validity_days) <= 5:
-                    streak_count = last_order.get('streak', 0) + 1
-            except Exception: pass
-
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
-    discount_percent = min(streak_count * 0.01, 0.01)
-    discount = original_price * discount_percent
+    discount_percent_val = round(random.uniform(0.1, 0.5), 2)
+    discount = (original_price * discount_percent_val) / 100
     final_price = max(0.0, original_price - discount)
     
+    c['discount_percent'] = f"{discount_percent_val:.2f}"
     c['final_price'] = f"{final_price:.2f}"
     c['mrp'] = f"{original_price:.2f}"
-    c['discount'] = f"{discount:.2f}"
-    c['streak'] = streak_count
+    c['discount'] = f"{discount:.2f}" 
     
     st.markdown(f"""
     <div style="padding: 0 20px;">
@@ -458,7 +484,7 @@ if st.session_state.checkout:
                 <span style="font-weight: 600; color: #0A1931;">₹{original_price:.2f}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; color: #138808; font-weight: 600;">
-                <span>🔥 Streak Bonus (x{streak_count})</span>
+                <span>⚡ Instant Smart Discount ({c['discount_percent']}%)</span>
                 <span>- ₹{discount:.2f}</span>
             </div>
             <hr style="margin: 0 0 16px 0; border-top: 1px dashed #EAECEF;">
@@ -489,7 +515,7 @@ if st.session_state.checkout:
         st.caption("Click the button below once you have successfully completed the payment.")
         
         with st.form("upi_verify_form"):
-            verify_btn = st.form_submit_button("I have made the payment")
+            verify_btn = st.form_submit_button("I have made the payment", type="primary")
             if verify_btn:
                 with st.spinner("Submitting your request..."): time.sleep(1.5)
                 order = {
@@ -497,7 +523,7 @@ if st.session_state.checkout:
                     "txn_id": txn_id, "type": c['type'].capitalize(),
                     "target": c['target'], "operator": c['operator'],
                     "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'), "streak": c.get('streak', 0),
+                    "discount": c.get('discount', '0.00'),
                     "amount": c['final_price'], "method": "UPI", "status": "Order Created"
                 }
                 save_order(st.session_state.user_phone, order)
@@ -527,7 +553,7 @@ if st.session_state.checkout:
                     "txn_id": txn_id, "type": c['type'].capitalize(),
                     "target": c['target'], "operator": c['operator'],
                     "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'), "streak": c.get('streak', 0),
+                    "discount": c.get('discount', '0.00'),
                     "amount": c['final_price'], "method": "Card", "status": "Order Created"
                 }
                 save_order(st.session_state.user_phone, order)
@@ -549,11 +575,11 @@ else:
     is_admin = st.session_state.user_phone in ADMIN_EMAILS
     
     if is_admin:
-        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Grievances", "🛠️ Control Tower"])
-        tab1, tab2, tab3, tab4, tab5 = tabs
+        tabs = st.tabs(["📱 Mobile", "📦 Orders", "🎧 Support", "🛠️ Admin"])
+        tab1, tab_orders, tab_grievances, tab_admin = tabs
     else:
-        tabs = st.tabs(["📱 Mobile", "📶 Wi-Fi", "📦 My Orders", "🎧 Grievances"])
-        tab1, tab2, tab3, tab4 = tabs
+        tabs = st.tabs(["📱 Mobile", "📦 Orders", "🎧 Support"])
+        tab1, tab_orders, tab_grievances = tabs
 
     def get_operator(phone):
         if not phone or len(phone) < 2: return "Select Operator"
@@ -586,7 +612,7 @@ else:
         plan_options.insert(0, "Select a Plan")
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
-        if st.button("Proceed to Pay", key="mobile_btn"):
+        if st.button("Proceed to Pay", key="mobile_btn", type="primary"):
             if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
             elif operator == "Select Operator": st.error("Select an operator.")
             elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
@@ -595,29 +621,7 @@ else:
                 st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
                 st.rerun()
 
-    with tab2:
-        st.markdown("<h3 style='margin-bottom:20px;'>Wi-Fi / Broadband</h3>", unsafe_allow_html=True)
-        account_id = st.text_input("Account ID / User ID", placeholder="e.g., ACCT-12345")
-        wifi_ops_data = data.get("wifi", {}).get("providers", {})
-        if isinstance(wifi_ops_data, dict): wifi_ops = ["Select Provider"] + list(wifi_ops_data.keys())
-        else: wifi_ops = ["Select Provider"] + wifi_ops_data
-            
-        provider = st.selectbox("Service Provider", wifi_ops)
-        wifi_plans = wifi_ops_data[provider].get("plans", []) if provider != "Select Provider" and isinstance(wifi_ops_data, dict) and provider in wifi_ops_data else []
-        wifi_plan_options = [f"{p['type']} - {p['description']} (₹{p['price']})" for p in wifi_plans]
-        wifi_plan_options.insert(0, "Select a Plan")
-        selected_wifi_plan_str = st.selectbox("Select Plan", wifi_plan_options)
-        
-        if st.button("Proceed to Pay", key="wifi_btn"):
-            if not account_id: st.error("Enter your account number.")
-            elif provider == "Select Provider": st.error("Select a provider.")
-            elif selected_wifi_plan_str == "Select a Plan": st.error("Select a recharge plan.")
-            else:
-                price_str = selected_wifi_plan_str.split(" ")[-1][1:-1]
-                st.session_state.checkout = { "type": "wifi", "target": account_id, "operator": provider, "price": price_str, "plan_str": selected_wifi_plan_str }
-                st.rerun()
-
-    with tab3:
+    with tab_orders:
         st.markdown("<h3 style='margin-bottom:20px;'>My Orders</h3>", unsafe_allow_html=True)
         orders_db = load_orders()
         user_orders = orders_db.get(st.session_state.user_phone, [])
@@ -631,26 +635,26 @@ else:
                     badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
                     html = f"""
                     <div class="order-card {status_class}">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                             <div>
-                                <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: #0A1931; font-size: 16px;">{o['type']} • {o['operator']}</div>
-                                <div style="color: #6B7280; font-size: 13px; font-weight: 500; margin-top: 2px;">Target: {o['target']}</div>
+                                <div style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--navy); font-size: 15px;">{o['type']} • {o['operator']}</div>
+                                <div style="color: #6B7280; font-size: 12px; font-weight: 500;">{o['target']}</div>
                             </div>
                             <div class="status-badge {badge_class}">{o['status']}</div>
                         </div>
-                        <div style="background: #F8F9FA; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                        <div style="background: #FAFAFA; border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
                                 <span style="color: #6B7280;">MRP</span><span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
-                                <span style="color: #6B7280;">Discount (x{o.get('streak', 0)})</span><span style="color: #138808; font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                <span style="color: #6B7280;">Smart Discount</span><span style="color: var(--india-green); font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 8px; border-top: 1px solid #EAECEF; padding-top: 8px;">
-                                <span style="color: #0A1931; font-weight: 600;">Amount Paid</span><span style="color: #FF6B00; font-weight: 700;">₹{o['amount']}</span>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 6px; border-top: 1px dashed var(--border-color); padding-top: 6px;">
+                                <span style="color: var(--navy); font-weight: 600;">Paid</span><span style="color: var(--navy); font-weight: 700;">₹{o['amount']}</span>
                             </div>
                         </div>
-                        <div style="font-size: 11px; color: #9CA3AF; display: flex; flex-direction: column; gap: 2px;">
-                            <div>Txn: {o['txn_id']} • {o['date']}</div><div>Method: {o['method']}</div>
+                        <div style="font-size: 10px; color: #9CA3AF; display: flex; flex-direction: column; gap: 2px;">
+                            <div>Txn: {o['txn_id']} • {o['date'][:10]}</div><div>Method: {o['method']}</div>
                     """
                     if "payment_utr" in o: html += f"<div>Pay UTR: {o['payment_utr']}</div>"
                     if "recharge_utr" in o: html += f"<div>Recharge UTR: {o['recharge_utr']}</div>"
@@ -673,7 +677,7 @@ else:
                             time.sleep(2)
                             st.rerun()
 
-    with tab4:
+    with tab_grievances:
         st.markdown("<h3 style='margin-bottom:20px;'>My Grievances</h3>", unsafe_allow_html=True)
         grievances_db = load_grievances()
         user_grievances = grievances_db.get(st.session_state.user_phone, [])
@@ -681,15 +685,24 @@ else:
         else:
             for g in user_grievances:
                 html_content = f"""<div class="order-card">
-<strong>Grievance ID: {g['id']}</strong> (For TXN: {g['txn_id']})<br>
-<span style="color: {'green' if g['status'] == 'Resolved' else 'red'}; font-weight: bold;">Status: {g['status']}</span><br>
-<em>{g['issue_type']}</em>: {g['details']}<br><small>{g['date']}</small><hr>
-<strong>Admin Reply:</strong> {g['admin_reply'] if g['admin_reply'] else 'Pending'}
+<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+    <div style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; color: var(--navy);">Ticket: {g['id']}</div>
+    <div class="status-badge {'status-success' if g['status'] == 'Resolved' else 'status-pending'}">{g['status']}</div>
+</div>
+<div style="font-size: 12px; color: #6B7280; margin-bottom: 8px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
+<div style="background: #FAFAFA; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; margin-bottom: 10px;">
+    <span style="font-weight: 600; color: var(--navy);">{g['issue_type']}</span><br>
+    <span style="color: #4B5563;">{g['details']}</span>
+</div>
+<div style="font-size: 13px;">
+    <span style="font-weight: 600; color: var(--navy);">Support Reply:</span><br>
+    <span style="color: {'var(--india-green)' if g['admin_reply'] else '#9CA3AF'};">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
+</div>
 </div>"""
                 st.markdown(html_content, unsafe_allow_html=True)
 
     if is_admin:
-        with tab5:
+        with tab_admin:
             st.markdown("<h3 style='margin-bottom:20px;'>🛠️ Admin Control Tower</h3>", unsafe_allow_html=True)
             orders_db = load_orders()
             grievances_db = load_grievances()
@@ -749,7 +762,7 @@ else:
                             "User": user, "Date": o['date'], "TXN ID": o['txn_id'], "Target": o['target'],
                             "Operator": o['operator'], "MRP": f"₹{o.get('mrp', o['amount'])}",
                             "Discount": f"₹{o.get('discount', '0.00')}", "Paid": f"₹{o['amount']}",
-                            "Streak": o.get('streak', 0), "Method": o['method'], "Status": o['status'],
+                            "Method": o['method'], "Status": o['status'],
                             "Pay UTR": o.get('payment_utr', 'N/A'), "Rech UTR": o.get('recharge_utr', 'N/A')
                         })
                 if all_orders_list:
@@ -799,80 +812,40 @@ else:
                 st.write("### Operators Configuration")
                 operators_data = load_operators()
                 if "mobile" not in operators_data: operators_data["mobile"] = {"operators": {}}
-                if "wifi" not in operators_data: operators_data["wifi"] = {"providers": {}}
                 
-                config_type = st.radio("Select Category", ["Mobile Operators", "Wi-Fi Providers"], horizontal=True)
-                
-                if config_type == "Mobile Operators":
-                    mobile_ops = operators_data["mobile"]["operators"]
-                    op_names = list(mobile_ops.keys())
-                    st.write("#### Add New Operator")
-                    with st.form("add_op_form", clear_on_submit=True):
-                        col1, col2 = st.columns([3, 1])
-                        new_op_name = col1.text_input("New Operator Name")
-                        if col2.form_submit_button("Add") and new_op_name and new_op_name not in mobile_ops:
-                            operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                            
-                    st.write("#### Edit Existing Operator")
-                    if op_names:
-                        selected_op = st.selectbox("Select Operator", op_names)
-                        op_data = mobile_ops[selected_op]
-                        with st.form(f"edit_op_form_{selected_op}"):
-                            new_prefixes = st.text_input("Prefixes (comma-separated)", ", ".join(op_data.get("prefixes", [])))
-                            st.write("**Plans**")
-                            current_plans = op_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
-                            edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
-                            if st.form_submit_button("Save Changes"):
-                                op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
-                                op_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                operators_data["mobile"]["operators"][selected_op] = op_data
-                                save_json_to_drive('operators.json', operators_data)
-                                st.cache_data.clear()
-                                st.success(f"Saved {selected_op}!")
-                                time.sleep(1)
-                                st.rerun()
-                        if st.button(f"Delete {selected_op}"):
-                            del operators_data["mobile"]["operators"][selected_op]
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                    else: st.info("No mobile operators found.")
+                mobile_ops = operators_data["mobile"]["operators"]
+                op_names = list(mobile_ops.keys())
+                st.write("#### Add New Operator")
+                with st.form("add_op_form", clear_on_submit=True):
+                    col1, col2 = st.columns([3, 1])
+                    new_op_name = col1.text_input("New Operator Name")
+                    if col2.form_submit_button("Add") and new_op_name and new_op_name not in mobile_ops:
+                        operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
+                        save_json_to_drive('operators.json', operators_data)
+                        st.cache_data.clear()
+                        st.rerun()
                         
-                elif config_type == "Wi-Fi Providers":
-                    wifi_ops = operators_data["wifi"]["providers"]
-                    prov_names = list(wifi_ops.keys())
-                    st.write("#### Add New Provider")
-                    with st.form("add_prov_form", clear_on_submit=True):
-                        col1, col2 = st.columns([3, 1])
-                        new_prov_name = col1.text_input("New Provider Name")
-                        if col2.form_submit_button("Add") and new_prov_name and new_prov_name not in wifi_ops:
-                            operators_data["wifi"]["providers"][new_prov_name] = {"plans": []}
+                st.write("#### Edit Existing Operator")
+                if op_names:
+                    selected_op = st.selectbox("Select Operator", op_names)
+                    op_data = mobile_ops[selected_op]
+                    with st.form(f"edit_op_form_{selected_op}"):
+                        new_prefixes = st.text_input("Prefixes (comma-separated)", ", ".join(op_data.get("prefixes", [])))
+                        st.write("**Plans**")
+                        current_plans = op_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
+                        edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
+                        if st.form_submit_button("Save Changes"):
+                            op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
+                            op_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
+                            operators_data["mobile"]["operators"][selected_op] = op_data
                             save_json_to_drive('operators.json', operators_data)
                             st.cache_data.clear()
+                            st.success(f"Saved {selected_op}!")
+                            time.sleep(1)
                             st.rerun()
-                            
-                    st.write("#### Edit Existing Provider")
-                    if prov_names:
-                        selected_prov = st.selectbox("Select Provider", prov_names)
-                        prov_data = wifi_ops[selected_prov]
-                        with st.form(f"edit_prov_form_{selected_prov}"):
-                            st.write("**Plans**")
-                            current_plans = prov_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
-                            edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_wifi_{selected_prov}")
-                            if st.form_submit_button("Save Changes"):
-                                prov_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
-                                operators_data["wifi"]["providers"][selected_prov] = prov_data
-                                save_json_to_drive('operators.json', operators_data)
-                                st.cache_data.clear()
-                                st.success(f"Saved {selected_prov}!")
-                                time.sleep(1)
-                                st.rerun()
-                        if st.button(f"Delete {selected_prov}"):
-                            del operators_data["wifi"]["providers"][selected_prov]
-                            save_json_to_drive('operators.json', operators_data)
-                            st.cache_data.clear()
-                            st.rerun()
-                    else: st.info("No Wi-Fi providers found.")
+                    if st.button(f"Delete {selected_op}"):
+                        del operators_data["mobile"]["operators"][selected_op]
+                        save_json_to_drive('operators.json', operators_data)
+                        st.cache_data.clear()
+                        st.rerun()
+                else: st.info("No mobile operators found.")
