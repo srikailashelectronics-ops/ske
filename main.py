@@ -849,3 +849,5 @@ else:
                         st.cache_data.clear()
                         st.rerun()
                 else: st.info("No mobile operators found.")
+
+st.markdown('</div>', unsafe_allow_html=True)
