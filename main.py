@@ -531,11 +531,40 @@ if "checkout" not in st.session_state:
 
 # Initialize Google Authenticator
 authenticator = streamlit_google_auth.Authenticate(
-    secret_credentials_path='app_secrets.json',
+    secret_credentials_path=temp_secrets_file.name,
     cookie_name='ske_cookie',
     cookie_key='ske_secret_key_must_be_at_least_32_bytes_long',
-    redirect_uri='http://localhost:8501',
+    redirect_uri=APP_SECRETS.get("web", {}).get("redirect_uris", ["https://ske-recharge.streamlit.app"])[0] if "https://ske-recharge.streamlit.app" not in APP_SECRETS.get("web", {}).get("redirect_uris", []) else "https://ske-recharge.streamlit.app",
 )
+
+def patched_login(color='blue', justify_content="center"):
+    if not st.session_state.get('connected'):
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            authenticator.secret_credentials_path,
+            scopes=["openid", "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
+            redirect_uri=authenticator.redirect_uri,
+        )
+        authorization_url, state = flow.authorization_url(
+            access_type="offline",
+            include_granted_scopes="true",
+        )
+        html_content = f"""
+<div style="display: flex; justify-content: {justify_content}; margin-top: 30px;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(10, 25, 49, 0.25); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google logo" style="margin-right: 14px; width: 28px; height: 28px; background-color: white; border-radius: 50%; padding: 4px;">
+        Secure Login with Google
+    </a>
+</div>
+<div style="text-align: center; margin-top: 25px; font-size: 13px; color: #6B7280; font-family: 'Inter', sans-serif;">
+    <p>By continuing, you agree to SKE Pay's <br><b>Terms of Service</b> & <b>Privacy Policy</b></p>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px; opacity: 0.6;">
+        <span>🔒 256-bit Secure</span> • <span>🇮🇳 Made in India</span>
+    </div>
+</div>
+"""
+        st.markdown(html_content, unsafe_allow_html=True)
+
+authenticator.login = patched_login
 
 # Catch the Google redirect and check authentication
 authenticator.check_authentification()
