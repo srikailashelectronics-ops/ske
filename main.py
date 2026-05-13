@@ -102,8 +102,8 @@ google_auth_oauthlib.flow.Flow.from_client_secrets_file = patched_from_client_se
 
 # Set page configuration for better mobile rendering
 st.set_page_config(
-    page_title="SKE Pay - Digital India",
-    page_icon="🇮🇳",
+    page_title="SKE Recharge",
+    page_icon="⚡",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -111,273 +111,35 @@ st.set_page_config(
 # Custom CSS for better mobile appearance
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
-    
-    /* Global Background and Fonts */
-    .stApp {
-        background-color: #F4F7FE;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif !important;
-        color: #0A1931;
-    }
-    
-    /* Hide Default Elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Main Container (Mobile View Simulation) */
-    .main .block-container {
-        padding: 0rem 0rem 2rem 0rem !important;
-        max-width: 480px;
-        margin: auto;
-        background-color: #ffffff;
-        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.08);
-        border-radius: 0 0 24px 24px;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-    
-    /* Premium Navbar */
-    .custom-navbar {
-        background: linear-gradient(135deg, #0A1931 0%, #152c5b 100%);
-        padding: 24px 20px 20px 20px;
-        border-radius: 0 0 24px 24px;
-        color: white;
-        box-shadow: 0 10px 20px rgba(10, 25, 49, 0.15);
-        position: relative;
-        overflow: hidden;
-        margin-bottom: -15px;
-    }
-    .custom-navbar::before {
-        content: '';
-        position: absolute;
-        top: -60%;
-        right: -10%;
-        width: 250px;
-        height: 250px;
-        background: radial-gradient(circle, rgba(255,153,51,0.15) 0%, rgba(255,255,255,0) 70%);
-        border-radius: 50%;
-    }
-    .custom-navbar::after {
-        content: '';
-        position: absolute;
-        bottom: -20%;
-        left: -10%;
-        width: 150px;
-        height: 150px;
-        background: radial-gradient(circle, rgba(19,136,8,0.15) 0%, rgba(255,255,255,0) 70%);
-        border-radius: 50%;
-    }
-    .brand-title {
-        font-family: 'Poppins', sans-serif;
-        font-size: 26px;
-        font-weight: 800;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        letter-spacing: -0.5px;
-    }
-    .brand-subtitle {
-        font-size: 13px;
-        opacity: 0.85;
-        margin-top: 4px;
-        font-weight: 500;
-    }
-    
-    /* Hero Section */
-    .hero-card {
-        background: linear-gradient(135deg, #FF9933 0%, #E67E22 100%);
-        border-radius: 16px;
-        padding: 24px;
-        color: white;
-        margin: 20px;
-        box-shadow: 0 8px 25px rgba(255, 153, 51, 0.25);
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-    }
-    .hero-card::after {
-        content: '₹';
-        position: absolute;
-        right: 15px;
-        bottom: -35px;
-        font-size: 120px;
-        opacity: 0.08;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 800;
-        transform: rotate(-15deg);
-    }
-    .hero-card .balance-label {
-        font-size: 14px;
-        opacity: 0.95;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-    .hero-card .balance-amount {
-        font-size: 28px;
-        font-weight: 800;
-        font-family: 'Poppins', sans-serif;
-        margin: 8px 0;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    /* Buttons */
     .stButton>button {
         width: 100%;
-        border-radius: 12px;
-        height: 54px;
-        font-weight: 600;
-        font-size: 16px;
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #0A1931 0%, #1a3668 100%);
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(10, 25, 49, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 25px;
+        height: 50px;
+        font-weight: bold;
+        background-color: #1E88E5;
+        color: white;
     }
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(10, 25, 49, 0.3);
-        background: linear-gradient(135deg, #1a3668 0%, #0A1931 100%);
+        background-color: #1565C0;
+        color: white;
+        border-color: #1565C0;
     }
-    .stButton>button:active {
-        transform: translateY(1px);
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 600px;
     }
-    
-    button[key="mobile_btn"], button[key="wifi_btn"], button[kind="primary"] {
-        background: linear-gradient(135deg, #FF9933 0%, #FF7F50 100%);
-        box-shadow: 0 4px 15px rgba(255, 153, 51, 0.3);
+    h1 {
+        text-align: center;
+        color: #1E88E5;
     }
-    button[key="mobile_btn"]:hover, button[key="wifi_btn"]:hover, button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #FF7F50 0%, #FF9933 100%);
-        box-shadow: 0 8px 20px rgba(255, 153, 51, 0.4);
-    }
-    
-    /* Inputs */
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
-        border-radius: 12px;
-        border: 2px solid #EAECEF;
-        padding: 14px 16px;
-        font-size: 15px;
-        background-color: #F8F9FA;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        color: #0A1931;
-    }
-    .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus, .stTextArea>div>div>textarea:focus {
-        border-color: #FF9933;
-        box-shadow: 0 0 0 4px rgba(255, 153, 51, 0.1);
-        background-color: #FFFFFF;
-    }
-    
-    /* Order Cards */
     .order-card {
-        background: #ffffff;
-        border: 1px solid #F0F2F5;
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .order-card::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 5px;
-        background: #0A1931;
-        border-radius: 16px 0 0 16px;
-    }
-    .order-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-    .order-card.success::before { background: #138808; }
-    .order-card.pending::before { background: #FF9933; }
-    
-    .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        font-family: 'Poppins', sans-serif;
-    }
-    .status-success { background: rgba(19,136,8,0.1); color: #138808; }
-    .status-pending { background: rgba(255,153,51,0.1); color: #E67E22; }
-    
-    /* Tabs */
-    div[data-testid="stTabs"] {
-        padding: 0 15px;
-    }
-    div[data-testid="stTabs"] button {
-        font-weight: 600;
-        font-family: 'Poppins', sans-serif;
-        color: #6B7280;
-        padding-bottom: 12px;
-        transition: all 0.2s;
-    }
-    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
-        color: #0A1931 !important;
-        border-bottom: 3px solid #FF9933 !important;
-    }
-    
-    /* Trust Badges */
-    .trust-container {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin: 25px 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
         padding: 15px;
-        background: #F8F9FA;
-        border-radius: 12px;
-        border: 1px dashed #EAECEF;
-    }
-    .trust-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-    }
-    .trust-icon {
-        font-size: 24px;
-        background: white;
-        padding: 8px;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .trust-text {
-        font-size: 11px;
-        color: #6B7280;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        font-weight: 600 !important;
-        font-family: 'Inter', sans-serif !important;
-        border-radius: 12px !important;
-        background-color: #F8F9FA !important;
-        border: 1px solid #EAECEF !important;
-    }
-    
-    /* Custom Alerts */
-    .stAlert {
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        color: #333;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -531,7 +293,7 @@ if "checkout" not in st.session_state:
 
 # Initialize Google Authenticator
 authenticator = streamlit_google_auth.Authenticate(
-    secret_credentials_path=temp_secrets_file.name,
+    secret_credentials_path='app_secrets.json',
     cookie_name='ske_cookie',
     cookie_key='ske_secret_key_must_be_at_least_32_bytes_long',
     redirect_uri=APP_SECRETS.get("web", {}).get("redirect_uris", ["https://ske-recharge.streamlit.app"])[0] if "https://ske-recharge.streamlit.app" not in APP_SECRETS.get("web", {}).get("redirect_uris", []) else "https://ske-recharge.streamlit.app",
@@ -571,14 +333,12 @@ authenticator.check_authentification()
 
 # --- LOGIN FLOW ---
 if not st.session_state.get('connected'):
-    st.markdown("""
-    <div style="text-align: center; padding: 40px 20px 20px 20px;">
-        <div style="font-size: 60px; margin-bottom: 10px;">🇮🇳</div>
-        <h1 style="color: #0A1931; font-weight: 800; font-size: 32px; margin-bottom: 5px;">SKE Pay</h1>
-        <p style="color: #FF9933; font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
-        <p style="color: #6B7280; font-size: 14px; margin-top: 15px; max-width: 280px; margin-left: auto; margin-right: auto;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title("⚡ SKE Recharge")
+    st.markdown("<p style='text-align: center; color: gray;'><strong>Sri Kailash Electronics</strong><br>Fast and secure mobile and Wi-Fi recharges.</p>", unsafe_allow_html=True)
+    st.markdown("---")
+    
+    st.subheader("Login / Register")
+    st.write("Please sign in with your Google account to continue.")
     
     # Render the Google login button
     authenticator.login()
@@ -594,22 +354,12 @@ else:
 
 # --- MAIN APP FLOW (LOGGED IN) ---
 
-# Premium Navbar Header
-st.markdown("""
-<div class="custom-navbar">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-            <div class="brand-title">🇮🇳 SKE Pay</div>
-            <div class="brand-subtitle">Bharat's Trusted Recharge App</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# Add logout button compactly below navbar
-col_space, col_logout = st.columns([4, 1.2])
-with col_logout:
-    st.write("") # small padding
+# Header with Logout
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.title("⚡ SKE Recharge")
+with col2:
+    st.write("") # Spacing
     if st.button("Logout", key="logout_btn"):
         authenticator.logout()
         st.session_state.logged_in = False
@@ -617,32 +367,12 @@ with col_logout:
         st.session_state.checkout = None
         st.rerun()
 
-# Hero Stats Section
-st.markdown("""
-<div class="hero-card">
-    <div class="balance-label">Digital India Initiative</div>
-    <div class="balance-amount">Fast & Secure</div>
-    <div style="font-size: 13px; margin-top: 8px; opacity: 0.9; font-weight: 500;">Zero Convenience Fees • UPI Ready</div>
-</div>
-<div class="trust-container">
-    <div class="trust-item">
-        <div class="trust-icon">🛡️</div>
-        <div class="trust-text">Secure</div>
-    </div>
-    <div class="trust-item">
-        <div class="trust-icon">⚡</div>
-        <div class="trust-text">Instant</div>
-    </div>
-    <div class="trust-item">
-        <div class="trust-icon">📱</div>
-        <div class="trust-text">All Networks</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'><strong>Sri Kailash Electronics</strong></p>", unsafe_allow_html=True)
+st.markdown("---")
 
 # --- CHECKOUT FLOW ---
 if st.session_state.checkout:
-    st.markdown("<h3 style='padding: 0 20px;'>💳 Secure Checkout</h3>", unsafe_allow_html=True)
+    st.subheader("Secure Checkout")
     c = st.session_state.checkout
     
     import re
@@ -692,33 +422,10 @@ if st.session_state.checkout:
     c['discount'] = f"{discount:.2f}"
     c['streak'] = streak_count
     
-    st.markdown(f"""
-    <div style="padding: 0 20px;">
-        <div style="background: #F8F9FA; border-radius: 16px; padding: 20px; border: 1px solid #EAECEF; margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                <span style="color: #6B7280; font-weight: 500;">Recharge Number</span>
-                <span style="font-weight: 600; color: #0A1931;">{c['target']}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                <span style="color: #6B7280; font-weight: 500;">Operator</span>
-                <span style="font-weight: 600; color: #0A1931;">{c['operator']}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                <span style="color: #6B7280; font-weight: 500;">MRP</span>
-                <span style="font-weight: 600; color: #0A1931;">₹{original_price:.2f}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; color: #138808; font-weight: 600;">
-                <span>🔥 Streak Bonus (x{streak_count})</span>
-                <span>- ₹{discount:.2f}</span>
-            </div>
-            <hr style="margin: 0 0 16px 0; border-top: 1px dashed #EAECEF;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 18px; font-weight: 700; color: #0A1931;">Total Payable</span>
-                <span style="font-size: 24px; font-weight: 800; color: #FF9933;">₹{c['final_price']}</span>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.info(f"Recharging **{c['target']}** ({c['operator']}) for **MRP: ₹{original_price:.2f}**")
+    if streak_count > 0:
+        st.success(f"🔥 **Streak Bonus Active!** Streak count: {streak_count}. You got a {discount_percent*100:.1f}% discount of ₹{discount:.2f}!")
+        st.write(f"**Final Amount to Pay: ₹{c['final_price']}**")
     
     payment_method = st.radio("Select Payment Method", ["Google Pay / UPI", "Credit / Debit Card"])
     
@@ -955,45 +662,14 @@ else:
                 status_color = "orange" if o['status'] == "Order Created" else ("blue" if o['status'] == "Payment Confirmed" else "green")
                 
                 with st.container():
-                    status_class = "success" if o['status'] == "Recharge Completed" else "pending"
-                    badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
-                    
-                    html = f"""
-                    <div class="order-card {status_class}">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                            <div>
-                                <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: #0A1931; font-size: 16px;">
-                                    {o['type']} • {o['operator']}
-                                </div>
-                                <div style="color: #6B7280; font-size: 13px; font-weight: 500; margin-top: 2px;">
-                                    Target: {o['target']}
-                                </div>
-                            </div>
-                            <div class="status-badge {badge_class}">{o['status']}</div>
-                        </div>
-                        <div style="background: #F8F9FA; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
-                                <span style="color: #6B7280;">MRP</span>
-                                <span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
-                                <span style="color: #6B7280;">Discount (x{o.get('streak', 0)})</span>
-                                <span style="color: #138808; font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 8px; border-top: 1px solid #EAECEF; padding-top: 8px;">
-                                <span style="color: #0A1931; font-weight: 600;">Amount Paid</span>
-                                <span style="color: #FF9933; font-weight: 700;">₹{o['amount']}</span>
-                            </div>
-                        </div>
-                        <div style="font-size: 11px; color: #9CA3AF; display: flex; flex-direction: column; gap: 2px;">
-                            <div>Txn: {o['txn_id']} • {o['date']}</div>
-                            <div>Method: {o['method']}</div>
-                    """
-                    if "payment_utr" in o: html += f"<div>Pay UTR: {o['payment_utr']}</div>"
-                    if "recharge_utr" in o: html += f"<div>Recharge UTR: {o['recharge_utr']}</div>"
-                    html += "</div></div>"
-                    
-                    st.markdown(html, unsafe_allow_html=True)
+                    st.markdown(f"**{o['type']} Recharge - {o['operator']}** &nbsp; | &nbsp; <span style='color: {status_color}; font-weight: bold;'>{o['status']}</span>", unsafe_allow_html=True)
+                    st.caption(f"Target: {o['target']} | MRP: ₹{o.get('mrp', o['amount'])} | Discount: ₹{o.get('discount', '0.00')} | Paid: ₹{o['amount']}")
+                    st.caption(f"{o['date']} | TXN: {o['txn_id']} | Method: {o['method']} | Streak: x{o.get('streak', 0)}")
+                    if "payment_utr" in o:
+                        st.caption(f"Payment UTR: {o['payment_utr']}")
+                    if "recharge_utr" in o:
+                        st.caption(f"Recharge UTR: {o['recharge_utr']}")
+                    st.markdown("---")
                 
                 with st.expander(f"Raise Grievance for {o['txn_id']}"):
                     with st.form(f"grievance_form_{o['txn_id']}"):
