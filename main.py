@@ -109,81 +109,177 @@ st.markdown("""
         --border-color: #E5E7EB;
     }
 
-    .stApp {
-        background-color: var(--bg-color);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.02em;
-    }
-    
     h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: var(--navy); letter-spacing: -0.02em; }
     #MainMenu, footer, header { display: none !important; }
     
-    /* Reset main streamlit containers */
-    section.main {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+    /* PHASE 2 — REBUILD ROOT LAYOUT SYSTEM */
     .main .block-container {
-        padding: 0 !important;
         max-width: 100% !important;
-        margin: 0 auto;
+        padding: 0 !important;
     }
-    @media (min-width: 768px) {
-        .main .block-container {
-            padding: 24px !important;
-        }
+    
+    section.main {
+        background: #F4F7FB;
+    }
+    
+    .stApp {
+        background: #F4F7FB;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: -0.02em;
     }
 
-    /* App Shell for Desktop Centering */
-    .app-shell {
+    /* PHASE 3 — CREATE SINGLE RESPONSIVE APP CONTAINER */
+    .ske-app {
         width: 100%;
         max-width: 520px;
         margin: 0 auto;
-        background-color: var(--card-bg);
+        background: #FFFFFF;
         min-height: 100vh;
         position: relative;
-        box-shadow: 0 4px 40px rgba(0, 0, 0, 0.05);
     }
-    @media (min-width: 768px) {
-        .app-shell {
-            border-radius: 24px;
-            min-height: calc(100vh - 48px);
+
+    @media (min-width: 900px) {
+        .ske-app {
+            margin: 24px auto;
+            border-radius: 28px;
             overflow: hidden;
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.06),
+                0 2px 10px rgba(0,0,0,0.04);
+            min-height: calc(100vh - 48px);
         }
     }
 
-    /* Premium Navbar */
-    .fintech-navbar {
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(12px);
-        padding: 0 20px;
+    /* PHASE 5 — NAVBAR CSS */
+    .ske-navbar {
         height: 72px;
-        color: var(--navy);
+        background: #0A1931;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
         position: sticky;
         top: 0;
-        z-index: 50;
-        box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        z-index: 100;
+    }
+
+    .ske-brand {
+        color: white;
+        font-size: 22px;
+        font-weight: 700;
+        font-family: 'Poppins';
+    }
+
+    .ske-nav-actions {
         display: flex;
+        align-items: center;
+    }
+
+    /* Target streamlit columns used as navbar just in case */
+    div[data-testid="stHorizontalBlock"]:has(button[key="logout_btn"]) {
+        height: 72px;
+        background: #0A1931;
+        display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
+        padding: 0 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        margin-bottom: 0;
     }
-    .brand-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--navy); }
+    div[data-testid="stHorizontalBlock"]:has(button[key="logout_btn"]) > div {
+        width: auto !important;
+        flex: none !important;
+        padding: 0 !important;
+    }
+
+    /* PHASE 6 — FIX STREAMLIT BUTTON BREAKAGE */
+    .stButton > button {
+        width: 100%;
+        border: none !important;
+        outline: none !important;
+        border-radius: 16px !important;
+        background: linear-gradient(135deg, #0A1931 0%, #152C5B 100%);
+        color: white !important;
+        height: 52px;
+        font-size: 15px;
+        font-weight: 700;
+        font-family: 'Poppins';
+        box-shadow: 0 6px 18px rgba(10,25,49,0.18);
+        transition: all 0.22s ease;
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(10,25,49,0.24);
+    }
     
-    /* Navbar actions container to wrap streamlit components */
-    .navbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+    /* Special style for logout button within navbar */
+    button[key="logout_btn"] {
+        background: rgba(255,255,255,0.1) !important;
+        height: 36px !important;
+        padding: 0 16px !important;
+        border-radius: 18px !important;
+        font-size: 13px !important;
+        box-shadow: none !important;
+        width: auto !important;
     }
 
-    /* Streamlit column adjustments for navbar */
-    div[data-testid="column"] { padding: 0 !important; }
+    /* PHASE 7 — FIX INPUT SYSTEM */
+    .stTextInput input,
+    .stSelectbox div[data-baseweb="select"] > div {
+        background: #F8FAFC !important;
+        border: none !important;
+        border-radius: 16px !important;
+        min-height: 54px;
+        box-shadow:
+            inset 0 0 0 1px #E5E7EB !important;
+        font-size: 15px !important;
+        color: #0A1931 !important;
+    }
 
-    /* Compact Hero Section */
+    .stTextInput input:focus,
+    .stSelectbox div[data-baseweb="select"] > div:focus-within {
+        box-shadow:
+            0 0 0 3px rgba(255,107,0,0.12),
+            inset 0 0 0 1px #FF6B00 !important;
+    }
+
+    /* PHASE 8 — FIX FORM SPACING */
+    .stTextInput,
+    .stSelectbox,
+    .stButton {
+        margin-bottom: 14px;
+    }
+
+    /* PHASE 9 — FIX TABS SYSTEM */
+    div[data-testid="stTabs"] { padding: 0; }
+    div[data-testid="stTabs"] button {
+        font-weight: 600; font-family: 'Inter', sans-serif; color: #6B7280;
+        padding: 12px 8px; margin: 0; border-radius: 0;
+        background: transparent; transition: all 0.2s; border: none;
+        flex: 1; text-align: center;
+        border-bottom: 2px solid transparent !important;
+        height: 48px;
+    }
+    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
+        color: var(--navy) !important; background: transparent !important;
+        border-bottom: 2px solid var(--saffron) !important;
+    }
+    div[data-baseweb="tab-list"] {
+        gap: 0; padding: 0 8px; border-bottom: 1px solid var(--border-color);
+        background: #FFFFFF;
+        position: sticky; top: 72px; z-index: 40;
+        display: flex; flex-wrap: nowrap;
+    }
+    div[data-baseweb="tab-list"]::-webkit-scrollbar { display: none; }
+
+    /* PHASE 10 — FIX HERO SECTION */
     .hero-card {
         background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron-hover) 100%);
         border-radius: 20px;
-        padding: 24px 20px;
+        padding: 18px;
         color: white;
         margin: 16px 20px;
         box-shadow: 0 8px 25px rgba(255, 107, 0, 0.25);
@@ -192,121 +288,42 @@ st.markdown("""
     }
     .hero-card::after {
         content: '₹'; position: absolute; right: -10px; bottom: -30px;
-        font-size: 100px; opacity: 0.1; font-family: 'Poppins', sans-serif;
+        font-size: 80px; opacity: 0.1; font-family: 'Poppins', sans-serif;
         font-weight: 800; transform: rotate(-10deg);
     }
-    .hero-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; }
-    .hero-amount { font-size: 28px; font-weight: 800; font-family: 'Poppins', sans-serif; margin: 0; line-height: 1.2; }
-    
-    /* Buttons */
-    .stButton>button {
-        width: 100%;
-        border-radius: 16px;
-        height: 54px;
-        font-weight: 700;
-        font-size: 15px;
-        font-family: 'Poppins', sans-serif;
-        background: var(--navy);
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 10px rgba(10, 25, 49, 0.15);
-        transition: all 0.2s ease;
-    }
-    .stButton>button:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 15px rgba(10, 25, 49, 0.2); background: #152c5b; }
-    
-    button[key="mobile_btn"], button[kind="primary"] {
-        background: linear-gradient(135deg, var(--saffron) 0%, #FF8533 100%);
-        box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
-    }
-    button[key="mobile_btn"]:hover, button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #FF8533 0%, var(--saffron) 100%);
-        box-shadow: 0 6px 16px rgba(255, 107, 0, 0.3);
-    }
+    .hero-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 2px; }
+    .hero-amount { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; margin: 0; line-height: 1.2; }
 
-    /* Special style for logout button */
-    .logout-btn-container .stButton > button {
-        height: 36px;
-        width: auto;
-        padding: 0 16px;
-        border-radius: 18px;
-        background: #F1F5F9 !important;
-        color: var(--navy) !important;
-        font-size: 13px;
-        box-shadow: none !important;
-        font-weight: 600;
-    }
-    .logout-btn-container .stButton > button:hover { background: #E2E8F0 !important; transform: none; box-shadow: none !important; }
-    
-    /* Inputs */
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
-        border-radius: 16px;
-        border: none !important;
-        padding: 16px;
-        font-size: 15px;
-        background-color: #F8FAFC !important;
-        box-shadow: inset 0 0 0 1px #E5E7EB !important;
-        transition: all 0.2s ease;
-        font-weight: 500;
-        color: var(--navy);
-        height: auto;
-    }
-    .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus, .stTextArea>div>div>textarea:focus {
-        background-color: white !important;
-        box-shadow: 0 0 0 3px rgba(255,107,0,0.12), inset 0 0 0 1px #FF6B00 !important;
-    }
-    
-    /* Order Cards */
+    /* PHASE 11 — FIX ORDER CARDS */
     .order-card {
         background: white;
         border: none;
         box-shadow: inset 0 0 0 1px var(--border-color);
         border-radius: 16px;
-        padding: 20px;
-        margin: 0 20px 16px 20px;
+        padding: 16px;
+        margin: 0 20px 12px 20px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         position: relative;
     }
     .order-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04), inset 0 0 0 1px var(--border-color); }
     
-    .status-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Poppins', sans-serif; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 600; font-family: 'Poppins', sans-serif; }
     .status-success { background: rgba(19,136,8,0.1); color: var(--india-green); }
     .status-pending { background: rgba(255,107,0,0.1); color: var(--saffron-hover); }
     
-    /* Tabs Redesign */
-    div[data-testid="stTabs"] { padding: 0; }
-    div[data-testid="stTabs"] button {
-        font-weight: 600; font-family: 'Inter', sans-serif; color: #6B7280;
-        padding: 16px 12px; margin: 0; border-radius: 0;
-        background: transparent; transition: all 0.2s; border: none;
-        flex: 1; text-align: center;
-        border-bottom: 2px solid transparent !important;
-    }
-    div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
-        color: var(--navy) !important; background: transparent !important;
-        border-bottom: 2px solid var(--saffron) !important;
-    }
-    div[data-baseweb="tab-list"] {
-        gap: 0; padding: 0 8px; border-bottom: 1px solid var(--border-color);
-        background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px);
-        position: sticky; top: 72px; z-index: 40;
-        display: flex; flex-wrap: nowrap;
-    }
-    div[data-baseweb="tab-list"]::-webkit-scrollbar { display: none; }
-    
     /* Trust Badges Compact */
     .trust-container { display: flex; justify-content: center; gap: 12px; margin: 12px 20px 24px 20px; }
-    .trust-item { display: flex; align-items: center; gap: 6px; background: #F8FAFC; padding: 8px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--border-color); }
-    .trust-icon { font-size: 14px; }
-    .trust-text { font-size: 11px; color: #4B5563; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .trust-item { display: flex; align-items: center; gap: 6px; background: #F8FAFC; padding: 6px 10px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--border-color); }
+    .trust-icon { font-size: 13px; }
+    .trust-text { font-size: 10px; color: #4B5563; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     
     /* Expanders for Grievances */
     .streamlit-expanderHeader { font-size: 14px !important; font-weight: 600 !important; color: var(--navy) !important; background: #F8FAFC !important; border-radius: 16px !important; margin-top: 12px; border: none !important; box-shadow: inset 0 0 0 1px var(--border-color); padding: 16px !important; }
     
     /* Global Padding Fix & Artifact Removal */
     .stMarkdown { padding: 0 20px; }
-    .stSelectbox, .stTextInput, .stRadio { padding: 0 20px; margin-bottom: 20px; }
     div[data-testid="stVerticalBlock"] > div:first-child { padding-top: 0 !important; }
-    div[data-testid="stForm"] { border: none; border-radius: 16px; padding: 24px 20px; background: #F8FAFC; margin: 0 20px 24px 20px; box-shadow: inset 0 0 0 1px var(--border-color); }
+    div[data-testid="stForm"] { border: none; border-radius: 16px; padding: 20px; background: #F8FAFC; margin: 0 20px 20px 20px; box-shadow: inset 0 0 0 1px var(--border-color); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -465,52 +482,13 @@ else:
     st.session_state.user_phone = user_info.get('email', 'unknown@google.com')
 
 # --- MAIN APP FLOW ---
-st.markdown('<div class="app-shell">', unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-/* Streamlit Navbar Overrides */
-div[data-testid="stHorizontalBlock"]:has(button[kind="secondary"]) {
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(12px);
-    height: 72px;
-    padding: 0 20px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
-    align-items: center;
-    margin-bottom: 0;
-    display: flex;
-    justify-content: space-between;
-}
-div[data-testid="stHorizontalBlock"]:has(button[kind="secondary"]) > div[data-testid="column"] {
-    width: auto !important;
-    flex: none !important;
-}
-div[data-testid="stHorizontalBlock"]:has(button[kind="secondary"]) button[kind="secondary"] {
-    height: 36px;
-    padding: 0 16px;
-    border-radius: 18px;
-    background: #F1F5F9 !important;
-    color: var(--navy) !important;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: none !important;
-    width: auto;
-    margin: 0;
-}
-div[data-testid="stHorizontalBlock"]:has(button[kind="secondary"]) button[kind="secondary"]:hover {
-    background: #E2E8F0 !important;
-}
-</style>
-""", unsafe_allow_html=True)
+st.markdown('<div class="ske-app">', unsafe_allow_html=True)
 
 nav_col1, nav_col2 = st.columns([1, 1])
 with nav_col1:
-    st.markdown('<div class="brand-title">🇮🇳 SKE Pay</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ske-brand">🇮🇳 SKE Pay</div>', unsafe_allow_html=True)
 with nav_col2:
-    if st.button("Logout", key="logout_btn", help="Sign out of SKE Pay", type="secondary"):
+    if st.button("Logout", key="logout_btn", help="Sign out of SKE Pay"):
         authenticator.logout()
         st.session_state.logged_in = False
         st.session_state.user_phone = ""
