@@ -308,7 +308,7 @@ st.markdown("""
     div[data-testid="stVerticalBlock"] > div:first-child { padding-top: 0 !important; }
     div[data-testid="stForm"] { border: none; border-radius: 16px; padding: 24px 20px; background: #F8FAFC; margin: 0 20px 24px 20px; box-shadow: inset 0 0 0 1px var(--border-color); }
 </style>
-""", unsafe_allow_html=True), unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive']
 
