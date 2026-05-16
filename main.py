@@ -110,18 +110,18 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
     
     :root {
-        --bg: #0B1120;
+        --bg: #0A0F1A;
         --surface: #111827;
-        --surface-2: #182235;
-        --surface-3: #1F2937;
-        --card: #141C2B;
-        --border: rgba(255, 255, 255, 0.08);
-        --border-hover: rgba(255, 255, 255, 0.16);
+        --surface-2: #162032;
+        --surface-3: #1C263B;
+        --card: rgba(0, 0, 0, 0.2);
+        --border: rgba(255, 255, 255, 0.06);
+        --border-hover: rgba(255, 255, 255, 0.12);
         --primary: #FF7A00;
         --primary-hover: #FF8F26;
         --text: #F9FAFB;
-        --muted: #94A3B8;
-        --success: #22C55E;
+        --muted: #8B9BB4;
+        --success: #10B981;
         --danger: #EF4444;
         --gradient: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%);
     }
@@ -135,10 +135,10 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
 
-    /* Streamlit block container reset and desktop width fix */
+    /* Streamlit block container reset and compact desktop width fix */
     .block-container {
         width: 100% !important;
-        max-width: 820px !important;
+        max-width: 600px !important; /* COMPACT FINTECH WIDTH */
         margin: 0 auto !important;
         padding: 24px 16px !important;
     }
@@ -148,14 +148,14 @@ st.markdown("""
         font-family: 'Poppins', sans-serif !important;
         color: var(--text) !important;
         letter-spacing: -0.02em;
-        margin-bottom: 16px !important;
+        margin-bottom: 20px !important;
     }
     
     h1, .stMarkdown h1 { font-size: 32px !important; line-height: 1.2 !important; }
     h2, .stMarkdown h2 { font-size: 24px !important; line-height: 1.3 !important; }
     
     @media (min-width: 768px) {
-        h1, .stMarkdown h1 { font-size: 40px !important; }
+        h1, .stMarkdown h1 { font-size: 38px !important; }
         h2, .stMarkdown h2 { font-size: 28px !important; }
         .block-container {
             padding: 32px 24px !important;
@@ -164,6 +164,7 @@ st.markdown("""
 
     p, span, div {
         color: var(--text);
+        font-size: 15px;
     }
     
     body {
@@ -177,12 +178,15 @@ st.markdown("""
         align-items: center;
         background: transparent;
         margin-bottom: 32px;
-        padding: 0 8px;
+        height: 64px;
+        padding: 0 !important;
+        gap: 0 !important;
     }
     [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"] {
         width: auto !important;
         flex: 0 1 auto !important;
         min-width: 0 !important;
+        padding: 0 !important;
     }
 
     .brand-wrap {
@@ -195,7 +199,7 @@ st.markdown("""
         height: 20px;
         object-fit: cover;
         border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
     .brand-text {
         color: white;
@@ -210,7 +214,7 @@ st.markdown("""
     .logout-btn-container button {
         height: 32px !important;
         min-height: 32px !important;
-        padding: 0 12px !important;
+        padding: 0 14px !important;
         border-radius: 8px !important;
         font-size: 13px !important;
         font-weight: 500 !important;
@@ -222,7 +226,7 @@ st.markdown("""
         transition: all 0.2s ease !important;
     }
     .logout-btn-container button:hover {
-        background: var(--surface) !important;
+        background: rgba(255,255,255,0.05) !important;
         color: var(--text) !important;
         border-color: var(--border-hover) !important;
     }
@@ -261,30 +265,35 @@ st.markdown("""
         font-weight: 600 !important;
     }
 
-    /* Forms & Inputs */
+    /* Forms & Inputs Vertical Rhythm */
+    .stTextInput, .stSelectbox, .stTextArea {
+        margin-bottom: 20px !important;
+    }
+
+    /* Input Fields styling */
     .stTextInput input, 
     .stSelectbox div[data-baseweb="select"] > div,
     .stTextArea textarea {
         background: var(--card) !important;
-        border: 1px solid var(--border) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
         color: white !important;
         border-radius: 12px !important;
         min-height: 48px !important;
         font-size: 15px !important;
         padding: 0 16px !important;
-        margin-bottom: 12px !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        margin-bottom: 0 !important;
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.15) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
     }
     .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #64748B !important;
+        color: #5A6981 !important;
     }
     .stTextInput input:focus, 
     .stSelectbox div[data-baseweb="select"] > div:focus-within,
     .stTextArea textarea:focus {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 1px var(--primary) !important;
-        background: var(--surface-2) !important;
+        border-color: rgba(255, 122, 0, 0.4) !important;
+        box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.4), inset 0 2px 6px rgba(0,0,0,0.1) !important;
+        background: rgba(0, 0, 0, 0.3) !important;
     }
     
     /* Labels */
@@ -292,7 +301,7 @@ st.markdown("""
         color: var(--muted) !important;
         font-size: 13px !important;
         font-weight: 500 !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important; /* Precise 8px gap */
         letter-spacing: 0.01em;
     }
 
@@ -301,19 +310,20 @@ st.markdown("""
         background: var(--gradient) !important;
         color: #fff !important;
         border: none !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         font-weight: 600 !important;
         font-family: 'Poppins', sans-serif !important;
-        box-shadow: 0 2px 8px rgba(255, 122, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 2px 6px rgba(255, 122, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         transition: all 0.2s ease !important;
-        padding: 12px 24px !important;
+        padding: 14px 20px !important;
         min-height: 48px;
         width: 100%;
         font-size: 15px !important;
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 10px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        filter: brightness(1.05);
     }
 
     /* Secondary Buttons (Outlined Dark) */
@@ -321,11 +331,11 @@ st.markdown("""
         background: var(--surface) !important;
         border: 1px solid var(--border) !important;
         color: var(--text) !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         font-weight: 600 !important;
         font-family: 'Inter', sans-serif !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        padding: 12px 24px !important;
+        padding: 14px 20px !important;
         min-height: 48px;
         width: 100%;
         font-size: 15px !important;
@@ -343,10 +353,10 @@ st.markdown("""
         color: var(--muted) !important;
         box-shadow: none !important;
         font-weight: 500 !important;
-        padding: 8px 16px !important;
+        padding: 10px 16px !important;
         width: 100%;
         font-size: 14px !important;
-        transition: color 0.2s ease !important;
+        transition: color 0.2s ease, background 0.2s ease !important;
     }
     .stButton > button[kind="tertiary"]:hover {
         color: var(--text) !important;
@@ -357,28 +367,28 @@ st.markdown("""
     /* Tabs as Segmented Control */
     div[data-testid="stTabs"] {
         background: transparent;
-        margin-bottom: 32px;
+        margin-bottom: 28px;
     }
     div[data-baseweb="tab-list"] {
         gap: 4px;
         background: var(--surface);
         padding: 4px;
-        border-radius: 12px;
+        border-radius: 10px;
         border: 1px solid var(--border);
-        min-height: 48px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        min-height: 44px;
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
     }
     div[data-baseweb="tab"] {
         background: transparent !important;
         border: none !important;
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         color: var(--muted) !important;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
         padding: 8px 16px !important;
-        height: 40px;
+        height: 36px;
         display: flex;
-        font-size: 14px !important;
+        font-size: 13px !important;
         transition: all 0.2s ease !important;
     }
     div[data-baseweb="tab"]:hover {
@@ -394,7 +404,7 @@ st.markdown("""
     .streamlit-expanderHeader {
         background: var(--surface) !important;
         color: var(--text) !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         border: 1px solid var(--border) !important;
         font-size: 14px !important;
         font-weight: 500 !important;
@@ -410,11 +420,11 @@ st.markdown("""
         position: relative;
         overflow: hidden;
         margin-bottom: 32px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .hero-card::before {
         content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(255,122,0,0.08) 0%, rgba(0,0,0,0) 60%);
+        background: radial-gradient(circle, rgba(255,122,0,0.06) 0%, rgba(0,0,0,0) 60%);
         pointer-events: none;
     }
     .hero-label { 
@@ -426,7 +436,7 @@ st.markdown("""
         margin-bottom: 8px; 
     }
     .hero-amount { 
-        font-size: 28px; 
+        font-size: 26px; 
         font-weight: 800; 
         font-family: 'Poppins', sans-serif; 
         color: var(--text); 
@@ -457,12 +467,12 @@ st.markdown("""
         border-radius: 16px;
         padding: 20px;
         margin-bottom: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     
     .status-badge { 
         display: inline-flex; 
-        padding: 4px 10px; 
+        padding: 4px 8px; 
         border-radius: 6px; 
         font-size: 11px; 
         font-weight: 600; 
@@ -470,17 +480,16 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    .status-success { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.2); }
+    .status-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
     .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); border: 1px solid rgba(255, 122, 0, 0.2); }
 
     /* Fix spacing of forms */
     .stForm {
         border-color: var(--border) !important;
-        background-color: var(--surface) !important;
-        padding: 24px !important;
-        border-radius: 16px !important;
-        margin-bottom: 24px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        background-color: transparent !important;
+        padding: 0 !important;
+        margin-bottom: 32px !important;
+        box-shadow: none !important;
     }
     
     /* CTA Link button */
@@ -490,20 +499,21 @@ st.markdown("""
         align-items: center;
         background: var(--gradient);
         color: white !important;
-        padding: 14px;
-        border-radius: 12px;
+        padding: 14px 20px;
+        border-radius: 10px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 16px;
+        font-size: 15px;
         font-family: 'Poppins', sans-serif;
         margin-bottom: 16px;
-        box-shadow: 0 2px 8px rgba(255,122,0,0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 6px rgba(255,122,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
         width: 100%;
     }
     .cta-button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255,122,0,0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 10px rgba(255,122,0,0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        filter: brightness(1.05);
         color: white !important;
     }
     
@@ -513,14 +523,14 @@ st.markdown("""
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 24px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        margin-bottom: 24px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        margin-bottom: 28px;
     }
     .payment-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 16px; /* slightly deeper rows */
         font-size: 14px;
     }
     .payment-label {
@@ -533,9 +543,9 @@ st.markdown("""
     }
     .payment-discount {
         color: var(--success);
-        background: rgba(34,197,94,0.1);
-        padding: 2px 8px;
-        border-radius: 4px;
+        background: rgba(16,185,129,0.1);
+        padding: 4px 8px;
+        border-radius: 6px;
         font-size: 12px;
         font-weight: 600;
     }
@@ -558,7 +568,7 @@ st.markdown("""
     }
     .payment-total-value {
         color: var(--primary);
-        font-size: 36px;
+        font-size: 34px;
         font-weight: 800;
         font-family: 'Poppins', sans-serif;
         line-height: 1;
@@ -688,8 +698,8 @@ def patched_login(color='blue', justify_content="center"):
         authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
 <div style="display: flex; justify-content: {justify_content}; margin-top: 16px;">
-    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 12px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 4px 12px rgba(255, 122, 0, 0.15); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
-        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 15px; cursor: pointer; padding: 14px 24px; border-radius: 10px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 12px; width: 24px; height: 24px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
     </a>
 </div>
@@ -710,7 +720,7 @@ if not st.session_state.get('connected'):
     <div style="text-align: center; padding: 32px 20px 24px 20px;">
         <img src="data:image/png;base64,{flag_base64}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
         <h1 style="color: var(--text); font-weight: 800; font-size: 36px; margin-bottom: 8px; font-family: 'Poppins', sans-serif; letter-spacing: -0.02em;">SKE Pay</h1>
-        <p style="color: var(--primary); font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
+        <p style="color: var(--primary); font-weight: 600; font-size: 15px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
         <p style="color: var(--muted); font-size: 14px; margin-top: 16px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -723,7 +733,7 @@ else:
 
 # --- MAIN APP FLOW ---
 
-# Header Section
+# Header Section (Using Streamlit Columns but styled as flex navbar via CSS)
 col1, col2 = st.columns([1, 1])
 with col1:
     st.markdown(f"""
@@ -806,8 +816,8 @@ if st.session_state.checkout:
     upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
     
     st.markdown(f"""
-    <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-        <h3 style="font-size: 16px; margin-top: 0; margin-bottom: 16px; text-align: center; color: var(--text); font-weight: 600;">Complete Your Payment</h3>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <h3 style="font-size: 16px; margin-top: 0; margin-bottom: 20px; text-align: center; color: var(--text); font-weight: 600;">Complete Your Payment</h3>
         <a href="{upi_link}" target="_blank" class="cta-button">Pay ₹{c["final_price"]} via UPI</a>
         <div style="text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 24px;">Order ID: <b>{txn_id}</b></div>
     """, unsafe_allow_html=True)
@@ -883,6 +893,7 @@ else:
         plan_options.insert(0, "Select a Plan")
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
+        st.markdown("<div style='margin-top: 32px;'></div>", unsafe_allow_html=True)
         if st.button("Proceed to Pay", key="mobile_btn", type="primary"):
             if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
             elif operator == "Select Operator": st.error("Select an operator.")
@@ -906,25 +917,25 @@ else:
                     badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
                     html = f"""
                     <div class="dark-card">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                             <div>
                                 <div style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--text); font-size: 15px;">{o['type']} • {o['operator']}</div>
                                 <div style="color: var(--muted); font-size: 13px; font-weight: 500; margin-top: 4px;">{o['target']}</div>
                             </div>
                             <div class="status-badge {badge_class}">{o['status']}</div>
                         </div>
-                        <div style="background: rgba(0,0,0,0.15); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border);">
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                        <div style="background: rgba(0,0,0,0.15); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
                                 <span style="color: var(--muted);">MRP</span><span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
                                 <span style="color: var(--muted);">Smart Discount</span><span style="color: var(--success); font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px;">
                                 <span style="color: var(--text); font-weight: 600;">Paid</span><span style="color: var(--text); font-weight: 700;">₹{o['amount']}</span>
                             </div>
                         </div>
-                        <div style="font-size: 11px; color: var(--muted); display: flex; flex-direction: column; gap: 4px;">
+                        <div style="font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px;">
                             <div>Txn: {o['txn_id']} • {o['date'][:10]}</div><div>Method: {o['method']}</div>
                     """
                     if "payment_utr" in o: html += f"<div>Pay UTR: {o['payment_utr']}</div>"
@@ -960,14 +971,14 @@ else:
     <div style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 15px; color: var(--text);">Ticket: {g['id']}</div>
     <div class="status-badge {'status-success' if g['status'] == 'Resolved' else 'status-pending'}">{g['status']}</div>
 </div>
-<div style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
-<div style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; margin-bottom: 12px;">
+<div style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
+<div style="background: rgba(0,0,0,0.15); padding: 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; margin-bottom: 16px;">
     <span style="font-weight: 600; color: var(--text);">{g['issue_type']}</span><br>
-    <span style="color: var(--muted); margin-top: 4px; display: inline-block;">{g['details']}</span>
+    <span style="color: var(--muted); margin-top: 6px; display: inline-block;">{g['details']}</span>
 </div>
-<div style="font-size: 14px; background: rgba(0,0,0,0.25); padding: 12px; border-radius: 12px;">
+<div style="font-size: 14px; background: rgba(0,0,0,0.25); padding: 16px; border-radius: 12px;">
     <span style="font-weight: 600; color: var(--text);">Support Reply:</span><br>
-    <span style="color: {'var(--success)' if g['admin_reply'] else 'var(--muted)'}; margin-top: 4px; display: inline-block;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
+    <span style="color: {'var(--success)' if g['admin_reply'] else 'var(--muted)'}; margin-top: 6px; display: inline-block;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
 </div>
 </div>"""
                 st.markdown(html_content, unsafe_allow_html=True)
