@@ -101,7 +101,7 @@ google_auth_oauthlib.flow.Flow.from_client_secrets_file = patched_from_client_se
 st.set_page_config(
     page_title="SKE Pay - Digital India",
     page_icon="🇮🇳",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
@@ -110,471 +110,316 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
     
     :root {
-        --bg: #0A0F1A;
-        --surface: #111827;
-        --surface-2: #162032;
-        --surface-3: #1C263B;
-        --card: rgba(0, 0, 0, 0.2);
+        --bg: #030712;
+        --surface: rgba(17, 24, 39, 0.7);
+        --surface-solid: #111827;
+        --surface-2: #1F2937;
+        --surface-3: #374151;
+        --card: rgba(255, 255, 255, 0.02);
         --border: rgba(255, 255, 255, 0.08);
         --border-hover: rgba(255, 255, 255, 0.16);
         --primary: #FF7A00;
         --primary-hover: #FF8F26;
         --text: #F9FAFB;
-        --muted: #8B9BB4;
+        --muted: #9CA3AF;
         --success: #10B981;
         --danger: #EF4444;
-        --gradient: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%);
+        --gradient: linear-gradient(135deg, #FF7A00 0%, #E65C00 100%);
     }
 
     #MainMenu, footer, header { display: none !important; }
 
-    /* Basic App Background */
-    .stApp, .main, .block-container {
+    /* Immersive Radial Background */
+    .stApp {
         background-color: var(--bg) !important;
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(255, 122, 0, 0.06), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.03), transparent 25%) !important;
         color: var(--text);
         font-family: 'Inter', sans-serif;
     }
+    
+    .main { background: transparent !important; }
 
-    /* Streamlit block container reset and compact desktop width fix */
+    /* Master Container Reset */
     .block-container {
         width: 100% !important;
-        max-width: 580px !important; /* COMPACT FINTECH WIDTH */
+        max-width: 1000px !important;
         margin: 0 auto !important;
-        padding: 24px 16px !important;
-        position: relative !important; /* For absolute header elements */
+        padding: 100px 24px 60px 24px !important;
     }
 
     /* Typography Hierarchy */
     h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
         font-family: 'Poppins', sans-serif !important;
         color: var(--text) !important;
-        letter-spacing: -0.02em;
-        margin-bottom: 20px !important;
+        letter-spacing: -0.03em;
+        margin-bottom: 24px !important;
     }
     
-    h1, .stMarkdown h1 { font-size: 32px !important; line-height: 1.2 !important; }
-    h2, .stMarkdown h2 { font-size: 24px !important; line-height: 1.3 !important; }
+    h1, .stMarkdown h1 { font-size: 48px !important; line-height: 1.1 !important; font-weight: 800 !important; }
+    h2, .stMarkdown h2 { font-size: 28px !important; line-height: 1.3 !important; font-weight: 700 !important; }
     
-    @media (min-width: 768px) {
-        h1, .stMarkdown h1 { font-size: 38px !important; }
-        h2, .stMarkdown h2 { font-size: 28px !important; }
-        .block-container {
-            padding: 32px 24px !important;
-        }
-    }
-
-    p, span, div {
-        color: var(--text);
-        font-size: 15px;
-    }
+    p, span, div { color: var(--text); font-size: 16px; line-height: 1.6; }
     
-    body {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
-    /* Header Container Flex Wrapper */
-    .header-native-flex {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-        margin-bottom: 32px !important;
-    }
-
-    .brand-wrap {
+    /* True Full-Width Glassmorphic Navbar */
+    .glass-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 72px;
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         display: flex;
+        justify-content: center;
+        z-index: 1000;
+    }
+    .glass-nav-content {
+        width: 100%;
+        max-width: 1000px;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 12px;
+        height: 100%;
     }
-    .brand-flag {
-        width: 28px;
-        height: 20px;
-        object-fit: cover;
-        border-radius: 4px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    .brand-text {
-        color: white;
-        font-size: 20px;
-        font-weight: 700;
-        font-family: 'Poppins', sans-serif;
-        line-height: 1;
-        letter-spacing: -0.01em;
+
+    .brand-wrap { display: flex; align-items: center; gap: 12px; }
+    .brand-flag { width: 32px; height: 24px; object-fit: cover; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    .brand-text { display: flex; flex-direction: column; justify-content: center; }
+    .brand-title { color: white; font-size: 20px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
+    .brand-sub { color: var(--muted); font-size: 11px; font-weight: 500; font-family: 'Inter', sans-serif; margin-top: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    /* Hide the Streamlit column wrapper around the logout button so we can style the button directly */
+    [data-testid="stHorizontalBlock"] { display: none !important; } /* We will inject custom HTML instead of columns for the header */
+
+    /* The new invisible container trick for Streamlit buttons */
+    .logout-btn-container {
+        position: fixed;
+        top: 18px;
+        right: max(24px, calc(50vw - 500px + 24px));
+        z-index: 1001;
     }
     
-    /* Logout button / Header tertiary */
-    .logout-native-wrapper {
-        display: flex;
-        justify-content: flex-end;
-    }
-    .logout-native-wrapper button {
+    .logout-btn-container button {
         height: 36px !important;
         min-height: 36px !important;
         padding: 0 16px !important;
         border-radius: 8px !important;
         font-size: 13px !important;
-        font-weight: 500 !important;
-        box-shadow: none !important;
+        font-weight: 600 !important;
         background: transparent !important;
         color: var(--muted) !important;
         border: 1px solid var(--border) !important;
-        width: auto !important;
         transition: all 0.2s ease !important;
-        margin: 0 !important;
     }
-    .logout-native-wrapper button:hover {
-        background: rgba(255,255,255,0.05) !important;
+    .logout-btn-container button:hover {
+        background: var(--card) !important;
         color: var(--text) !important;
         border-color: var(--border-hover) !important;
     }
+
+    /* Asymmetric Hero Redesign */
+    .hero-container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        margin-bottom: 48px;
+        margin-top: 24px;
+    }
+    @media (min-width: 768px) {
+        .hero-container { flex-direction: row; align-items: center; justify-content: space-between; }
+        .hero-left { flex: 1.2; padding-right: 48px; }
+        .hero-right { flex: 0.8; display: flex; flex-direction: column; gap: 16px; align-items: flex-end; }
+    }
     
-    /* Dropdown Portal */
-    div[data-baseweb="popover"] {
-        background: var(--surface-2) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 12px !important;
-        overflow: hidden !important;
-        box-shadow: 0 12px 24px rgba(0,0,0,0.5) !important;
+    .hero-h1 {
+        font-size: 56px;
+        font-weight: 800;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        background: linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.7) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+    }
+    .hero-h1 span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
+    .hero-p { color: var(--muted); font-size: 18px; line-height: 1.6; margin-bottom: 32px; font-weight: 400; max-width: 480px; }
+    
+    .trust-pill {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        border-radius: 100px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .trust-pill:hover { transform: translateX(-4px); border-color: var(--border-hover); }
+    .trust-pill.orange i { color: var(--primary); font-style: normal; font-size: 16px; }
+    .trust-pill.green i { color: var(--success); font-style: normal; font-size: 16px; }
+
+    /* Elevated Content Layouts */
+    .layout-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+    @media (min-width: 860px) {
+        .layout-grid { flex-direction: row; align-items: flex-start; }
+        .layout-main { flex: 1.5; }
+        .layout-sidebar { flex: 1; position: sticky; top: 100px; }
     }
 
-    ul[role="listbox"] {
-        background: var(--surface-2) !important;
-        padding: 8px !important;
+    /* Premium Form Surface */
+    .premium-surface {
+        background: var(--surface-solid);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .premium-surface::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,122,0,0.3), transparent);
     }
 
-    li[role="option"] {
-        background: transparent !important;
-        color: var(--text) !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        margin-bottom: 2px !important;
-        transition: background-color 0.2s ease !important;
-        font-size: 14px !important;
-    }
-
-    li[role="option"]:hover {
-        background: var(--surface-3) !important;
-    }
-
-    li[role="option"][aria-selected="true"] {
-        background: rgba(255, 122, 0, 0.1) !important;
-        color: var(--primary) !important;
-        font-weight: 600 !important;
-    }
-
-    /* Forms & Inputs Vertical Rhythm */
-    .stTextInput, .stSelectbox, .stTextArea {
-        margin-bottom: 20px !important;
-    }
-
-    /* Form Container Width */
-    .stForm > div {
-        max-width: 100% !important;
-        margin: 0 auto;
-    }
-
-    /* Input Fields styling */
-    .stTextInput input, 
-    .stSelectbox div[data-baseweb="select"] > div,
-    .stTextArea textarea {
-        background: var(--card) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    /* Form Components */
+    .stTextInput, .stSelectbox, .stTextArea { margin-bottom: 24px !important; }
+    
+    .stTextInput input, .stSelectbox div[data-baseweb="select"] > div, .stTextArea textarea {
+        background: #0A0F1A !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
         color: white !important;
-        border-radius: 12px !important;
-        min-height: 48px !important;
-        font-size: 15px !important;
-        padding: 0 16px !important;
+        border-radius: 16px !important;
+        min-height: 56px !important;
+        font-size: 16px !important;
+        padding: 0 20px !important;
         margin-bottom: 0 !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.3) !important;
+        transition: all 0.2s ease !important;
     }
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #5A6981 !important;
-    }
-    .stTextInput input:focus, 
-    .stSelectbox div[data-baseweb="select"] > div:focus-within,
-    .stTextArea textarea:focus {
+    .stTextInput input::placeholder { color: #4B5563 !important; }
+    .stTextInput input:focus, .stSelectbox div[data-baseweb="select"] > div:focus-within {
         border-color: rgba(255, 122, 0, 0.5) !important;
-        box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.5), inset 0 2px 4px rgba(0,0,0,0.1) !important;
-        background: rgba(0, 0, 0, 0.4) !important;
+        box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.5), inset 0 2px 4px rgba(0,0,0,0.2) !important;
+        background: rgba(0, 0, 0, 0.5) !important;
     }
-    
-    /* Labels */
-    .stTextInput label, .stSelectbox label, .stTextArea label {
+    .stTextInput label, .stSelectbox label {
         color: var(--muted) !important;
-        font-size: 13px !important;
-        font-weight: 500 !important;
-        margin-bottom: 8px !important; /* Precise 8px gap */
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-bottom: 10px !important;
         letter-spacing: 0.01em;
     }
 
-    /* Primary Buttons */
+    /* Live Summary Panel */
+    .live-summary-card {
+        background: linear-gradient(145deg, #1C263B 0%, #111827 100%);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .summary-header { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .summary-label { color: var(--muted); font-size: 15px; font-weight: 500; }
+    .summary-value { color: var(--text); font-size: 15px; font-weight: 600; }
+    .summary-accent { color: var(--success); font-weight: 600; background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 8px; font-size: 13px; }
+    .summary-divider { height: 1px; background: var(--border); margin: 24px 0; border: none; }
+    .summary-total-label { color: var(--text); font-size: 18px; font-weight: 600; }
+    .summary-total-value { color: var(--primary); font-size: 40px; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
+
+    /* Next Gen Tabs */
+    div[data-testid="stTabs"] { background: transparent; margin-bottom: 40px; }
+    div[data-baseweb="tab-list"] {
+        gap: 8px;
+        background: rgba(17,24,39,0.5);
+        backdrop-filter: blur(12px);
+        padding: 6px;
+        border-radius: 100px;
+        border: 1px solid rgba(255,255,255,0.05);
+        min-height: 56px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        display: inline-flex;
+    }
+    div[data-baseweb="tab"] {
+        background: transparent !important;
+        border: none !important;
+        border-radius: 100px !important;
+        color: var(--muted) !important;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        padding: 10px 24px !important;
+        height: 44px;
+        display: flex;
+        font-size: 15px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    div[data-baseweb="tab"]:hover { color: var(--text) !important; }
+    div[data-baseweb="tab"][aria-selected="true"] {
+        background: var(--surface-3) !important;
+        color: var(--text) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    }
+
+    /* Buttons */
     .stButton > button[kind="primary"] {
         background: var(--gradient) !important;
         color: #fff !important;
         border: none !important;
-        border-radius: 10px !important;
-        font-weight: 600 !important;
+        border-radius: 14px !important;
+        font-weight: 700 !important;
         font-family: 'Poppins', sans-serif !important;
-        box-shadow: 0 2px 8px rgba(255, 122, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-        transition: all 0.2s ease !important;
-        padding: 14px 20px !important;
-        min-height: 48px;
+        box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        padding: 16px 24px !important;
+        min-height: 56px;
         width: 100%;
-        font-size: 15px !important;
+        font-size: 16px !important;
+        letter-spacing: 0.5px;
     }
     .stButton > button[kind="primary"]:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-        filter: brightness(1.05);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(255, 122, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        filter: brightness(1.1);
     }
-
-    /* Secondary Buttons (Outlined Dark) */
+    
     .stButton > button[kind="secondary"] {
-        background: var(--surface) !important;
+        background: rgba(255,255,255,0.03) !important;
         border: 1px solid var(--border) !important;
         color: var(--text) !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-weight: 600 !important;
         font-family: 'Inter', sans-serif !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        padding: 14px 20px !important;
-        min-height: 48px;
+        padding: 16px 24px !important;
+        min-height: 52px;
         width: 100%;
         font-size: 15px !important;
         transition: all 0.2s ease !important;
     }
     .stButton > button[kind="secondary"]:hover {
-        background: var(--surface-2) !important;
+        background: rgba(255,255,255,0.06) !important;
         border-color: var(--border-hover) !important;
     }
 
-    /* Tertiary Buttons (Ghost) */
-    .stButton > button[kind="tertiary"] {
-        background: transparent !important;
-        border: none !important;
-        color: var(--muted) !important;
-        box-shadow: none !important;
-        font-weight: 500 !important;
-        padding: 10px 16px !important;
-        width: 100%;
-        font-size: 14px !important;
-        transition: color 0.2s ease, background 0.2s ease !important;
-    }
-    .stButton > button[kind="tertiary"]:hover {
-        color: var(--text) !important;
-        background: rgba(255,255,255,0.05) !important;
-        border-radius: 8px !important;
-    }
-
-    /* Tabs as Segmented Control */
-    div[data-testid="stTabs"] {
-        background: transparent;
-        margin-bottom: 28px;
-    }
-    div[data-baseweb="tab-list"] {
-        gap: 4px;
-        background: var(--surface);
-        padding: 4px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        min-height: 44px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    }
-    div[data-baseweb="tab"] {
-        background: transparent !important;
-        border: none !important;
-        border-radius: 6px !important;
-        color: var(--muted) !important;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-        padding: 8px 16px !important;
-        height: 36px;
-        display: flex;
-        font-size: 13px !important;
-        transition: all 0.2s ease !important;
-    }
-    div[data-baseweb="tab"]:hover {
-        color: var(--text) !important;
-    }
-    div[data-baseweb="tab"][aria-selected="true"] {
-        background: var(--surface-3) !important;
-        color: var(--text) !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-    }
-
-    /* Expanders */
-    .streamlit-expanderHeader {
-        background: var(--surface) !important;
-        color: var(--text) !important;
-        border-radius: 10px !important;
-        border: 1px solid var(--border) !important;
-        font-size: 14px !important;
-        font-weight: 500 !important;
-    }
-
-    /* Hero / Premium Trust Banner */
-    .hero-card {
-        background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 32px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .hero-card::before {
-        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(255,122,0,0.06) 0%, rgba(0,0,0,0) 60%);
-        pointer-events: none;
-    }
-    .hero-label { 
-        font-size: 12px; 
-        color: var(--primary); 
-        font-weight: 700; 
-        text-transform: uppercase; 
-        letter-spacing: 1.5px; 
-        margin-bottom: 8px; 
-    }
-    .hero-amount { 
-        font-size: 26px; 
-        font-weight: 800; 
-        font-family: 'Poppins', sans-serif; 
-        color: var(--text); 
-        margin: 0; 
-        line-height: 1.2; 
-        letter-spacing: -0.02em;
-    }
-    .hero-sub { 
-        font-size: 13px; 
-        color: var(--muted); 
-        font-weight: 500; 
-        margin-top: 16px; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center;
-        gap: 16px; 
-    }
-    .hero-sub span {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    /* Custom Cards */
-    .dark-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    
-    .status-badge { 
-        display: inline-flex; 
-        padding: 4px 8px; 
-        border-radius: 6px; 
-        font-size: 11px; 
-        font-weight: 600; 
-        font-family: 'Inter', sans-serif; 
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .status-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
-    .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); border: 1px solid rgba(255, 122, 0, 0.2); }
-
-    /* Fix spacing of forms */
+    /* Override ugly Streamlit form borders completely */
     .stForm {
-        border-color: transparent !important;
-        background-color: transparent !important;
+        border: none !important;
+        background: transparent !important;
         padding: 0 !important;
-        margin-bottom: 32px !important;
+        margin: 0 !important;
         box-shadow: none !important;
-    }
-    
-    /* CTA Link button */
-    .cta-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--gradient);
-        color: white !important;
-        padding: 14px 20px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 15px;
-        font-family: 'Poppins', sans-serif;
-        margin-bottom: 16px;
-        box-shadow: 0 2px 6px rgba(255,122,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-        width: 100%;
-    }
-    .cta-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(255,122,0,0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        filter: brightness(1.05);
-        color: white !important;
-    }
-    
-    /* Payment Summary Block */
-    .payment-summary {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        margin-bottom: 28px;
-    }
-    .payment-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px; /* slightly deeper rows */
-        font-size: 14px;
-    }
-    .payment-label {
-        color: var(--muted);
-        font-weight: 500;
-    }
-    .payment-value {
-        color: var(--text);
-        font-weight: 600;
-    }
-    .payment-discount {
-        color: var(--success);
-        background: rgba(16,185,129,0.1);
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    .payment-divider {
-        height: 1px;
-        background: var(--border);
-        margin: 20px 0;
-        width: 100%;
-    }
-    .payment-total-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-    .payment-total-label {
-        color: var(--text);
-        font-size: 16px;
-        font-weight: 600;
-        padding-bottom: 4px;
-    }
-    .payment-total-value {
-        color: var(--primary);
-        font-size: 34px;
-        font-weight: 800;
-        font-family: 'Poppins', sans-serif;
-        line-height: 1;
     }
 
 </style>
@@ -701,14 +546,14 @@ def patched_login(color='blue', justify_content="center"):
         authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
 <div style="display: flex; justify-content: {justify_content}; margin-top: 16px;">
-    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 15px; cursor: pointer; padding: 14px 24px; border-radius: 10px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
-        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 12px; width: 24px; height: 24px; background: white; border-radius: 50%; padding: 4px;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 15px; cursor: pointer; padding: 14px 24px; border-radius: 10px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 340px; box-shadow: 0 8px 24px rgba(255, 122, 0, 0.25); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
     </a>
 </div>
-<div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); font-family: 'Inter', sans-serif;">
+<div style="text-align: center; margin-top: 32px; font-size: 14px; color: var(--muted); font-family: 'Inter', sans-serif;">
     <p>By continuing, you agree to SKE Pay's <br><b>Terms of Service</b> & <b>Privacy Policy</b></p>
-    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px; opacity: 0.8;">
+    <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px; opacity: 0.8; font-weight: 500;">
         <span>🔒 256-bit Secure</span> • <span>🇮🇳 Made in India</span>
     </div>
 </div>
@@ -720,11 +565,11 @@ authenticator.check_authentification()
 
 if not st.session_state.get('connected'):
     st.markdown(f"""
-    <div style="text-align: center; padding: 32px 20px 24px 20px;">
-        <img src="data:image/png;base64,{flag_base64}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
-        <h1 style="color: var(--text); font-weight: 800; font-size: 36px; margin-bottom: 8px; font-family: 'Poppins', sans-serif; letter-spacing: -0.02em;">SKE Pay</h1>
-        <p style="color: var(--primary); font-weight: 600; font-size: 15px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
-        <p style="color: var(--muted); font-size: 14px; margin-top: 16px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
+    <div style="text-align: center; padding: 60px 20px;">
+        <img src="data:image/png;base64,{flag_base64}" style="width: 90px; height: 60px; object-fit: cover; border-radius: 6px; margin-bottom: 24px; box-shadow: 0 12px 24px rgba(0,0,0,0.3);">
+        <h1 style="color: white; font-weight: 800; font-size: 48px; margin-bottom: 12px; font-family: 'Poppins', sans-serif; letter-spacing: -0.03em;">SKE Pay</h1>
+        <p style="color: var(--primary); font-weight: 600; font-size: 18px; margin-top: 0; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; text-transform: uppercase;">India's Next-Gen Payments</p>
+        <p style="color: var(--muted); font-size: 16px; margin-top: 24px; max-width: 320px; margin-left: auto; margin-right: auto; line-height: 1.6;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
     </div>
     """, unsafe_allow_html=True)
     authenticator.login()
@@ -736,15 +581,22 @@ else:
 
 # --- MAIN APP FLOW ---
 
-# Header Section
+# 1. TOP NAVIGATION BAR (Absolute Fixed Glassmorphism)
 st.markdown(f"""
-<div class="brand-wrap" style="position: absolute; left: 16px; top: 24px; z-index: 10;">
-    <img src="data:image/png;base64,{flag_base64}" class="brand-flag">
-    <div class="brand-text">SKE Pay</div>
+<div class="glass-nav">
+    <div class="glass-nav-content">
+        <div class="brand-wrap">
+            <img src="data:image/png;base64,{flag_base64}" class="brand-flag">
+            <div class="brand-text">
+                <div class="brand-title">SKE Pay</div>
+                <div class="brand-sub">Next Gen Payments</div>
+            </div>
+        </div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="logout-native-wrapper" style="margin-bottom: 24px;">', unsafe_allow_html=True)
+st.markdown('<div class="logout-btn-container">', unsafe_allow_html=True)
 if st.button("Logout", key="logout_btn", type="tertiary"):
     authenticator.logout()
     st.session_state.logged_in = False
@@ -752,21 +604,24 @@ if st.button("Logout", key="logout_btn", type="tertiary"):
     st.session_state.checkout = None
     st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
-    
 
+# 2. ASYMMETRIC HERO SECTION
 st.markdown("""
-<div class="hero-card">
-    <div class="hero-label">Lightning Fast UPI</div>
-    <div class="hero-amount">Recharge & Pay Bills</div>
-    <div class="hero-sub">
-        <span>🔒 256-bit Secure</span>
-        <span>⚡ Instant Processing</span>
+<div class="hero-container">
+    <div class="hero-left">
+        <div class="hero-h1">Recharge Smarter.<br><span>Pay Faster.</span></div>
+        <div class="hero-p">Secure, instant mobile recharges powered by modern UPI infrastructure. Join the future of Indian payments.</div>
+    </div>
+    <div class="hero-right">
+        <div class="trust-pill orange"><i>⚡</i> Instant Processing</div>
+        <div class="trust-pill green"><i>🔒</i> 256-bit Secure</div>
+        <div class="trust-pill"><i>📱</i> UPI Ready</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 if st.session_state.checkout:
-    st.markdown("<h2 style='font-family: Poppins; margin-bottom: 24px;'>💳 Secure Checkout</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-family: Poppins; margin-bottom: 32px;'>Secure Checkout</h2>", unsafe_allow_html=True)
     c = st.session_state.checkout
     
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
@@ -780,31 +635,37 @@ if st.session_state.checkout:
     c['discount'] = f"{discount:.2f}" 
     
     st.markdown(f"""
-    <div class="payment-summary">
-        <div class="payment-row">
-            <span class="payment-label">Recharge Target</span>
-            <span class="payment-value">{c['target']}</span>
+    <div class="layout-grid">
+        <div class="layout-main">
+            <div class="premium-surface" style="padding: 40px;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 24px;">Payment Summary</h3>
+                <div class="live-summary-card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                    <div class="summary-row">
+                        <span class="summary-label">Recharge Target</span>
+                        <span class="summary-value" style="font-size: 18px;">{c['target']}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Operator</span>
+                        <span class="summary-value">{c['operator']}</span>
+                    </div>
+                    <div class="summary-row" style="margin-top: 24px;">
+                        <span class="summary-label">MRP</span>
+                        <span class="summary-value">₹{original_price:.2f}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">⚡ Smart Discount ({c['discount_percent']}%)</span>
+                        <span class="summary-accent">- ₹{discount:.2f}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total Payable</span>
+                        <span class="summary-total-value">₹{c['final_price']}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="payment-row">
-            <span class="payment-label">Operator</span>
-            <span class="payment-value">{c['operator']}</span>
-        </div>
-        <div class="payment-row">
-            <span class="payment-label">MRP</span>
-            <span class="payment-value">₹{original_price:.2f}</span>
-        </div>
-        <div class="payment-row">
-            <span class="payment-label">Smart Discount ({c['discount_percent']}%)</span>
-            <span class="payment-discount">- ₹{discount:.2f}</span>
-        </div>
-        <div class="payment-divider"></div>
-        <div class="payment-total-row">
-            <span class="payment-total-label">Total Payable</span>
-            <span class="payment-total-value">₹{c['final_price']}</span>
-        </div>
-    </div>
+        <div class="layout-sidebar">
     """, unsafe_allow_html=True)
-    
 
     # UPI Only Flow
     if "current_txn_id" not in st.session_state:
@@ -817,17 +678,21 @@ if st.session_state.checkout:
     upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
     
     st.markdown(f"""
-    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <h3 style="font-size: 16px; margin-top: 0; margin-bottom: 20px; text-align: center; color: var(--text); font-weight: 600;">Complete Your Payment</h3>
-        <a href="{upi_link}" target="_blank" class="cta-button">Pay ₹{c["final_price"]} via UPI</a>
-        <div style="text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 24px;">Order ID: <b>{txn_id}</b></div>
+            <div class="premium-surface">
+                <div class="summary-header" style="color: var(--text);">Complete Payment</div>
+                <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Pay securely using Google Pay, PhonePe, or any UPI app.</p>
+                <a href="{upi_link}" target="_blank" style="display: flex; justify-content: center; align-items: center; background: var(--gradient); color: white; padding: 16px 24px; border-radius: 14px; font-weight: 700; font-size: 16px; font-family: 'Poppins', sans-serif; text-decoration: none; box-shadow: 0 8px 20px rgba(255,122,0,0.25); transition: transform 0.2s ease; margin-bottom: 24px;">
+                    Pay ₹{c["final_price"]} via UPI
+                </a>
+                <div style="text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 32px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px;">Order ID: <b style="color: var(--text);">{txn_id}</b></div>
+                <hr class="summary-divider">
+                <div style="font-size: 13px; color: var(--muted); margin-bottom: 16px; text-align: center;">Click below <b>after</b> completing payment.</div>
     """, unsafe_allow_html=True)
     
     with st.form("upi_verify_form"):
-        st.markdown("<div style='text-align:center; font-size:14px; margin-bottom:16px; color:var(--text);'>Click below after completing payment on your UPI app.</div>", unsafe_allow_html=True)
         verify_btn = st.form_submit_button("I Have Paid", type="secondary")
         if verify_btn:
-            with st.spinner("Submitting your request..."): time.sleep(1.5)
+            with st.spinner("Verifying transaction..."): time.sleep(1.5)
             order = {
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "txn_id": txn_id, "type": c['type'].capitalize(),
@@ -839,28 +704,29 @@ if st.session_state.checkout:
             save_order(st.session_state.user_phone, order)
             send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
             for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-            st.success(f"Order Submitted! Order ID: {txn_id}")
-            st.info("Your order is currently in 'Order Created' status. Please wait for an admin to verify your payment.")
-            time.sleep(3)
+            st.success(f"Order Submitted! Verification pending.")
+            time.sleep(2)
             st.session_state.checkout = None
             del st.session_state.current_txn_id
             st.rerun()
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div></div></div>", unsafe_allow_html=True)
 
+    st.markdown("<div style='margin-top: 24px; text-align: center;'>", unsafe_allow_html=True)
     if st.button("Cancel & Go Back", type="tertiary"):
         st.session_state.checkout = None
         if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
         st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 else:
     is_admin = st.session_state.user_phone in ADMIN_EMAILS
     
     if is_admin:
-        tabs = st.tabs(["📱 Mobile", "📦 Orders", "🎧 Support", "🛠️ Admin"])
+        tabs = st.tabs(["📱 Recharge", "📦 Activity", "🎧 Support", "🛠️ Admin"])
         tab1, tab_orders, tab_grievances, tab_admin = tabs
     else:
-        tabs = st.tabs(["📱 Mobile", "📦 Orders", "🎧 Support"])
+        tabs = st.tabs(["📱 Recharge", "📦 Activity", "🎧 Support"])
         tab1, tab_orders, tab_grievances = tabs
 
     def get_operator(phone):
@@ -873,7 +739,13 @@ else:
         return "Select Operator"
 
     with tab1:
-        st.markdown("<h2 style='margin-bottom:24px;'>Mobile Recharge</h2>", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="layout-grid">
+            <div class="layout-main">
+                <div class="premium-surface">
+                    <h2 style='margin-bottom:32px; font-size: 24px;'>Mobile Recharge</h2>
+        """, unsafe_allow_html=True)
+        
         if "last_phone_prefix" not in st.session_state: st.session_state.last_phone_prefix = ""
         phone_number = st.text_input("Mobile Number", placeholder="e.g., 9876543210", max_chars=10, key="mobile_phone")
         
@@ -894,8 +766,51 @@ else:
         plan_options.insert(0, "Select a Plan")
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
-        st.markdown("<div style='margin-top: 32px;'></div>", unsafe_allow_html=True)
-        if st.button("Proceed to Pay", key="mobile_btn", type="primary"):
+        st.markdown("</div></div>", unsafe_allow_html=True)
+
+        st.markdown("""
+            <div class="layout-sidebar">
+                <div class="live-summary-card">
+                    <div class="summary-header">Live Summary</div>
+        """, unsafe_allow_html=True)
+        
+        preview_price = 0.00
+        preview_discount = 0.00
+        preview_total = 0.00
+        if selected_plan_str != "Select a Plan":
+            try:
+                preview_price = float(selected_plan_str.split(" ")[-1][1:-1])
+                preview_discount = preview_price * 0.0023  # Simulated visual constant 0.23%
+                preview_total = preview_price - preview_discount
+            except: pass
+            
+        st.markdown(f"""
+                    <div class="summary-row">
+                        <span class="summary-label">Target</span>
+                        <span class="summary-value">{phone_number if phone_number else '—'}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Operator</span>
+                        <span class="summary-value">{operator if operator != "Select Operator" else '—'}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row">
+                        <span class="summary-label">MRP</span>
+                        <span class="summary-value">₹{preview_price:.2f}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Smart Discount</span>
+                        <span class="summary-accent">- ₹{preview_discount:.2f}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total</span>
+                        <span class="summary-total-value">₹{preview_total:.2f}</span>
+                    </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<div style='margin-top: 32px;'>", unsafe_allow_html=True)
+        if st.button("Continue to Secure Payment", key="mobile_btn", type="primary"):
             if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
             elif operator == "Select Operator": st.error("Select an operator.")
             elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
@@ -903,97 +818,99 @@ else:
                 price_str = selected_plan_str.split(" ")[-1][1:-1]
                 st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
                 st.rerun()
+        st.markdown("</div></div></div></div>", unsafe_allow_html=True)
 
     with tab_orders:
-        st.markdown("<h2 style='margin-bottom:24px;'>My Orders</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 24px;'>Activity History</h2>", unsafe_allow_html=True)
         orders_db = load_orders()
         user_orders = orders_db.get(st.session_state.user_phone, [])
         if not user_orders:
-            st.info("You have no past recharges. Make a recharge to see it here!")
+            st.info("You have no past transactions.")
         else:
-            if st.button("Refresh Orders", type="secondary"): st.rerun()
+            if st.button("Refresh", type="secondary"): st.rerun()
             for o in user_orders:
                 with st.container():
                     status_class = "success" if o['status'] == "Recharge Completed" else "pending"
                     badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
                     html = f"""
-                    <div class="dark-card">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                    <div class="live-summary-card" style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                             <div>
-                                <div style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--text); font-size: 15px;">{o['type']} • {o['operator']}</div>
-                                <div style="color: var(--muted); font-size: 13px; font-weight: 500; margin-top: 4px;">{o['target']}</div>
+                                <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--text); font-size: 18px;">{o['type']} • {o['operator']}</div>
+                                <div style="color: var(--muted); font-size: 14px; font-weight: 500; margin-top: 4px;">{o['target']}</div>
                             </div>
                             <div class="status-badge {badge_class}">{o['status']}</div>
                         </div>
-                        <div style="background: rgba(0,0,0,0.15); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border);">
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
+                        <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px;">
                                 <span style="color: var(--muted);">MRP</span><span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px;">
                                 <span style="color: var(--muted);">Smart Discount</span><span style="color: var(--success); font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 15px; margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px;">
-                                <span style="color: var(--text); font-weight: 600;">Paid</span><span style="color: var(--text); font-weight: 700;">₹{o['amount']}</span>
+                            <div style="display: flex; justify-content: space-between; font-size: 16px; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                                <span style="color: var(--text); font-weight: 600;">Paid Amount</span><span style="color: var(--primary); font-weight: 800; font-family: 'Poppins', sans-serif;">₹{o['amount']}</span>
                             </div>
                         </div>
-                        <div style="font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px;">
-                            <div>Txn: {o['txn_id']} • {o['date'][:10]}</div><div>Method: {o['method']}</div>
+                        <div style="font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 6px;">
+                            <div>Txn: <span style="color: var(--text);">{o['txn_id']}</span> • {o['date'][:10]}</div><div>Method: {o['method']}</div>
                     """
-                    if "payment_utr" in o: html += f"<div>Pay UTR: {o['payment_utr']}</div>"
-                    if "recharge_utr" in o: html += f"<div>Recharge UTR: {o['recharge_utr']}</div>"
+                    if "payment_utr" in o: html += f"<div>Pay UTR: <span style='color: var(--text);'>{o['payment_utr']}</span></div>"
+                    if "recharge_utr" in o: html += f"<div>Rech UTR: <span style='color: var(--text);'>{o['recharge_utr']}</span></div>"
                     html += "</div></div>"
                     st.markdown(html, unsafe_allow_html=True)
                 
-                with st.expander(f"Raise Grievance for {o['txn_id']}"):
+                with st.expander(f"Raise Support Ticket"):
                     with st.form(f"grievance_form_{o['txn_id']}"):
                         issue_type = st.selectbox("Issue Type", ["Recharge Not Received", "Amount Deducted but Order Failed", "Wrong Target Recharge", "Other"])
                         details = st.text_area("Details", placeholder="Describe the issue...")
-                        if st.form_submit_button("Submit Grievance", type="secondary"):
+                        if st.form_submit_button("Submit Ticket", type="primary"):
                             grievance = {
-                                "id": f"GRV_{uuid.uuid4().hex[:8].upper()}", "txn_id": o['txn_id'], "issue_type": issue_type,
+                                "id": f"TKT_{uuid.uuid4().hex[:8].upper()}", "txn_id": o['txn_id'], "issue_type": issue_type,
                                 "details": details, "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "status": "Open", "admin_reply": ""
                             }
                             save_grievance(st.session_state.user_phone, grievance)
-                            send_notification_email(st.session_state.user_phone, f"Grievance Submitted: {grievance['id']}", get_grievance_created_html(grievance))
-                            for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Grievance: {grievance['id']}", get_grievance_created_html(grievance))
-                            st.success("Grievance raised successfully. Check 'Grievances' tab.")
+                            send_notification_email(st.session_state.user_phone, f"Ticket Submitted: {grievance['id']}", get_grievance_created_html(grievance))
+                            for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Ticket: {grievance['id']}", get_grievance_created_html(grievance))
+                            st.success("Ticket raised successfully. Check 'Support' tab.")
                             time.sleep(2)
                             st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with tab_grievances:
-        st.markdown("<h2 style='margin-bottom:24px;'>My Grievances</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 24px;'>Support Tickets</h2>", unsafe_allow_html=True)
         grievances_db = load_grievances()
         user_grievances = grievances_db.get(st.session_state.user_phone, [])
-        if not user_grievances: st.info("No grievances found.")
+        if not user_grievances: st.info("No active support tickets.")
         else:
             for g in user_grievances:
-                html_content = f"""<div class="dark-card">
-<div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-    <div style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 15px; color: var(--text);">Ticket: {g['id']}</div>
+                html_content = f"""<div class="live-summary-card" style="margin-bottom: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; color: var(--text);">Ticket: {g['id']}</div>
     <div class="status-badge {'status-success' if g['status'] == 'Resolved' else 'status-pending'}">{g['status']}</div>
 </div>
-<div style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
-<div style="background: rgba(0,0,0,0.15); padding: 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; margin-bottom: 16px;">
+<div style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
+<div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); font-size: 14px; margin-bottom: 16px;">
     <span style="font-weight: 600; color: var(--text);">{g['issue_type']}</span><br>
-    <span style="color: var(--muted); margin-top: 6px; display: inline-block;">{g['details']}</span>
+    <span style="color: var(--muted); margin-top: 8px; display: inline-block; line-height: 1.5;">{g['details']}</span>
 </div>
-<div style="font-size: 14px; background: rgba(0,0,0,0.25); padding: 16px; border-radius: 12px;">
-    <span style="font-weight: 600; color: var(--text);">Support Reply:</span><br>
-    <span style="color: {'var(--success)' if g['admin_reply'] else 'var(--muted)'}; margin-top: 6px; display: inline-block;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
+<div style="font-size: 14px; background: rgba(255,122,0,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,122,0,0.1);">
+    <span style="font-weight: 600; color: var(--primary);">Support Reply:</span><br>
+    <span style="color: {'var(--text)' if g['admin_reply'] else 'var(--muted)'}; margin-top: 8px; display: inline-block; line-height: 1.5;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
 </div>
 </div>"""
                 st.markdown(html_content, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     if is_admin:
         with tab_admin:
-            st.markdown("<h2 style='margin-bottom:24px;'>🛠️ Admin Control Tower</h2>", unsafe_allow_html=True)
+            st.markdown("<div class='premium-surface'><h2 style='margin-bottom:24px;'>🛠️ Admin Control Tower</h2>", unsafe_allow_html=True)
             orders_db = load_orders()
             grievances_db = load_grievances()
-            admin_tabs = st.tabs(["⏳ Pending Orders", "📋 All Orders", "🚨 Open Grievances", "📂 All Grievances", "⚙️ Operators Config"])
+            admin_tabs = st.tabs(["⏳ Pending", "📋 All Orders", "🚨 Tickets", "⚙️ Config"])
             
             with admin_tabs[0]:
                 st.write("### Pending Orders")
-                st.markdown("---")
                 pending_count = 0
                 for user, user_orders in orders_db.items():
                     for o in user_orders:
@@ -1044,9 +961,8 @@ else:
                         all_orders_list.append({
                             "User": user, "Date": o['date'], "TXN ID": o['txn_id'], "Target": o['target'],
                             "Operator": o['operator'], "MRP": f"₹{o.get('mrp', o['amount'])}",
-                            "Discount": f"₹{o.get('discount', '0.00')}", "Paid": f"₹o['amount']",
-                            "Method": o['method'], "Status": o['status'],
-                            "Pay UTR": o.get('payment_utr', 'N/A'), "Rech UTR": o.get('recharge_utr', 'N/A')
+                            "Paid": f"₹{o['amount']}",
+                            "Status": o['status']
                         })
                 if all_orders_list:
                     all_orders_list.sort(key=lambda x: x["Date"], reverse=True)
@@ -1054,13 +970,13 @@ else:
                 else: st.info("No orders found.")
             
             with admin_tabs[2]:
-                st.write("### Open Grievances")
+                st.write("### Open Tickets")
                 open_g_count = 0
                 for user, user_grievances in grievances_db.items():
                     for g in user_grievances:
                         if g['status'] == "Open":
                             open_g_count += 1
-                            st.markdown(f"#### Grievance: {g['id']} by {user}")
+                            st.markdown(f"#### Ticket: {g['id']} by {user}")
                             st.write(f"**TXN ID:** {g['txn_id']} | **Type:** {g['issue_type']}")
                             st.write(f"**Details:** {g['details']}")
                             with st.form(f"resolve_grievance_{g['id']}"):
@@ -1071,27 +987,13 @@ else:
                                     g_updated = g.copy()
                                     g_updated.update(update_data)
                                     send_notification_email(user, f"Grievance Resolved: {g['id']}", get_grievance_resolved_html(g_updated))
-                                    st.success("Grievance Resolved!")
+                                    st.success("Resolved!")
                                     time.sleep(1)
                                     st.rerun()
                             st.markdown("---")
-                if open_g_count == 0: st.info("No open grievances.")
+                if open_g_count == 0: st.info("No open tickets.")
 
             with admin_tabs[3]:
-                st.write("### All Grievances")
-                all_grievances_list = []
-                for user, user_grievances in grievances_db.items():
-                    for g in user_grievances:
-                        all_grievances_list.append({
-                            "User": user, "Date": g.get('date', 'N/A'), "Grievance ID": g['id'],
-                            "TXN ID": g['txn_id'], "Issue Type": g['issue_type'], "Status": g['status']
-                        })
-                if all_grievances_list:
-                    all_grievances_list.sort(key=lambda x: x["Date"], reverse=True)
-                    st.dataframe(all_grievances_list, use_container_width=True)
-                else: st.info("No grievances found.")
-
-            with admin_tabs[4]:
                 st.write("### Operators Configuration")
                 operators_data = load_operators()
                 if "mobile" not in operators_data: operators_data["mobile"] = {"operators": {}}
@@ -1132,3 +1034,4 @@ else:
                         st.cache_data.clear()
                         st.rerun()
                 else: st.info("No mobile operators found.")
+            st.markdown("</div>", unsafe_allow_html=True)
