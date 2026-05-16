@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import time
 import json
 import os
@@ -46,6 +47,15 @@ def get_app_secrets():
 APP_SECRETS = get_app_secrets()
 ADMIN_EMAIL = APP_SECRETS.get("ADMIN_EMAIL", "sri.kailash.electronics@gmail.com")
 ADMIN_EMAILS = [ADMIN_EMAIL]
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+flag_base64 = ""
+if os.path.exists("india_flag.png"):
+    flag_base64 = get_base64_image("india_flag.png")
+
 
 def send_notification_email(receiver, subject, html_body):
     sender = ADMIN_EMAIL
@@ -463,7 +473,7 @@ def patched_login(color='blue', justify_content="center"):
         )
         authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
-<div style="display: flex; justify-content: {justify_content}; margin-top: 30px;">
+<div style="display: flex; justify-content: {justify_content}; margin-top: 16px;">
     <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex;   width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); transition: transform 0.3s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
         <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
@@ -482,9 +492,9 @@ authenticator.login = patched_login
 authenticator.check_authentification()
 
 if not st.session_state.get('connected'):
-    st.markdown("""
-    <div style="text-align: center; padding: 40px 20px 20px 20px;">
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/2560px-Flag_of_India.svg.png" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+    st.markdown(f"""
+    <div style="text-align: center; padding: 16px 20px 20px 20px;">
+        <img src="data:image/png;base64,{flag_base64}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
         <h1 style="color: #F9FAFB; font-weight: 800; font-size: 32px; margin-bottom: 5px;">SKE Pay</h1>
         <p style="color: #FF7A00; font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
         <p style="color: #94A3B8; font-size: 14px; margin-top: 15px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
@@ -529,10 +539,10 @@ st.markdown("""
 
 col1, col2 = st.columns([1, 1])
 with col1:
-    st.markdown("""
+    st.markdown(f"""
     <div class="ske-navbar">
         <div class="brand-wrap">
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/2560px-Flag_of_India.svg.png" class="brand-flag">
+            <img src="data:image/png;base64,{flag_base64}" class="brand-flag">
             <div class="brand-text">SKE Pay</div>
         </div>
     </div>
