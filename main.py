@@ -134,34 +134,74 @@ st.markdown("""
         color: var(--text);
     }
 
+    
     /* Streamlit block container - desktop max-width, mobile full */
+    section.main {
+        padding-top: 0 !important;
+    }
+
     .main .block-container {
         max-width: 1200px !important;
-        padding: 16px !important;
+        padding: 16px 16px 0 16px !important;
         margin: 0 auto;
     }
     @media (min-width: 768px) {
         .main .block-container {
-            padding: 32px !important;
+            padding: 32px 32px 0 32px !important;
         }
+    }
+
+    /* Dropdown Portal */
+    div[data-baseweb="popover"] {
+        background: #111827 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.45) !important;
+    }
+
+    /* Dropdown List */
+    ul {
+        background: #111827 !important;
+    }
+
+    /* Dropdown Options */
+    li[role="option"] {
+        background: #111827 !important;
+        color: #F9FAFB !important;
+        font-weight: 500 !important;
+    }
+
+    /* Hovered Option */
+    li[role="option"]:hover {
+        background: rgba(255,122,0,0.12) !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Selected Option */
+    li[aria-selected="true"] {
+        background: rgba(255,122,0,0.18) !important;
+        color: #FF9A3D !important;
     }
 
     /* Forms & Inputs */
     .stTextInput input, 
     .stSelectbox div[data-baseweb="select"] > div,
     .stTextArea textarea {
-        background-color: var(--surface) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 12px !important;
-        color: var(--text) !important;
-        padding: 12px 16px !important;
-        box-shadow: none !important;
+        background: rgba(17,24,39,0.72) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        color: white !important;
+        border-radius: 18px !important;
+        min-height: 56px !important;
+        font-size: 16px !important;
+        backdrop-filter: blur(8px);
+        margin-bottom: 14px !important;
     }
     .stTextInput input:focus, 
     .stSelectbox div[data-baseweb="select"] > div:focus-within,
     .stTextArea textarea:focus {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.12) !important;
+        border-color: #FF7A00 !important;
+        box-shadow: 0 0 0 3px rgba(255,122,0,0.12) !important;
     }
 
     /* Buttons */
@@ -187,22 +227,29 @@ st.markdown("""
     /* Tabs */
     div[data-testid="stTabs"] {
         background: transparent;
+        margin-bottom: 14px;
     }
     div[data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 4px;
         background: var(--surface);
-        padding: 8px;
+        padding: 4px;
         border-radius: 16px;
         border: 1px solid var(--border);
+        min-height: 56px;
+        align-items: center;
     }
     div[data-baseweb="tab"] {
         background: transparent !important;
         border: none !important;
-        border-radius: 10px;
+        border-radius: 12px;
         color: var(--muted) !important;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
-        padding: 8px 16px !important;
+        padding: 8px 12px !important;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     div[data-baseweb="tab"][aria-selected="true"] {
         background: var(--surface-2) !important;
@@ -223,11 +270,11 @@ st.markdown("""
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 16px;
-        padding: 20px;
+        padding: 18px;
         text-align: center;
         position: relative;
         overflow: hidden;
-        margin-bottom: 24px;
+        margin-bottom: 14px;
     }
     .hero-card::before {
         content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -244,7 +291,7 @@ st.markdown("""
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 16px;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
     
     .status-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
@@ -413,6 +460,23 @@ nav_col1, nav_col2 = st.columns([3, 1])
 with nav_col1:
     st.markdown('<h2 style="margin:0; padding:0; font-size: 24px; color: var(--text);">🇮🇳 SKE Pay</h2>', unsafe_allow_html=True)
 with nav_col2:
+    st.markdown("""
+        <style>
+            div[data-testid="stButton"] {
+                display: flex;
+                justify-content: flex-end;
+            }
+            button[key="logout_btn"] {
+                height: 40px !important;
+                min-height: 40px !important;
+                padding: 0 16px !important;
+                border-radius: 12px !important;
+                font-size: 14px !important;
+                box-shadow: none !important;
+                width: auto !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
     if st.button("Logout", key="logout_btn"):
         authenticator.logout()
         st.session_state.logged_in = False
@@ -457,7 +521,7 @@ if st.session_state.checkout:
                 <span style="color: #94A3B8; font-weight: 500;">MRP</span>
                 <span style="font-weight: 600; color: #F9FAFB;">₹{original_price:.2f}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; color: #138808; font-weight: 600;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px; color: #138808; font-weight: 600;">
                 <span>⚡ Instant Smart Discount ({c['discount_percent']}%)</span>
                 <span>- ₹{discount:.2f}</span>
             </div>
