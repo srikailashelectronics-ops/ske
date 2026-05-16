@@ -173,20 +173,29 @@ st.markdown("""
     
     /* Header Single Flex Navbar */
     [data-testid="stHorizontalBlock"]:first-of-type {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: transparent;
-        margin-bottom: 32px;
-        height: 64px;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background: transparent !important;
+        margin-bottom: 32px !important;
+        height: 64px !important;
         padding: 0 !important;
+        width: 100% !important;
         gap: 0 !important;
     }
-    [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"] {
+    [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"]:first-child {
         width: auto !important;
         flex: 0 1 auto !important;
         min-width: 0 !important;
         padding: 0 !important;
+    }
+    [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"]:last-child {
+        width: auto !important;
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: flex-end !important;
     }
 
     .brand-wrap {
@@ -734,6 +743,7 @@ else:
 # --- MAIN APP FLOW ---
 
 # Header Section (Using Streamlit Columns but styled as flex navbar via CSS)
+st.markdown('<div class="header-container">', unsafe_allow_html=True)
 col1, col2 = st.columns([1, 1])
 with col1:
     st.markdown(f"""
@@ -743,7 +753,7 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 with col2:
-    st.markdown('<div class="logout-btn-container" style="display: flex; justify-content: flex-end;">', unsafe_allow_html=True)
+    st.markdown('<div class="logout-btn-container">', unsafe_allow_html=True)
     if st.button("Logout", key="logout_btn", type="tertiary"):
         authenticator.logout()
         st.session_state.logged_in = False
@@ -751,6 +761,7 @@ with col2:
         st.session_state.checkout = None
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
     
 
 st.markdown("""
