@@ -350,6 +350,72 @@ st.markdown("""
     .status-badge { display: inline-flex;  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
     .status-success { background: rgba(34, 197, 94, 0.1); color: var(--success); }
     .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); }
+
+    /* Better Dropdown / Popover support */
+    div[data-baseweb="popover"], div[data-baseweb="menu"] {
+        background-color: var(--surface) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    }
+    
+    ul[role="listbox"] {
+        background-color: var(--surface) !important;
+        padding: 8px !important;
+    }
+    
+    li[role="option"] {
+        background-color: transparent !important;
+        color: var(--text) !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        margin-bottom: 4px !important;
+        transition: background-color 0.2s ease !important;
+    }
+    
+    li[role="option"]:hover {
+        background-color: rgba(255, 122, 0, 0.1) !important;
+        color: var(--text) !important;
+    }
+    
+    li[role="option"][aria-selected="true"] {
+        background-color: rgba(255, 122, 0, 0.2) !important;
+        color: var(--primary) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Better Tabs */
+    div[data-baseweb="tab"] {
+        padding: 12px 16px !important;
+        margin: 4px !important;
+        border-radius: 12px !important;
+    }
+    
+    /* Global Typography overrides to remove Streamlit generic feel */
+    .stMarkdown, .stText {
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    /* Fix spacing of forms */
+    .stForm {
+        border-color: var(--border) !important;
+        background-color: transparent !important;
+        padding: 24px !important;
+        border-radius: 16px !important;
+    }
+    
+    /* Make generic buttons secondary ghost style */
+    .stButton > button[kind="secondary"] {
+        background: transparent !important;
+        border: 1px solid var(--border) !important;
+        color: var(--text) !important;
+        box-shadow: none !important;
+    }
+    .stButton > button[kind="secondary"]:hover {
+        border-color: var(--primary) !important;
+        background: rgba(255,122,0,0.05) !important;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -534,7 +600,73 @@ st.markdown("""
         .logout-wrapper button:hover {
             background: rgba(255, 255, 255, 0.15) !important;
         }
-    </style>
+    
+    /* Better Dropdown / Popover support */
+    div[data-baseweb="popover"], div[data-baseweb="menu"] {
+        background-color: var(--surface) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    }
+    
+    ul[role="listbox"] {
+        background-color: var(--surface) !important;
+        padding: 8px !important;
+    }
+    
+    li[role="option"] {
+        background-color: transparent !important;
+        color: var(--text) !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        margin-bottom: 4px !important;
+        transition: background-color 0.2s ease !important;
+    }
+    
+    li[role="option"]:hover {
+        background-color: rgba(255, 122, 0, 0.1) !important;
+        color: var(--text) !important;
+    }
+    
+    li[role="option"][aria-selected="true"] {
+        background-color: rgba(255, 122, 0, 0.2) !important;
+        color: var(--primary) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Better Tabs */
+    div[data-baseweb="tab"] {
+        padding: 12px 16px !important;
+        margin: 4px !important;
+        border-radius: 12px !important;
+    }
+    
+    /* Global Typography overrides to remove Streamlit generic feel */
+    .stMarkdown, .stText {
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    /* Fix spacing of forms */
+    .stForm {
+        border-color: var(--border) !important;
+        background-color: transparent !important;
+        padding: 24px !important;
+        border-radius: 16px !important;
+    }
+    
+    /* Make generic buttons secondary ghost style */
+    .stButton > button[kind="secondary"] {
+        background: transparent !important;
+        border: 1px solid var(--border) !important;
+        color: var(--text) !important;
+        box-shadow: none !important;
+    }
+    .stButton > button[kind="secondary"]:hover {
+        border-color: var(--primary) !important;
+        background: rgba(255,122,0,0.05) !important;
+    }
+
+</style>
 """, unsafe_allow_html=True)
 
 col1, col2 = st.columns([1, 1])
@@ -561,8 +693,16 @@ with col2:
 st.markdown('<div class="content-column">', unsafe_allow_html=True)
 
 st.markdown("""
+
 <div class="hero-card">
-    <div class="hero-label">Recharge & Pay Bills</div>
+    <div class="hero-label" style="margin-bottom: 8px;">Lightning Fast UPI</div>
+    <div class="hero-amount">Recharge & Pay Bills</div>
+    <div class="hero-sub" style="margin-top: 12px; display: flex; justify-content: center; gap: 16px; opacity: 0.8;">
+        <span>🔒 256-bit Secure</span>
+        <span>⚡ Instant Processing</span>
+    </div>
+</div>
+
     <div class="hero-amount">Fast & Secure</div>
     <div class="hero-sub">Zero Convenience Fees • UPI Ready</div>
 </div>
@@ -610,75 +750,45 @@ if st.session_state.checkout:
     </div>
     """, unsafe_allow_html=True)
     
-    payment_method = st.radio("Select Payment Method", ["Google Pay / UPI", "Credit / Debit Card"])
-    
-    if payment_method == "Google Pay / UPI":
-        st.write("Pay securely using Google Pay or any UPI app.")
-        if "current_txn_id" not in st.session_state:
-            st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
-        txn_id = st.session_state.current_txn_id
-        
-        merchant_vpa = "akgaya99@okaxis" 
-        merchant_name = "SriKailashElectronics"
-        transaction_note = f"Order+{txn_id}"
-        upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
-        
-        st.markdown(f'<a href="{upi_link}" target="_blank" style="display:block; text-align:center; background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color:white; padding:16px; border-radius:12px; text-decoration:none; font-weight:600; font-family:\'Poppins\'; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(255,122,0,0.3);">Pay ₹{c["final_price"]} with UPI Apps</a>', unsafe_allow_html=True)
-        
-        st.write(f"**Order ID:** `{txn_id}`")
-        st.caption("Click the button below once you have successfully completed the payment.")
-        
-        with st.form("upi_verify_form"):
-            verify_btn = st.form_submit_button("I have made the payment", type="primary")
-            if verify_btn:
-                with st.spinner("Submitting your request..."): time.sleep(1.5)
-                order = {
-                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "txn_id": txn_id, "type": c['type'].capitalize(),
-                    "target": c['target'], "operator": c['operator'],
-                    "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'),
-                    "amount": c['final_price'], "method": "UPI", "status": "Order Created"
-                }
-                save_order(st.session_state.user_phone, order)
-                send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
-                for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-                st.success(f"Order Submitted! Order ID: {txn_id}")
-                st.info("Your order is currently in 'Order Created' status. Please wait for an admin to verify your payment.")
-                time.sleep(3)
-                st.session_state.checkout = None
-                del st.session_state.current_txn_id
-                st.rerun()
 
-    elif payment_method == "Credit / Debit Card":
-        with st.form("card_payment_form"):
-            st.text_input("Cardholder Name")
-            st.text_input("Card Number", max_chars=16)
-            col_a, col_b = st.columns(2)
-            col_a.text_input("Expiry (MM/YY)", max_chars=5)
-            col_b.text_input("CVV", max_chars=3, type="password")
-            
-            pay_btn = st.form_submit_button(f"Pay ₹{c['final_price']}")
-            if pay_btn:
-                with st.spinner("Processing payment securely..."): time.sleep(2)
-                txn_id = f"CARD_{uuid.uuid4().hex[:10].upper()}"
-                order = {
-                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "txn_id": txn_id, "type": c['type'].capitalize(),
-                    "target": c['target'], "operator": c['operator'],
-                    "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
-                    "discount": c.get('discount', '0.00'),
-                    "amount": c['final_price'], "method": "Card", "status": "Order Created"
-                }
-                save_order(st.session_state.user_phone, order)
-                send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
-                for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
-                st.success(f"Payment details submitted! TXN ID: {txn_id}")
-                st.info("Your order is currently in 'Order Created' status. Please wait for an admin to confirm.")
-                time.sleep(3)
-                st.session_state.checkout = None
-                st.rerun()
-                
+    # UPI Only Flow
+    st.write("Pay securely using Google Pay or any UPI app.")
+    if "current_txn_id" not in st.session_state:
+        st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
+    txn_id = st.session_state.current_txn_id
+    
+    merchant_vpa = "akgaya99@okaxis" 
+    merchant_name = "SriKailashElectronics"
+    transaction_note = f"Order+{txn_id}"
+    upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
+    
+    st.markdown(f'<a href="{upi_link}" target="_blank" style="display:flex; justify-content:center; align-items:center; background: var(--gradient); color:white; padding:16px; border-radius:12px; text-decoration:none; font-weight:700; font-size:16px; font-family:\'Poppins\'; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(255,122,0,0.25);">Pay ₹{c["final_price"]} with UPI Apps</a>', unsafe_allow_html=True)
+    
+    st.markdown(f'<div style="text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 12px;">Order ID: <b>{txn_id}</b></div>', unsafe_allow_html=True)
+    st.caption("Click the button below once you have successfully completed the payment on your UPI app.")
+    
+    with st.form("upi_verify_form"):
+        verify_btn = st.form_submit_button("I Have Paid", type="primary")
+        if verify_btn:
+            with st.spinner("Submitting your request..."): time.sleep(1.5)
+            order = {
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "txn_id": txn_id, "type": c['type'].capitalize(),
+                "target": c['target'], "operator": c['operator'],
+                "plan_str": c.get('plan_str', ''), "mrp": c.get('mrp', c['final_price']),
+                "discount": c.get('discount', '0.00'),
+                "amount": c['final_price'], "method": "UPI", "status": "Order Created"
+            }
+            save_order(st.session_state.user_phone, order)
+            send_notification_email(st.session_state.user_phone, f"Order Received: {txn_id}", get_order_created_html(order))
+            for admin in ADMIN_EMAILS: send_notification_email(admin, f"New Order: {txn_id}", get_order_created_html(order))
+            st.success(f"Order Submitted! Order ID: {txn_id}")
+            st.info("Your order is currently in 'Order Created' status. Please wait for an admin to verify your payment.")
+            time.sleep(3)
+            st.session_state.checkout = None
+            del st.session_state.current_txn_id
+            st.rerun()
+
     st.markdown("---")
     if st.button("Cancel & Go Back"):
         st.session_state.checkout = None
