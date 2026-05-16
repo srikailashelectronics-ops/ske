@@ -112,9 +112,11 @@ st.markdown("""
     :root {
         --bg: #0B1120;
         --surface: #111827;
-        --surface-2: #1F2937;
-        --card: #182235;
-        --border: rgba(255,255,255,0.06);
+        --surface-2: #182235;
+        --surface-3: #1F2937;
+        --card: #141C2B;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(255, 255, 255, 0.16);
         --primary: #FF7A00;
         --primary-hover: #FF8F26;
         --text: #F9FAFB;
@@ -136,7 +138,7 @@ st.markdown("""
     /* Streamlit block container reset and desktop width fix */
     .block-container {
         width: 100% !important;
-        max-width: 760px !important;
+        max-width: 820px !important;
         margin: 0 auto !important;
         padding: 24px 16px !important;
     }
@@ -146,10 +148,11 @@ st.markdown("""
         font-family: 'Poppins', sans-serif !important;
         color: var(--text) !important;
         letter-spacing: -0.02em;
+        margin-bottom: 16px !important;
     }
     
-    h1, .stMarkdown h1 { font-size: 32px !important; }
-    h2, .stMarkdown h2 { font-size: 24px !important; }
+    h1, .stMarkdown h1 { font-size: 32px !important; line-height: 1.2 !important; }
+    h2, .stMarkdown h2 { font-size: 24px !important; line-height: 1.3 !important; }
     
     @media (min-width: 768px) {
         h1, .stMarkdown h1 { font-size: 40px !important; }
@@ -173,7 +176,7 @@ st.markdown("""
         justify-content: space-between;
         align-items: center;
         background: transparent;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
         padding: 0 8px;
     }
     [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"] {
@@ -185,49 +188,56 @@ st.markdown("""
     .brand-wrap {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
     }
     .brand-flag {
         width: 28px;
         height: 20px;
         object-fit: cover;
         border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .brand-text {
         color: white;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
         font-family: 'Poppins', sans-serif;
         line-height: 1;
+        letter-spacing: -0.01em;
     }
     
+    /* Logout button / Header tertiary */
     .logout-btn-container button {
-        height: 36px !important;
-        min-height: 36px !important;
-        padding: 0 16px !important;
-        border-radius: 12px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 0 12px !important;
+        border-radius: 8px !important;
         font-size: 13px !important;
+        font-weight: 500 !important;
         box-shadow: none !important;
-        background: rgba(255, 255, 255, 0.08) !important;
-        color: white !important;
-        border: none !important;
+        background: transparent !important;
+        color: var(--muted) !important;
+        border: 1px solid var(--border) !important;
         width: auto !important;
+        transition: all 0.2s ease !important;
     }
     .logout-btn-container button:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
+        background: var(--surface) !important;
+        color: var(--text) !important;
+        border-color: var(--border-hover) !important;
     }
     
     /* Dropdown Portal */
     div[data-baseweb="popover"] {
-        background: var(--surface) !important;
+        background: var(--surface-2) !important;
         border: 1px solid var(--border) !important;
-        border-radius: 16px !important;
+        border-radius: 12px !important;
         overflow: hidden !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.45) !important;
+        box-shadow: 0 12px 24px rgba(0,0,0,0.5) !important;
     }
 
     ul[role="listbox"] {
-        background: var(--surface) !important;
+        background: var(--surface-2) !important;
         padding: 8px !important;
     }
 
@@ -235,19 +245,18 @@ st.markdown("""
         background: transparent !important;
         color: var(--text) !important;
         border-radius: 8px !important;
-        padding: 12px 16px !important;
-        margin-bottom: 4px !important;
+        padding: 10px 16px !important;
+        margin-bottom: 2px !important;
         transition: background-color 0.2s ease !important;
         font-size: 14px !important;
     }
 
     li[role="option"]:hover {
-        background: rgba(255, 122, 0, 0.1) !important;
-        color: var(--text) !important;
+        background: var(--surface-3) !important;
     }
 
     li[role="option"][aria-selected="true"] {
-        background: rgba(255, 122, 0, 0.2) !important;
+        background: rgba(255, 122, 0, 0.1) !important;
         color: var(--primary) !important;
         font-weight: 600 !important;
     }
@@ -256,21 +265,26 @@ st.markdown("""
     .stTextInput input, 
     .stSelectbox div[data-baseweb="select"] > div,
     .stTextArea textarea {
-        background: var(--surface) !important;
+        background: var(--card) !important;
         border: 1px solid var(--border) !important;
         color: white !important;
-        border-radius: 14px !important;
-        min-height: 52px !important;
+        border-radius: 12px !important;
+        min-height: 48px !important;
         font-size: 15px !important;
         padding: 0 16px !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 12px !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
+        color: #64748B !important;
     }
     .stTextInput input:focus, 
     .stSelectbox div[data-baseweb="select"] > div:focus-within,
     .stTextArea textarea:focus {
         border-color: var(--primary) !important;
-        box-shadow: 0 0 0 2px rgba(255,122,0,0.2) !important;
-        background: #182235 !important;
+        box-shadow: 0 0 0 1px var(--primary) !important;
+        background: var(--surface-2) !important;
     }
     
     /* Labels */
@@ -278,128 +292,195 @@ st.markdown("""
         color: var(--muted) !important;
         font-size: 13px !important;
         font-weight: 500 !important;
-        margin-bottom: 4px !important;
+        margin-bottom: 6px !important;
+        letter-spacing: 0.01em;
     }
 
-    /* Buttons */
-    .stButton > button {
+    /* Primary Buttons */
+    .stButton > button[kind="primary"] {
         background: var(--gradient) !important;
         color: #fff !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         font-weight: 600 !important;
         font-family: 'Poppins', sans-serif !important;
-        box-shadow: 0 4px 12px rgba(255, 122, 0, 0.18) !important;
+        box-shadow: 0 2px 8px rgba(255, 122, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         transition: all 0.2s ease !important;
         padding: 12px 24px !important;
-        height: auto !important;
         min-height: 48px;
         width: 100%;
         font-size: 15px !important;
     }
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255, 122, 0, 0.25) !important;
+    .stButton > button[kind="primary"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Tertiary / Ghost Button (Cancel) */
+    /* Secondary Buttons (Outlined Dark) */
     .stButton > button[kind="secondary"] {
-        background: transparent !important;
+        background: var(--surface) !important;
         border: 1px solid var(--border) !important;
-        color: var(--muted) !important;
-        box-shadow: none !important;
+        color: var(--text) !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        font-family: 'Inter', sans-serif !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        padding: 12px 24px !important;
+        min-height: 48px;
+        width: 100%;
+        font-size: 15px !important;
+        transition: all 0.2s ease !important;
     }
     .stButton > button[kind="secondary"]:hover {
-        border-color: var(--primary) !important;
-        color: var(--text) !important;
-        background: rgba(255,122,0,0.05) !important;
+        background: var(--surface-2) !important;
+        border-color: var(--border-hover) !important;
     }
 
-    /* Tabs */
+    /* Tertiary Buttons (Ghost) */
+    .stButton > button[kind="tertiary"] {
+        background: transparent !important;
+        border: none !important;
+        color: var(--muted) !important;
+        box-shadow: none !important;
+        font-weight: 500 !important;
+        padding: 8px 16px !important;
+        width: 100%;
+        font-size: 14px !important;
+        transition: color 0.2s ease !important;
+    }
+    .stButton > button[kind="tertiary"]:hover {
+        color: var(--text) !important;
+        background: rgba(255,255,255,0.05) !important;
+        border-radius: 8px !important;
+    }
+
+    /* Tabs as Segmented Control */
     div[data-testid="stTabs"] {
         background: transparent;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
     }
     div[data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 4px;
         background: var(--surface);
-        padding: 6px;
-        border-radius: 20px;
+        padding: 4px;
+        border-radius: 12px;
         border: 1px solid var(--border);
-        min-height: 60px;
+        min-height: 48px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
     div[data-baseweb="tab"] {
         background: transparent !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 8px !important;
         color: var(--muted) !important;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
-        padding: 12px 20px !important;
-        height: 48px;
+        padding: 8px 16px !important;
+        height: 40px;
         display: flex;
         font-size: 14px !important;
+        transition: all 0.2s ease !important;
+    }
+    div[data-baseweb="tab"]:hover {
+        color: var(--text) !important;
     }
     div[data-baseweb="tab"][aria-selected="true"] {
-        background: var(--surface-2) !important;
-        color: var(--primary) !important;
-        box-shadow: inset 0 -3px 0 var(--primary) !important;
+        background: var(--surface-3) !important;
+        color: var(--text) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
     }
 
     /* Expanders */
     .streamlit-expanderHeader {
         background: var(--surface) !important;
         color: var(--text) !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         border: 1px solid var(--border) !important;
         font-size: 14px !important;
+        font-weight: 500 !important;
     }
 
-    /* Hero */
+    /* Hero / Premium Trust Banner */
     .hero-card {
-        background: var(--surface);
+        background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
         border: 1px solid var(--border);
-        border-radius: 24px;
+        border-radius: 16px;
         padding: 24px;
         text-align: center;
         position: relative;
         overflow: hidden;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
     .hero-card::before {
         content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(255,122,0,0.1) 0%, rgba(0,0,0,0) 70%);
+        background: radial-gradient(circle, rgba(255,122,0,0.08) 0%, rgba(0,0,0,0) 60%);
         pointer-events: none;
     }
-    .hero-label { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
-    .hero-amount { font-size: 28px; font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--text); margin: 8px 0; line-height: 1.2; }
-    .hero-sub { font-size: 13px; color: var(--success); font-weight: 500; margin-top: 16px; display: flex; justify-content: center; gap: 16px; opacity: 0.9; }
+    .hero-label { 
+        font-size: 12px; 
+        color: var(--primary); 
+        font-weight: 700; 
+        text-transform: uppercase; 
+        letter-spacing: 1.5px; 
+        margin-bottom: 8px; 
+    }
+    .hero-amount { 
+        font-size: 28px; 
+        font-weight: 800; 
+        font-family: 'Poppins', sans-serif; 
+        color: var(--text); 
+        margin: 0; 
+        line-height: 1.2; 
+        letter-spacing: -0.02em;
+    }
+    .hero-sub { 
+        font-size: 13px; 
+        color: var(--muted); 
+        font-weight: 500; 
+        margin-top: 16px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        gap: 16px; 
+    }
+    .hero-sub span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
 
     /* Custom Cards */
     .dark-card {
-        background: var(--card);
+        background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 16px;
-        padding: 16px;
+        padding: 20px;
         margin-bottom: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     
-    .status-badge { display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
-    .status-success { background: rgba(34, 197, 94, 0.1); color: var(--success); }
-    .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); }
-
-    /* Global Typography overrides */
-    .stMarkdown, .stText {
-        font-family: 'Inter', sans-serif !important;
+    .status-badge { 
+        display: inline-flex; 
+        padding: 4px 10px; 
+        border-radius: 6px; 
+        font-size: 11px; 
+        font-weight: 600; 
+        font-family: 'Inter', sans-serif; 
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
+    .status-success { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.2); }
+    .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); border: 1px solid rgba(255, 122, 0, 0.2); }
 
     /* Fix spacing of forms */
     .stForm {
         border-color: var(--border) !important;
         background-color: var(--surface) !important;
         padding: 24px !important;
-        border-radius: 20px !important;
+        border-radius: 16px !important;
         margin-bottom: 24px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     }
     
     /* CTA Link button */
@@ -409,20 +490,78 @@ st.markdown("""
         align-items: center;
         background: var(--gradient);
         color: white !important;
-        padding: 16px;
-        border-radius: 14px;
+        padding: 14px;
+        border-radius: 12px;
         text-decoration: none;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 16px;
         font-family: 'Poppins', sans-serif;
         margin-bottom: 16px;
-        box-shadow: 0 4px 12px rgba(255,122,0,0.18);
+        box-shadow: 0 2px 8px rgba(255,122,0,0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        width: 100%;
     }
     .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255,122,0,0.25);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255,122,0,0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         color: white !important;
+    }
+    
+    /* Payment Summary Block */
+    .payment-summary {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        margin-bottom: 24px;
+    }
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+    .payment-label {
+        color: var(--muted);
+        font-weight: 500;
+    }
+    .payment-value {
+        color: var(--text);
+        font-weight: 600;
+    }
+    .payment-discount {
+        color: var(--success);
+        background: rgba(34,197,94,0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .payment-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 20px 0;
+        width: 100%;
+    }
+    .payment-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .payment-total-label {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 600;
+        padding-bottom: 4px;
+    }
+    .payment-total-value {
+        color: var(--primary);
+        font-size: 36px;
+        font-weight: 800;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1;
     }
 
 </style>
@@ -549,7 +688,7 @@ def patched_login(color='blue', justify_content="center"):
         authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
 <div style="display: flex; justify-content: {justify_content}; margin-top: 16px;">
-    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 4px 12px rgba(255, 122, 0, 0.18); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 12px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 4px 12px rgba(255, 122, 0, 0.15); transition: transform 0.2s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
         <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
     </a>
@@ -570,7 +709,7 @@ if not st.session_state.get('connected'):
     st.markdown(f"""
     <div style="text-align: center; padding: 32px 20px 24px 20px;">
         <img src="data:image/png;base64,{flag_base64}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
-        <h1 style="color: var(--text); font-weight: 800; font-size: 32px; margin-bottom: 8px; font-family: 'Poppins', sans-serif;">SKE Pay</h1>
+        <h1 style="color: var(--text); font-weight: 800; font-size: 36px; margin-bottom: 8px; font-family: 'Poppins', sans-serif; letter-spacing: -0.02em;">SKE Pay</h1>
         <p style="color: var(--primary); font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
         <p style="color: var(--muted); font-size: 14px; margin-top: 16px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
     </div>
@@ -595,7 +734,7 @@ with col1:
     """, unsafe_allow_html=True)
 with col2:
     st.markdown('<div class="logout-btn-container" style="display: flex; justify-content: flex-end;">', unsafe_allow_html=True)
-    if st.button("Logout", key="logout_btn", type="secondary"):
+    if st.button("Logout", key="logout_btn", type="tertiary"):
         authenticator.logout()
         st.session_state.logged_in = False
         st.session_state.user_phone = ""
@@ -616,7 +755,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if st.session_state.checkout:
-    st.markdown("<h2 style='padding: 0 8px; font-family: Poppins; margin-bottom: 24px;'>💳 Secure Checkout</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-family: Poppins; margin-bottom: 24px;'>💳 Secure Checkout</h2>", unsafe_allow_html=True)
     c = st.session_state.checkout
     
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
@@ -630,36 +769,33 @@ if st.session_state.checkout:
     c['discount'] = f"{discount:.2f}" 
     
     st.markdown(f"""
-    <div>
-        <div style="background: var(--surface); border-radius: 20px; padding: 24px; border: 1px solid var(--border); margin-bottom: 24px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                <span style="color: var(--muted); font-weight: 500; font-size: 14px;">Recharge Number</span>
-                <span style="font-weight: 600; color: var(--text); font-size: 14px;">{c['target']}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                <span style="color: var(--muted); font-weight: 500; font-size: 14px;">Operator</span>
-                <span style="font-weight: 600; color: var(--text); font-size: 14px;">{c['operator']}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                <span style="color: var(--muted); font-weight: 500; font-size: 14px;">MRP</span>
-                <span style="font-weight: 600; color: var(--text); font-size: 14px;">₹{original_price:.2f}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 24px; color: var(--success); font-weight: 600; font-size: 14px;">
-                <span>⚡ Instant Smart Discount ({c['discount_percent']}%)</span>
-                <span>- ₹{discount:.2f}</span>
-            </div>
-            <hr style="margin: 0 0 24px 0; border: none; border-top: 1px dashed rgba(255,255,255,0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 16px; font-weight: 600; color: var(--muted);">Total Payable</span>
-                <span style="font-size: 32px; font-weight: 800; color: var(--primary); font-family: 'Poppins', sans-serif;">₹{c['final_price']}</span>
-            </div>
+    <div class="payment-summary">
+        <div class="payment-row">
+            <span class="payment-label">Recharge Target</span>
+            <span class="payment-value">{c['target']}</span>
+        </div>
+        <div class="payment-row">
+            <span class="payment-label">Operator</span>
+            <span class="payment-value">{c['operator']}</span>
+        </div>
+        <div class="payment-row">
+            <span class="payment-label">MRP</span>
+            <span class="payment-value">₹{original_price:.2f}</span>
+        </div>
+        <div class="payment-row">
+            <span class="payment-label">Smart Discount ({c['discount_percent']}%)</span>
+            <span class="payment-discount">- ₹{discount:.2f}</span>
+        </div>
+        <div class="payment-divider"></div>
+        <div class="payment-total-row">
+            <span class="payment-total-label">Total Payable</span>
+            <span class="payment-total-value">₹{c['final_price']}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
 
     # UPI Only Flow
-    st.write("Pay securely using Google Pay or any UPI app.")
     if "current_txn_id" not in st.session_state:
         st.session_state.current_txn_id = f"UPI_{uuid.uuid4().hex[:10].upper()}"
     txn_id = st.session_state.current_txn_id
@@ -669,13 +805,16 @@ if st.session_state.checkout:
     transaction_note = f"Order+{txn_id}"
     upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
     
-    st.markdown(f'<a href="{upi_link}" target="_blank" class="cta-button">Pay ₹{c["final_price"]} via UPI</a>', unsafe_allow_html=True)
-    
-    st.markdown(f'<div style="text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 16px;">Order ID: <b>{txn_id}</b></div>', unsafe_allow_html=True)
-    st.caption("Click the button below once you have successfully completed the payment on your UPI app.")
+    st.markdown(f"""
+    <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <h3 style="font-size: 16px; margin-top: 0; margin-bottom: 16px; text-align: center; color: var(--text); font-weight: 600;">Complete Your Payment</h3>
+        <a href="{upi_link}" target="_blank" class="cta-button">Pay ₹{c["final_price"]} via UPI</a>
+        <div style="text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 24px;">Order ID: <b>{txn_id}</b></div>
+    """, unsafe_allow_html=True)
     
     with st.form("upi_verify_form"):
-        verify_btn = st.form_submit_button("I Have Paid")
+        st.markdown("<div style='text-align:center; font-size:14px; margin-bottom:16px; color:var(--text);'>Click below after completing payment on your UPI app.</div>", unsafe_allow_html=True)
+        verify_btn = st.form_submit_button("I Have Paid", type="secondary")
         if verify_btn:
             with st.spinner("Submitting your request..."): time.sleep(1.5)
             order = {
@@ -696,7 +835,9 @@ if st.session_state.checkout:
             del st.session_state.current_txn_id
             st.rerun()
 
-    if st.button("Cancel & Go Back", type="secondary"):
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if st.button("Cancel & Go Back", type="tertiary"):
         st.session_state.checkout = None
         if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
         st.rerun()
@@ -742,7 +883,7 @@ else:
         plan_options.insert(0, "Select a Plan")
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
-        if st.button("Proceed to Pay", key="mobile_btn"):
+        if st.button("Proceed to Pay", key="mobile_btn", type="primary"):
             if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
             elif operator == "Select Operator": st.error("Select an operator.")
             elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
@@ -772,7 +913,7 @@ else:
                             </div>
                             <div class="status-badge {badge_class}">{o['status']}</div>
                         </div>
-                        <div style="background: var(--surface); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border);">
+                        <div style="background: rgba(0,0,0,0.15); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border);">
                             <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
                                 <span style="color: var(--muted);">MRP</span><span style="font-weight: 600;">₹{o.get('mrp', o['amount'])}</span>
                             </div>
@@ -795,7 +936,7 @@ else:
                     with st.form(f"grievance_form_{o['txn_id']}"):
                         issue_type = st.selectbox("Issue Type", ["Recharge Not Received", "Amount Deducted but Order Failed", "Wrong Target Recharge", "Other"])
                         details = st.text_area("Details", placeholder="Describe the issue...")
-                        if st.form_submit_button("Submit Grievance"):
+                        if st.form_submit_button("Submit Grievance", type="secondary"):
                             grievance = {
                                 "id": f"GRV_{uuid.uuid4().hex[:8].upper()}", "txn_id": o['txn_id'], "issue_type": issue_type,
                                 "details": details, "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "status": "Open", "admin_reply": ""
@@ -820,11 +961,11 @@ else:
     <div class="status-badge {'status-success' if g['status'] == 'Resolved' else 'status-pending'}">{g['status']}</div>
 </div>
 <div style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
-<div style="background: var(--surface); padding: 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; margin-bottom: 12px;">
+<div style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; margin-bottom: 12px;">
     <span style="font-weight: 600; color: var(--text);">{g['issue_type']}</span><br>
     <span style="color: var(--muted); margin-top: 4px; display: inline-block;">{g['details']}</span>
 </div>
-<div style="font-size: 14px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px;">
+<div style="font-size: 14px; background: rgba(0,0,0,0.25); padding: 12px; border-radius: 12px;">
     <span style="font-weight: 600; color: var(--text);">Support Reply:</span><br>
     <span style="color: {'var(--success)' if g['admin_reply'] else 'var(--muted)'}; margin-top: 4px; display: inline-block;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
 </div>
@@ -856,7 +997,7 @@ else:
                                 if o['status'] == "Order Created":
                                     with st.form(f"pay_form_{o['txn_id']}", clear_on_submit=True):
                                         payment_id = st.text_input("Payment ID (Optional)", placeholder="Bank Ref")
-                                        if st.form_submit_button("Confirm Payment"):
+                                        if st.form_submit_button("Confirm Payment", type="primary"):
                                             update_data = {"status": "Payment Confirmed"}
                                             if payment_id: update_data["payment_utr"] = payment_id
                                             update_order(user, o['txn_id'], update_data)
@@ -869,7 +1010,7 @@ else:
                                 elif o['status'] == "Payment Confirmed":
                                     with st.form(f"rech_form_{o['txn_id']}", clear_on_submit=True):
                                         recharge_utr = st.text_input("Recharge UTR", placeholder="Required")
-                                        if st.form_submit_button("Complete Recharge"):
+                                        if st.form_submit_button("Complete Recharge", type="primary"):
                                             if not recharge_utr: st.error("UTR Required")
                                             else:
                                                 update_data = {"status": "Recharge Completed", "recharge_utr": recharge_utr}
@@ -912,7 +1053,7 @@ else:
                             st.write(f"**Details:** {g['details']}")
                             with st.form(f"resolve_grievance_{g['id']}"):
                                 reply = st.text_area("Reply to User")
-                                if st.form_submit_button("Mark Resolved"):
+                                if st.form_submit_button("Mark Resolved", type="primary"):
                                     update_data = {"status": "Resolved", "admin_reply": reply}
                                     update_grievance(user, g['id'], update_data)
                                     g_updated = g.copy()
@@ -949,7 +1090,7 @@ else:
                 with st.form("add_op_form", clear_on_submit=True):
                     col1, col2 = st.columns([3, 1])
                     new_op_name = col1.text_input("New Operator Name")
-                    if col2.form_submit_button("Add") and new_op_name and new_op_name not in mobile_ops:
+                    if col2.form_submit_button("Add", type="secondary") and new_op_name and new_op_name not in mobile_ops:
                         operators_data["mobile"]["operators"][new_op_name] = {"prefixes": [], "plans": []}
                         save_json_to_drive('operators.json', operators_data)
                         st.cache_data.clear()
@@ -964,7 +1105,7 @@ else:
                         st.write("**Plans**")
                         current_plans = op_data.get("plans", []) or [{"type": "", "description": "", "price": 0}]
                         edited_plans = st.data_editor(current_plans, num_rows="dynamic", use_container_width=True, key=f"de_mob_{selected_op}")
-                        if st.form_submit_button("Save Changes"):
+                        if st.form_submit_button("Save Changes", type="primary"):
                             op_data["prefixes"] = [p.strip() for p in new_prefixes.split(",") if p.strip()]
                             op_data["plans"] = [p for p in edited_plans if str(p.get("type", "")).strip() or str(p.get("description", "")).strip() or p.get("price")]
                             operators_data["mobile"]["operators"][selected_op] = op_data
@@ -973,7 +1114,7 @@ else:
                             st.success(f"Saved {selected_op}!")
                             time.sleep(1)
                             st.rerun()
-                    if st.button(f"Delete {selected_op}"):
+                    if st.button(f"Delete {selected_op}", type="tertiary"):
                         del operators_data["mobile"]["operators"][selected_op]
                         save_json_to_drive('operators.json', operators_data)
                         st.cache_data.clear()
