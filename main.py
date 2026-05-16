@@ -144,7 +144,7 @@ st.markdown("""
     /* Master Container Reset */
     .block-container {
         width: 100% !important;
-        max-width: 1000px !important;
+        max-width: 1100px !important;
         margin: 0 auto !important;
         padding: 100px 24px 60px 24px !important;
     }
@@ -167,9 +167,9 @@ st.markdown("""
         position: fixed;
         top: 0; left: 0; right: 0;
         height: 72px;
-        background: rgba(17, 24, 39, 0.6);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         display: flex;
         justify-content: center;
@@ -177,7 +177,7 @@ st.markdown("""
     }
     .glass-nav-content {
         width: 100%;
-        max-width: 1000px;
+        max-width: 1100px;
         padding: 0 24px;
         display: flex;
         justify-content: space-between;
@@ -192,13 +192,13 @@ st.markdown("""
     .brand-sub { color: var(--muted); font-size: 11px; font-weight: 500; font-family: 'Inter', sans-serif; margin-top: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
 
     /* Hide the Streamlit column wrapper around the logout button so we can style the button directly */
-    [data-testid="stHorizontalBlock"] { display: none !important; } /* We will inject custom HTML instead of columns for the header */
+    [data-testid="stHorizontalBlock"] { display: none !important; } 
 
     /* The new invisible container trick for Streamlit buttons */
     .logout-btn-container {
         position: fixed;
         top: 18px;
-        right: max(24px, calc(50vw - 500px + 24px));
+        right: max(24px, calc(50vw - 550px + 24px));
         z-index: 1001;
     }
     
@@ -220,63 +220,40 @@ st.markdown("""
         border-color: var(--border-hover) !important;
     }
 
-    /* Asymmetric Hero Redesign */
-    .hero-container {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        margin-bottom: 48px;
-        margin-top: 24px;
+    /* Minimal Compact Banner (Replaced Hero) */
+    .compact-banner {
+        background: rgba(17, 24, 39, 0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 40px;
+        text-align: center;
+        backdrop-filter: blur(10px);
     }
-    @media (min-width: 768px) {
-        .hero-container { flex-direction: row; align-items: center; justify-content: space-between; }
-        .hero-left { flex: 1.2; padding-right: 48px; }
-        .hero-right { flex: 0.8; display: flex; flex-direction: column; gap: 16px; align-items: flex-end; }
-    }
-    
-    .hero-h1 {
-        font-size: 56px;
-        font-weight: 800;
-        font-family: 'Poppins', sans-serif;
-        line-height: 1.05;
-        letter-spacing: -0.04em;
-        background: linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.7) 100%);
+    .compact-banner h2 {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        margin-bottom: 4px !important;
+        background: linear-gradient(90deg, #FFF, #CCC);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 24px;
     }
-    .hero-h1 span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
-    .hero-p { color: var(--muted); font-size: 18px; line-height: 1.6; margin-bottom: 32px; font-weight: 400; max-width: 480px; }
-    
-    .trust-pill {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        border-radius: 100px;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
+    .compact-banner p {
         font-size: 14px;
-        font-weight: 600;
-        color: var(--text);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        color: var(--muted);
+        margin: 0;
     }
-    .trust-pill:hover { transform: translateX(-4px); border-color: var(--border-hover); }
-    .trust-pill.orange i { color: var(--primary); font-style: normal; font-size: 16px; }
-    .trust-pill.green i { color: var(--success); font-style: normal; font-size: 16px; }
 
-    /* Elevated Content Layouts */
-    .layout-grid {
+    /* 2-Column Transaction Architecture */
+    .transaction-layout {
         display: flex;
         flex-direction: column;
         gap: 32px;
     }
     @media (min-width: 860px) {
-        .layout-grid { flex-direction: row; align-items: flex-start; }
-        .layout-main { flex: 1.5; }
-        .layout-sidebar { flex: 1; position: sticky; top: 100px; }
+        .transaction-layout { flex-direction: row; align-items: flex-start; }
+        .transaction-left { flex: 1.2; }
+        .transaction-right { flex: 1; position: sticky; top: 100px; }
     }
 
     /* Premium Form Surface */
@@ -289,9 +266,9 @@ st.markdown("""
         position: relative;
         overflow: hidden;
     }
-    .premium-surface::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255,122,0,0.3), transparent);
+    
+    .transaction-left .premium-surface {
+        padding: 32px;
     }
 
     /* Form Components */
@@ -317,28 +294,63 @@ st.markdown("""
     }
     .stTextInput label, .stSelectbox label {
         color: var(--muted) !important;
-        font-size: 14px !important;
+        font-size: 13px !important;
         font-weight: 600 !important;
         margin-bottom: 10px !important;
         letter-spacing: 0.01em;
+        text-transform: uppercase;
     }
 
-    /* Live Summary Panel */
-    .live-summary-card {
+    /* Live Summary Dominant Panel */
+    .transaction-right .live-summary-card {
         background: linear-gradient(145deg, #1C263B 0%, #111827 100%);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,122,0,0.2);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 40px rgba(255,122,0,0.05);
+        position: relative;
     }
-    .summary-header { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+    .summary-header { font-size: 13px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
+    .summary-plan { font-size: 22px; font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+    .summary-mrp { font-size: 15px; color: var(--muted); margin-bottom: 24px; }
     .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .summary-label { color: var(--muted); font-size: 15px; font-weight: 500; }
     .summary-value { color: var(--text); font-size: 15px; font-weight: 600; }
     .summary-accent { color: var(--success); font-weight: 600; background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 8px; font-size: 13px; }
-    .summary-divider { height: 1px; background: var(--border); margin: 24px 0; border: none; }
-    .summary-total-label { color: var(--text); font-size: 18px; font-weight: 600; }
-    .summary-total-value { color: var(--primary); font-size: 40px; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
+    .summary-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 24px 0; border: none; width: 100%; }
+    
+    .summary-total-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 32px;
+    }
+    .summary-total-label { color: var(--muted); font-size: 15px; font-weight: 500; }
+    .summary-total-value { color: var(--primary); font-size: 48px; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
+
+    /* Trust Indicators inside Summary */
+    .trust-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: rgba(0,0,0,0.2);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.03);
+    }
+    .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 500;
+    }
+    .trust-item i {
+        color: var(--success);
+        font-style: normal;
+        font-weight: 700;
+    }
 
     /* Next Gen Tabs */
     div[data-testid="stTabs"] { background: transparent; margin-bottom: 40px; }
@@ -378,20 +390,20 @@ st.markdown("""
         background: var(--gradient) !important;
         color: #fff !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 16px !important;
         font-weight: 700 !important;
         font-family: 'Poppins', sans-serif !important;
-        box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 8px 24px rgba(255, 122, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         padding: 16px 24px !important;
-        min-height: 56px;
+        min-height: 60px;
         width: 100%;
-        font-size: 16px !important;
+        font-size: 18px !important;
         letter-spacing: 0.5px;
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(255, 122, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 12px 32px rgba(255, 122, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         filter: brightness(1.1);
     }
     
@@ -399,19 +411,31 @@ st.markdown("""
         background: rgba(255,255,255,0.03) !important;
         border: 1px solid var(--border) !important;
         color: var(--text) !important;
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         font-weight: 600 !important;
         font-family: 'Inter', sans-serif !important;
         padding: 16px 24px !important;
-        min-height: 52px;
+        min-height: 56px;
         width: 100%;
-        font-size: 15px !important;
+        font-size: 16px !important;
         transition: all 0.2s ease !important;
     }
     .stButton > button[kind="secondary"]:hover {
         background: rgba(255,255,255,0.06) !important;
         border-color: var(--border-hover) !important;
     }
+
+    /* Tertiary / Text buttons */
+    .stButton > button[kind="tertiary"] {
+        background: transparent !important;
+        border: none !important;
+        color: var(--muted) !important;
+        box-shadow: none !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+        transition: color 0.2s ease !important;
+    }
+    .stButton > button[kind="tertiary"]:hover { color: var(--text) !important; }
 
     /* Override ugly Streamlit form borders completely */
     .stForm {
@@ -605,23 +629,15 @@ if st.button("Logout", key="logout_btn", type="tertiary"):
     st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 2. ASYMMETRIC HERO SECTION
+# 2. COMPACT TOP BANNER
 st.markdown("""
-<div class="hero-container">
-    <div class="hero-left">
-        <div class="hero-h1">Recharge Smarter.<br><span>Pay Faster.</span></div>
-        <div class="hero-p">Secure, instant mobile recharges powered by modern UPI infrastructure. Join the future of Indian payments.</div>
-    </div>
-    <div class="hero-right">
-        <div class="trust-pill orange"><i>⚡</i> Instant Processing</div>
-        <div class="trust-pill green"><i>🔒</i> 256-bit Secure</div>
-        <div class="trust-pill"><i>📱</i> UPI Ready</div>
-    </div>
+<div class="compact-banner">
+    <h2>Recharge Smarter. Pay Faster.</h2>
+    <p>Secure UPI-powered mobile recharges.</p>
 </div>
 """, unsafe_allow_html=True)
 
 if st.session_state.checkout:
-    st.markdown("<h2 style='font-family: Poppins; margin-bottom: 32px;'>Secure Checkout</h2>", unsafe_allow_html=True)
     c = st.session_state.checkout
     
     original_price = float(c['price'].replace('₹', '').replace(',', '').strip())
@@ -633,39 +649,6 @@ if st.session_state.checkout:
     c['final_price'] = f"{final_price:.2f}"
     c['mrp'] = f"{original_price:.2f}"
     c['discount'] = f"{discount:.2f}" 
-    
-    st.markdown(f"""
-    <div class="layout-grid">
-        <div class="layout-main">
-            <div class="premium-surface" style="padding: 40px;">
-                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 24px;">Payment Summary</h3>
-                <div class="live-summary-card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
-                    <div class="summary-row">
-                        <span class="summary-label">Recharge Target</span>
-                        <span class="summary-value" style="font-size: 18px;">{c['target']}</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Operator</span>
-                        <span class="summary-value">{c['operator']}</span>
-                    </div>
-                    <div class="summary-row" style="margin-top: 24px;">
-                        <span class="summary-label">MRP</span>
-                        <span class="summary-value">₹{original_price:.2f}</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label">⚡ Smart Discount ({c['discount_percent']}%)</span>
-                        <span class="summary-accent">- ₹{discount:.2f}</span>
-                    </div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-total-row">
-                        <span class="summary-total-label">Total Payable</span>
-                        <span class="summary-total-value">₹{c['final_price']}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="layout-sidebar">
-    """, unsafe_allow_html=True)
 
     # UPI Only Flow
     if "current_txn_id" not in st.session_state:
@@ -676,17 +659,25 @@ if st.session_state.checkout:
     merchant_name = "SriKailashElectronics"
     transaction_note = f"Order+{txn_id}"
     upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
-    
+
     st.markdown(f"""
+    <div class="transaction-layout">
+        <div class="transaction-left">
             <div class="premium-surface">
-                <div class="summary-header" style="color: var(--text);">Complete Payment</div>
-                <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Pay securely using Google Pay, PhonePe, or any UPI app.</p>
-                <a href="{upi_link}" target="_blank" style="display: flex; justify-content: center; align-items: center; background: var(--gradient); color: white; padding: 16px 24px; border-radius: 14px; font-weight: 700; font-size: 16px; font-family: 'Poppins', sans-serif; text-decoration: none; box-shadow: 0 8px 20px rgba(255,122,0,0.25); transition: transform 0.2s ease; margin-bottom: 24px;">
+                <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 32px; font-family: 'Poppins', sans-serif;">Complete Secure Payment</h3>
+                
+                <p style="color: var(--muted); font-size: 15px; margin-bottom: 32px;">Please proceed to pay using Google Pay, PhonePe, or any UPI-enabled application.</p>
+                
+                <a href="{upi_link}" target="_blank" style="display: flex; justify-content: center; align-items: center; background: var(--gradient); color: white; padding: 20px 24px; border-radius: 16px; font-weight: 700; font-size: 18px; font-family: 'Poppins', sans-serif; text-decoration: none; box-shadow: 0 8px 24px rgba(255,122,0,0.3); transition: transform 0.2s ease, filter 0.2s ease; margin-bottom: 32px;">
                     Pay ₹{c["final_price"]} via UPI
                 </a>
-                <div style="text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 32px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px;">Order ID: <b style="color: var(--text);">{txn_id}</b></div>
+                
+                <div style="text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    Transaction ID: <b style="color: var(--text); font-family: monospace; font-size: 15px;">{txn_id}</b>
+                </div>
+                
                 <hr class="summary-divider">
-                <div style="font-size: 13px; color: var(--muted); margin-bottom: 16px; text-align: center;">Click below <b>after</b> completing payment.</div>
+                <div style="font-size: 14px; color: var(--muted); margin-bottom: 24px; text-align: center; font-weight: 500;">Click below <b>after</b> completing the payment on your app.</div>
     """, unsafe_allow_html=True)
     
     with st.form("upi_verify_form"):
@@ -710,14 +701,60 @@ if st.session_state.checkout:
             del st.session_state.current_txn_id
             st.rerun()
 
-    st.markdown("</div></div></div>", unsafe_allow_html=True)
-
+    st.markdown("</div>", unsafe_allow_html=True)
+    
     st.markdown("<div style='margin-top: 24px; text-align: center;'>", unsafe_allow_html=True)
     if st.button("Cancel & Go Back", type="tertiary"):
         st.session_state.checkout = None
         if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
         st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div></div>", unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div class="transaction-right">
+            <div class="live-summary-card">
+                <div class="summary-header">Payment Summary</div>
+                
+                <div class="summary-plan">{c['plan_str'].split(' (')[0] if '(' in c['plan_str'] else c['plan_str']}</div>
+                <div class="summary-mrp">MRP: ₹{original_price:.2f}</div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Target Number</span>
+                    <span class="summary-value">{c['target']}</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Operator</span>
+                    <span class="summary-value">{c['operator']}</span>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">⚡ Smart Discount</span>
+                    <span class="summary-accent">{c['discount_percent']}% applied</span>
+                </div>
+                
+                <div class="summary-row" style="margin-bottom: 24px;">
+                    <span class="summary-label">You Save</span>
+                    <span class="summary-value" style="color: var(--success);">₹{discount:.2f}</span>
+                </div>
+                
+                <div class="summary-total-container">
+                    <span class="summary-total-label">Total Payable</span>
+                    <span class="summary-total-value">₹{c['final_price']}</span>
+                </div>
+                
+                <div class="trust-list">
+                    <div class="trust-item"><i>✔</i> Instant Recharge Processing</div>
+                    <div class="trust-item"><i>✔</i> UPI Secure Transaction</div>
+                    <div class="trust-item"><i>✔</i> 256-bit Bank Encryption</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 else:
     is_admin = st.session_state.user_phone in ADMIN_EMAILS
@@ -740,10 +777,10 @@ else:
 
     with tab1:
         st.markdown("""
-        <div class="layout-grid">
-            <div class="layout-main">
+        <div class="transaction-layout">
+            <div class="transaction-left">
                 <div class="premium-surface">
-                    <h2 style='margin-bottom:32px; font-size: 24px;'>Mobile Recharge</h2>
+                    <h2 style='margin-bottom:32px; font-size: 28px;'>Mobile Recharge</h2>
         """, unsafe_allow_html=True)
         
         if "last_phone_prefix" not in st.session_state: st.session_state.last_phone_prefix = ""
@@ -766,14 +803,18 @@ else:
         plan_options.insert(0, "Select a Plan")
         selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
         
+        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
+        if st.button("Continue to Secure UPI Payment", key="mobile_btn", type="primary"):
+            if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
+            elif operator == "Select Operator": st.error("Select an operator.")
+            elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
+            else:
+                price_str = selected_plan_str.split(" ")[-1][1:-1]
+                st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
+                st.rerun()
+                
         st.markdown("</div></div>", unsafe_allow_html=True)
 
-        st.markdown("""
-            <div class="layout-sidebar">
-                <div class="live-summary-card">
-                    <div class="summary-header">Live Summary</div>
-        """, unsafe_allow_html=True)
-        
         preview_price = 0.00
         preview_discount = 0.00
         preview_total = 0.00
@@ -783,45 +824,55 @@ else:
                 preview_discount = preview_price * 0.0023  # Simulated visual constant 0.23%
                 preview_total = preview_price - preview_discount
             except: pass
-            
+
         st.markdown(f"""
+            <div class="transaction-right">
+                <div class="live-summary-card">
+                    <div class="summary-header">Live Summary</div>
+                    
+                    <div class="summary-plan">{selected_plan_str.split(' (')[0] if '(' in selected_plan_str else 'No Plan Selected'}</div>
+                    <div class="summary-mrp" style="margin-bottom: 24px;">MRP: ₹{preview_price:.2f}</div>
+                    
                     <div class="summary-row">
                         <span class="summary-label">Target</span>
                         <span class="summary-value">{phone_number if phone_number else '—'}</span>
                     </div>
+                    
                     <div class="summary-row">
                         <span class="summary-label">Operator</span>
                         <span class="summary-value">{operator if operator != "Select Operator" else '—'}</span>
                     </div>
+                    
                     <div class="summary-divider"></div>
+                    
                     <div class="summary-row">
-                        <span class="summary-label">MRP</span>
-                        <span class="summary-value">₹{preview_price:.2f}</span>
+                        <span class="summary-label">⚡ Smart Discount</span>
+                        <span class="summary-accent">0.23% applied</span>
                     </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Smart Discount</span>
-                        <span class="summary-accent">- ₹{preview_discount:.2f}</span>
+                    
+                    <div class="summary-row" style="margin-bottom: 24px;">
+                        <span class="summary-label">You Save</span>
+                        <span class="summary-value" style="color: var(--success);">₹{preview_discount:.2f}</span>
                     </div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-total-row">
-                        <span class="summary-total-label">Total</span>
+                    
+                    <div class="summary-total-container">
+                        <span class="summary-total-label">Total Payable</span>
                         <span class="summary-total-value">₹{preview_total:.2f}</span>
                     </div>
+                    
+                    <div class="trust-list">
+                        <div class="trust-item"><i>✔</i> Instant Recharge Processing</div>
+                        <div class="trust-item"><i>✔</i> UPI Secure Transaction</div>
+                        <div class="trust-item"><i>✔</i> 256-bit Bank Encryption</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
         """, unsafe_allow_html=True)
-        
-        st.markdown("<div style='margin-top: 32px;'>", unsafe_allow_html=True)
-        if st.button("Continue to Secure Payment", key="mobile_btn", type="primary"):
-            if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
-            elif operator == "Select Operator": st.error("Select an operator.")
-            elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
-            else:
-                price_str = selected_plan_str.split(" ")[-1][1:-1]
-                st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
-                st.rerun()
-        st.markdown("</div></div></div></div>", unsafe_allow_html=True)
 
     with tab_orders:
-        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 24px;'>Activity History</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 28px;'>Activity History</h2>", unsafe_allow_html=True)
         orders_db = load_orders()
         user_orders = orders_db.get(st.session_state.user_phone, [])
         if not user_orders:
@@ -833,7 +884,7 @@ else:
                     status_class = "success" if o['status'] == "Recharge Completed" else "pending"
                     badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
                     html = f"""
-                    <div class="live-summary-card" style="margin-bottom: 24px;">
+                    <div class="live-summary-card" style="margin-bottom: 24px; padding: 24px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                             <div>
                                 <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--text); font-size: 18px;">{o['type']} • {o['operator']}</div>
@@ -878,7 +929,7 @@ else:
         st.markdown("</div>", unsafe_allow_html=True)
 
     with tab_grievances:
-        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 24px;'>Support Tickets</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 28px;'>Support Tickets</h2>", unsafe_allow_html=True)
         grievances_db = load_grievances()
         user_grievances = grievances_db.get(st.session_state.user_phone, [])
         if not user_grievances: st.info("No active support tickets.")
