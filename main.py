@@ -260,46 +260,71 @@ st.set_page_config(
 def render_css():
     css = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800;900&display=swap');
 
 :root {
-    --bg: #030712;
-    --surface-solid: #111827;
-    --surface-2: #1F2937;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.16);
+    --bg: #000000;
+    --surface-solid: #0A0A0A;
+    --surface-2: #111111;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.12);
     --primary: #FF7A00;
-    --success: #10B981;
-    --text: #F9FAFB;
-    --muted: #9CA3AF;
+    --primary-glow: rgba(255, 122, 0, 0.25);
+    --success: #00D084;
+    --success-glow: rgba(0, 208, 132, 0.2);
+    --text: #FFFFFF;
+    --muted: #888888;
     --gradient: linear-gradient(135deg, #FF7A00 0%, #E65C00 100%);
 }
 
 #MainMenu, footer, header { display: none !important; }
 
+/* Aggressive Fintech Atmosphere */
 .stApp {
     background-color: var(--bg) !important;
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 122, 0, 0.04), transparent 30%),
-        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03), transparent 30%) !important;
+        radial-gradient(circle at 50% 0%, rgba(255, 122, 0, 0.05), transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(0, 208, 132, 0.03), transparent 40%) !important;
     color: var(--text);
     font-family: 'Inter', sans-serif;
 }
-
 .main { background: transparent !important; }
 
-/* Desktop Grid Layout Constraint */
+/* Massive Desktop Architecture Constraint */
 .block-container {
     width: 100% !important;
-    max-width: 1100px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 100px 24px 80px 24px !important;
+    padding: 120px 24px 80px 24px !important;
 }
 
-/* Typography Unified Hierarchy */
-h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: var(--text) !important; letter-spacing: -0.02em; }
+/* Violent Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: var(--text) !important; letter-spacing: -0.02em; margin: 0; }
+.section-title { font-size: 36px !important; font-weight: 800 !important; margin-bottom: 32px !important; line-height: 1.1; letter-spacing: -0.03em; }
 
-/* Sticky Right Column Summary Trick */
+/* Form Group Rhythm */
+.stTextInput, .stSelectbox, .stTextArea { margin-bottom: 20px !important; }
+
+/* Tactile Compact Inputs */
+.stTextInput input, .stSelectbox div[data-baseweb="select"] > div, .stTextArea textarea {
+    background: #0D0D0D !important; border: 1px solid var(--border) !important;
+    color: white !important; border-radius: 12px !important;
+    min-height: 52px !important; height: 52px !important; font-size: 16px !important; font-weight: 500 !important;
+    padding: 0 16px !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.stTextInput input::placeholder { color: #555555 !important; font-weight: 400 !important; }
+.stTextInput input:focus, .stSelectbox div[data-baseweb="select"] > div:focus-within {
+    border-color: rgba(255, 122, 0, 0.6) !important;
+    box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.6), inset 0 2px 4px rgba(0,0,0,0.5) !important;
+    background: #000000 !important;
+}
+.stTextInput label, .stSelectbox label {
+    color: var(--muted) !important; font-size: 12px !important; font-weight: 600 !important;
+    margin-bottom: 6px !important; text-transform: uppercase; letter-spacing: 0.8px;
+}
+
+/* Sticky Right Column Summary */
 [data-testid="column"]:nth-of-type(2) {
     position: sticky;
     top: 100px;
@@ -309,118 +334,102 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; color: v
 /* Navbar System */
 .glass-nav {
     position: fixed; top: 0; left: 0; right: 0; height: 72px;
-    background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: center; z-index: 1000;
 }
 .glass-nav-content {
-    width: 100%; max-width: 1100px; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; height: 100%;
+    width: 100%; max-width: 1200px; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; height: 100%;
 }
 .brand-wrap { display: flex; align-items: center; gap: 12px; }
-.brand-flag { width: 32px; height: 24px; object-fit: cover; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-.brand-title { color: white; font-size: 22px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
-.brand-sub { color: var(--muted); font-size: 11px; font-weight: 500; font-family: 'Inter', sans-serif; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+.brand-flag { width: 28px; height: 20px; object-fit: cover; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.brand-title { color: white; font-size: 20px; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
+.brand-sub { color: var(--muted); font-size: 10px; font-weight: 600; font-family: 'Inter', sans-serif; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Anchoring Logout Button using Streamlit sibling hack */
-.logout-anchor + div {
-    position: fixed !important; top: 16px !important; right: max(24px, calc(50vw - 550px + 24px)) !important; z-index: 1001 !important; width: auto !important;
-}
+/* Logout Anchor Hack */
+.logout-anchor + div { position: fixed !important; top: 18px !important; right: max(24px, calc(50vw - 600px + 24px)) !important; z-index: 1001 !important; width: auto !important; }
 
-/* Compact Hero */
-.compact-hero {
-    background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 16px; padding: 24px 32px; margin-bottom: 40px; text-align: left;
-    backdrop-filter: blur(10px);
+/* Dominant Summary Card Architecture */
+.dominant-summary {
+    background: linear-gradient(160deg, #111111 0%, #050505 100%);
+    border: 1px solid rgba(255,122,0,0.15); border-radius: 24px; padding: 40px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.8), 0 0 80px rgba(255,122,0,0.05);
 }
-.compact-hero h2 { font-size: 28px !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; color: white !important; }
-.compact-hero p { font-size: 15px; color: var(--muted); margin: 0; }
-
-/* Premium Surface for Form */
-.premium-surface {
-    background: var(--surface-solid); border: 1px solid var(--border);
-    border-radius: 20px; padding: 32px; box-shadow: 0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-
-/* Streamlit Forms unified UI */
-.stTextInput, .stSelectbox, .stTextArea { margin-bottom: 24px !important; }
-
-.stTextInput input, .stSelectbox div[data-baseweb="select"] > div, .stTextArea textarea {
-    background: #0A0F1A !important; border: 1px solid var(--border) !important;
-    color: white !important; border-radius: 12px !important;
-    min-height: 56px !important; height: 56px !important; font-size: 16px !important;
-    padding: 0 16px !important; box-shadow: inset 0 2px 6px rgba(0,0,0,0.4) !important;
-    transition: all 0.2s ease !important; display: flex !important; align-items: center !important;
-}
-.stTextInput input::placeholder { color: #4B5563 !important; }
-.stTextInput input:focus, .stSelectbox div[data-baseweb="select"] > div:focus-within {
-    border-color: rgba(255, 122, 0, 0.6) !important;
-    box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.6), inset 0 2px 6px rgba(0,0,0,0.2) !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-}
-.stTextInput label, .stSelectbox label {
-    color: var(--muted) !important; font-size: 13px !important; font-weight: 600 !important;
-    margin-bottom: 8px !important; text-transform: uppercase; letter-spacing: 0.5px;
-}
-
-/* Live Summary Confidence Sidebar */
-.live-summary-card {
-    background: linear-gradient(145deg, #1C263B 0%, #111827 100%);
-    border: 1px solid rgba(255,122,0,0.2); border-radius: 20px; padding: 32px;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.summary-header { font-size: 13px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
-.summary-plan { font-size: 24px; font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+.summary-eyebrow { font-size: 12px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 24px; }
 .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .summary-label { color: var(--muted); font-size: 15px; font-weight: 500; }
 .summary-value { color: var(--text); font-size: 15px; font-weight: 600; }
-.summary-accent { color: var(--success); font-weight: 600; background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 8px; font-size: 13px; }
-.summary-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 24px 0; border: none; width: 100%; }
-.summary-total-label { color: var(--muted); font-size: 15px; font-weight: 500; margin-bottom: 8px; display: block; }
-.summary-total-value { color: var(--primary); font-size: 48px; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1; letter-spacing: -0.02em; }
 
-/* Streamlit Native Buttons */
+/* Giant Payable Anchor */
+.giant-payable-wrap { margin: 32px 0; padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.giant-payable-label { color: var(--muted); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.giant-payable-amount { 
+    color: var(--primary); font-size: 64px; font-weight: 900; font-family: 'Poppins', sans-serif; 
+    line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--primary-glow);
+}
+
+/* Savings Animation Emphasis */
+.savings-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0, 208, 132, 0.1); border: 1px solid rgba(0, 208, 132, 0.2);
+    color: var(--success); font-weight: 700; font-size: 14px; padding: 8px 16px; border-radius: 8px;
+    box-shadow: 0 0 20px var(--success-glow);
+}
+
+/* Trust Indicators */
+.trust-row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: #666; font-weight: 600; margin-bottom: 12px; }
+.trust-row i { color: var(--success); font-style: normal; }
+
+/* Streamlit Native CTA Overrides */
 .stButton > button[kind="primary"] {
     background: var(--gradient) !important; color: #fff !important; border: none !important;
-    border-radius: 14px !important; font-weight: 700 !important; font-family: 'Poppins', sans-serif !important;
-    box-shadow: 0 8px 24px rgba(255, 122, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-    transition: all 0.3s ease !important; padding: 16px 24px !important; min-height: 60px !important;
-    width: 100% !important; font-size: 18px !important; letter-spacing: 0.5px;
+    border-radius: 12px !important; font-weight: 800 !important; font-family: 'Poppins', sans-serif !important;
+    box-shadow: 0 8px 32px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; padding: 0 24px !important; 
+    height: 64px !important; width: 100% !important; font-size: 18px !important; letter-spacing: 0.5px;
 }
 .stButton > button[kind="primary"]:hover {
-    transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255, 122, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px); box-shadow: 0 16px 40px rgba(255, 122, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     filter: brightness(1.1);
 }
 .stButton > button[kind="secondary"] {
-    background: rgba(255,255,255,0.03) !important; border: 1px solid var(--border) !important;
-    color: var(--text) !important; border-radius: 12px !important; font-weight: 600 !important;
-    padding: 16px 24px !important; min-height: 56px !important; width: 100% !important; font-size: 16px !important;
+    background: #111111 !important; border: 1px solid var(--border) !important;
+    color: var(--text) !important; border-radius: 12px !important; font-weight: 700 !important; font-family: 'Inter', sans-serif !important;
+    height: 56px !important; width: 100% !important; font-size: 16px !important; transition: all 0.2s ease !important;
 }
-.stButton > button[kind="secondary"]:hover { background: rgba(255,255,255,0.06) !important; border-color: var(--border-hover) !important; }
+.stButton > button[kind="secondary"]:hover { background: #1A1A1A !important; border-color: var(--border-hover) !important; }
 .stButton > button[kind="tertiary"] {
     background: transparent !important; border: 1px solid var(--border) !important; color: var(--muted) !important;
-    padding: 8px 16px !important; border-radius: 8px !important; min-height: 36px !important; font-size: 13px !important; font-weight: 600 !important;
+    padding: 0 16px !important; border-radius: 8px !important; height: 36px !important; font-size: 12px !important; font-weight: 600 !important;
 }
-.stButton > button[kind="tertiary"]:hover { color: var(--text) !important; background: var(--surface-solid) !important; border-color: var(--border-hover) !important; }
+.stButton > button[kind="tertiary"]:hover { color: var(--text) !important; background: #111111 !important; border-color: var(--border-hover) !important; }
 
-/* Tabs */
-div[data-testid="stTabs"] { background: transparent; margin-bottom: 32px; }
+/* Segmented Tabs */
+div[data-testid="stTabs"] { background: transparent; margin-bottom: 40px; }
 div[data-baseweb="tab-list"] {
-    gap: 8px; background: rgba(17,24,39,0.5); backdrop-filter: blur(12px); padding: 6px;
-    border-radius: 100px; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    display: inline-flex;
+    gap: 8px; background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); padding: 6px;
+    border-radius: 100px; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); display: inline-flex;
 }
 div[data-baseweb="tab"] {
-    background: transparent !important; border: none !important; border-radius: 100px !important;
-    color: var(--muted) !important; font-family: 'Inter', sans-serif; font-weight: 600;
-    padding: 10px 24px !important; height: 44px; display: flex; font-size: 15px !important; transition: all 0.3s ease !important;
+    background: transparent !important; border: none !important; border-radius: 100px !important; color: var(--muted) !important;
+    font-family: 'Inter', sans-serif; font-weight: 600; padding: 10px 24px !important; height: 44px; display: flex; font-size: 14px !important; transition: all 0.3s ease !important;
 }
 div[data-baseweb="tab"]:hover { color: var(--text) !important; }
 div[data-baseweb="tab"][aria-selected="true"] {
-    background: var(--surface-3) !important; color: var(--text) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    background: #1A1A1A !important; color: var(--text) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1) !important;
 }
 
 /* Remove default form styling */
 .stForm { border: none !important; padding: 0 !important; background: transparent !important; box-shadow: none !important; }
+
+/* Mobile Bottom Sticky CTA */
+@media (max-width: 768px) {
+    .mobile-sticky-cta {
+        position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); padding: 16px 20px; z-index: 999;
+    }
+    .block-container { padding-bottom: 120px !important; }
+}
 </style>
 """
     st.markdown(css, unsafe_allow_html=True)
@@ -449,53 +458,43 @@ def render_navbar():
         st.session_state.checkout = None
         st.rerun()
 
-def render_compact_hero():
-    html = """
-<div class="compact-hero">
-<h2>Recharge Smarter. Pay Faster.</h2>
-<p>Secure UPI-powered mobile recharges tailored for modern India.</p>
-</div>
-"""
-    st.markdown(html, unsafe_allow_html=True)
-
 def render_live_summary(phone, operator, plan_str, price, discount, total):
     plan_name = plan_str.split(' (')[0] if '(' in plan_str else 'No Plan Selected'
+    
+    # Conditional animation class rendering
+    savings_html = f"""
+<div class="savings-badge">
+<span style="font-size: 16px;">⚡</span> 0.23% Smart Discount
+</div>
+""" if discount > 0 else ""
+
     html = f"""
-<div class="live-summary-card">
-<div class="summary-header">Live Payment Summary</div>
-<div class="summary-plan">{plan_name}</div>
-<div style="color: #9CA3AF; margin-bottom: 32px; font-size: 15px;">MRP: ₹{price:.2f}</div>
+<div class="dominant-summary">
+<div class="summary-eyebrow">Transaction Summary</div>
+
+<div style="font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; color: white; margin-bottom: 4px; line-height: 1.2;">{plan_name}</div>
+<div style="color: #666; font-size: 14px; font-weight: 600; margin-bottom: 32px;">MRP: ₹{price:.2f}</div>
 
 <div class="summary-row">
-<span class="summary-label">Target Number</span>
-<span class="summary-value">{phone if phone else '—'}</span>
+<span class="summary-label">Recharge Target</span>
+<span class="summary-value" style="font-family: monospace; font-size: 16px;">{phone if phone else '—'}</span>
 </div>
 <div class="summary-row">
-<span class="summary-label">Operator</span>
+<span class="summary-label">Network Operator</span>
 <span class="summary-value">{operator if operator != "Select Operator" else '—'}</span>
 </div>
 
-<div class="summary-divider"></div>
-
-<div class="summary-row">
-<span class="summary-label">⚡ Smart Discount</span>
-<span style="color: #10B981; font-weight: 600; background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 8px; font-size: 13px;">0.23% applied</span>
-</div>
-<div class="summary-row" style="margin-bottom: 32px;">
-<span class="summary-label">You Save</span>
-<span style="color: #10B981; font-weight: 600; font-size: 15px;">₹{discount:.2f}</span>
+<div style="margin-top: 24px; margin-bottom: 8px;">
+{savings_html}
 </div>
 
-<div>
-<span class="summary-total-label">Total Payable</span>
-<span class="summary-total-value">₹{total:.2f}</span>
+<div class="giant-payable-wrap">
+<div class="giant-payable-label">Total Payable</div>
+<div class="giant-payable-amount">₹{total:.2f}</div>
 </div>
 
-<div style="margin-top: 32px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
-<div style="color: #9CA3AF; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><span style="color: #10B981; font-weight: 800;">✔</span> Instant Recharge Processing</div>
-<div style="color: #9CA3AF; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><span style="color: #10B981; font-weight: 800;">✔</span> UPI Secure Transaction</div>
-<div style="color: #9CA3AF; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 12px;"><span style="color: #10B981; font-weight: 800;">✔</span> 256-bit Bank Encryption</div>
-</div>
+<div class="trust-row"><i>✔</i> Instant Processing via UPI Infrastructure</div>
+<div class="trust-row"><i>✔</i> 256-bit Secure Encryption</div>
 </div>
 """
     st.markdown(html, unsafe_allow_html=True)
@@ -511,11 +510,11 @@ authenticator.check_authentification()
 if not st.session_state.get('connected'):
     render_css()
     html_landing = f"""
-<div style="text-align: center; padding: 60px 20px;">
-<img src="data:image/png;base64,{flag_base64}" style="width: 90px; height: 60px; object-fit: cover; border-radius: 6px; margin-bottom: 24px; box-shadow: 0 12px 24px rgba(0,0,0,0.3);">
-<h1 style="color: white; font-weight: 800; font-size: 48px; margin-bottom: 12px; font-family: 'Poppins', sans-serif; letter-spacing: -0.03em;">SKE Pay</h1>
-<p style="color: #FF7A00; font-weight: 600; font-size: 18px; margin-top: 0; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; text-transform: uppercase;">India's Next-Gen Payments</p>
-<p style="color: #9CA3AF; font-size: 16px; margin-top: 24px; max-width: 320px; margin-left: auto; margin-right: auto; line-height: 1.6;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
+<div style="text-align: center; padding: 100px 20px;">
+<img src="data:image/png;base64,{flag_base64}" style="width: 100px; height: 70px; object-fit: cover; border-radius: 6px; margin-bottom: 32px; box-shadow: 0 16px 32px rgba(0,0,0,0.5);">
+<h1 style="color: white; font-weight: 900; font-size: 64px; margin-bottom: 12px; font-family: 'Poppins', sans-serif; letter-spacing: -0.04em;">SKE Pay</h1>
+<p style="color: #FF7A00; font-weight: 700; font-size: 20px; margin-top: 0; font-family: 'Poppins', sans-serif; letter-spacing: 1px; text-transform: uppercase;">India's Next-Gen Payments</p>
+<p style="color: #888; font-size: 16px; margin-top: 32px; max-width: 360px; margin-left: auto; margin-right: auto; line-height: 1.6; font-weight: 500;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
 </div>
 """
     st.markdown(html_landing, unsafe_allow_html=True)
@@ -549,25 +548,23 @@ if st.session_state.checkout:
     transaction_note = f"Order+{txn_id}"
     upi_link = f"upi://pay?pa={merchant_vpa}&pn={merchant_name}&am={c['final_price']}&cu=INR&tn={transaction_note}"
 
-    render_compact_hero()
-    col1, col2 = st.columns([1.2, 1], gap="large")
+    col1, col2 = st.columns([4, 6], gap="large")
     
     with col1:
-        st.markdown("<div class='premium-surface'>", unsafe_allow_html=True)
         html_checkout_header = f"""
-<h3 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; font-family: 'Poppins', sans-serif;">Complete Secure Payment</h3>
-<p style="color: #9CA3AF; font-size: 15px; margin-bottom: 32px;">Please proceed to pay using Google Pay, PhonePe, or any UPI-enabled application.</p>
-<a href="{upi_link}" target="_blank" style="display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #FF7A00 0%, #E65C00 100%); color: white; padding: 20px 24px; border-radius: 16px; font-weight: 700; font-size: 18px; font-family: 'Poppins', sans-serif; text-decoration: none; box-shadow: 0 8px 24px rgba(255,122,0,0.3); transition: transform 0.2s ease, filter 0.2s ease; margin-bottom: 32px;">
-Pay ₹{c["final_price"]} via UPI
-</a>
-<div style="text-align: center; color: #9CA3AF; font-size: 14px; margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-Transaction ID: <b style="color: white; font-family: monospace; font-size: 15px;">{txn_id}</b>
+<div class="section-title">Finalize<br>Payment</div>
+<p style="color: #888; font-size: 15px; margin-bottom: 32px; font-weight: 500; line-height: 1.6;">Your transaction is securely locked. Pay via any UPI app to complete.</p>
+
+<div style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 32px;">
+<div style="color: #666; font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">Transaction ID</div>
+<div style="color: white; font-family: monospace; font-size: 16px; font-weight: 600;">{txn_id}</div>
 </div>
-<hr style="height: 1px; background: rgba(255,255,255,0.08); margin: 24px 0; border: none; width: 100%;">
-<div style="font-size: 14px; color: #9CA3AF; margin-bottom: 24px; text-align: center; font-weight: 500;">Click below <b>after</b> completing the payment on your app.</div>
 """
         st.markdown(html_checkout_header, unsafe_allow_html=True)
         
+        st.markdown(f'<a href="{upi_link}" target="_blank" style="display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #FF7A00 0%, #E65C00 100%); color: white; padding: 0 24px; height: 64px; border-radius: 12px; font-weight: 800; font-size: 18px; font-family: \'Poppins\', sans-serif; text-decoration: none; box-shadow: 0 8px 32px rgba(255, 122, 0, 0.25); transition: transform 0.2s ease, filter 0.2s ease; margin-bottom: 24px; letter-spacing: 0.5px;">Pay ₹{c["final_price"]} via UPI</a>', unsafe_allow_html=True)
+        
+        st.markdown("<div style='font-size: 13px; color: #666; margin-bottom: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;'>Step 2: Confirmation</div>", unsafe_allow_html=True)
         with st.form("upi_verify_form"):
             verify_btn = st.form_submit_button("I Have Paid", type="secondary")
             if verify_btn:
@@ -589,12 +586,11 @@ Transaction ID: <b style="color: white; font-family: monospace; font-size: 15px;
                 if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
                 st.rerun()
 
-        st.markdown("<div style='margin-top: 24px; text-align: center;'>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top: 16px;'>", unsafe_allow_html=True)
         if st.button("Cancel & Go Back", type="tertiary"):
             st.session_state.checkout = None
             if "current_txn_id" in st.session_state: del st.session_state.current_txn_id
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
     with col2:
@@ -619,12 +615,10 @@ else:
         return "Select Operator"
 
     with tab1:
-        render_compact_hero()
-        col1, col2 = st.columns([1.2, 1], gap="large")
+        col1, col2 = st.columns([4, 6], gap="large")
         
         with col1:
-            st.markdown("<div class='premium-surface'>", unsafe_allow_html=True)
-            st.markdown("<h2 style='margin-bottom:32px; font-size: 28px;'>Mobile Recharge</h2>", unsafe_allow_html=True)
+            st.markdown("<div class='section-title'>Mobile<br>Recharge</div>", unsafe_allow_html=True)
             
             if "last_phone_prefix" not in st.session_state: st.session_state.last_phone_prefix = ""
             phone_number = st.text_input("Mobile Number", placeholder="e.g., 9876543210", max_chars=10, key="mobile_phone")
@@ -646,18 +640,9 @@ else:
             plan_options.insert(0, "Select a Plan")
             selected_plan_str = st.selectbox("Select Plan", plan_options, key="mobile_plan")
             
-            st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
-            if st.button("Continue to Secure UPI Payment", key="mobile_btn", type="primary"):
-                if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
-                elif operator == "Select Operator": st.error("Select an operator.")
-                elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
-                else:
-                    price_str = selected_plan_str.split(" ")[-1][1:-1]
-                    st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
-                    st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with col2:
+            st.markdown("<div style='margin-top: 32px;'></div>", unsafe_allow_html=True)
+            
+            # Dynamic CTA logic
             preview_price = 0.00
             preview_discount = 0.00
             preview_total = 0.00
@@ -667,10 +652,23 @@ else:
                     preview_discount = preview_price * 0.0023
                     preview_total = preview_price - preview_discount
                 except: pass
+            
+            btn_text = f"Pay ₹{preview_total:.2f} Securely" if preview_total > 0 else "Continue to Secure Payment"
+            
+            if st.button(btn_text, key="mobile_btn", type="primary"):
+                if not phone_number or not phone_number.isdigit() or len(phone_number) != 10: st.error("Enter a valid 10-digit mobile number.")
+                elif operator == "Select Operator": st.error("Select an operator.")
+                elif selected_plan_str == "Select a Plan": st.error("Select a recharge plan.")
+                else:
+                    price_str = selected_plan_str.split(" ")[-1][1:-1]
+                    st.session_state.checkout = { "type": "mobile", "target": phone_number, "operator": operator, "price": price_str, "plan_str": selected_plan_str }
+                    st.rerun()
+
+        with col2:
             render_live_summary(phone_number, operator, selected_plan_str, preview_price, preview_discount, preview_total)
 
     with tab_orders:
-        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 28px;'>Activity History</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='section-title'>Activity History</div>", unsafe_allow_html=True)
         orders_db = load_orders()
         user_orders = orders_db.get(st.session_state.user_phone, [])
         if not user_orders:
@@ -682,30 +680,31 @@ else:
                     status_class = "success" if o['status'] == "Recharge Completed" else "pending"
                     badge_class = "status-success" if o['status'] == "Recharge Completed" else "status-pending"
                     html = f"""
-<div class="live-summary-card" style="margin-bottom: 24px; padding: 24px;">
+<div style="background: #111111; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
 <div>
 <div style="font-family: 'Poppins', sans-serif; font-weight: 700; color: white; font-size: 18px;">{o['type']} • {o['operator']}</div>
-<div style="color: #9CA3AF; font-size: 14px; font-weight: 500; margin-top: 4px;">{o['target']}</div>
+<div style="color: #888; font-size: 14px; font-weight: 500; margin-top: 4px;">{o['target']}</div>
 </div>
-<div style="display: inline-flex; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2);">{o['status']}</div>
+<div style="display: inline-flex; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(16, 185, 129, 0.1); color: #00D084; border: 1px solid rgba(0, 208, 132, 0.2);">{o['status']}</div>
 </div>
-<div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.03);">
-<div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px;">
-<span style="color: #9CA3AF;">MRP</span><span style="font-weight: 600; color: white;">₹{o.get('mrp', o['amount'])}</span>
+<div style="background: rgba(0,0,0,0.5); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.03);">
+<div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px;">
+<span style="color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">MRP</span><span style="font-weight: 600; color: white;">₹{o.get('mrp', o['amount'])}</span>
 </div>
-<div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px;">
-<span style="color: #9CA3AF;">Smart Discount</span><span style="color: #10B981; font-weight: 600;">-₹{o.get('discount', '0.00')}</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px;">
+<span style="color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Smart Discount</span><span style="color: #00D084; font-weight: 700;">-₹{o.get('discount', '0.00')}</span>
 </div>
-<div style="display: flex; justify-content: space-between; font-size: 16px; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+<div style="display: flex; justify-content: space-between; font-size: 18px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
 <span style="color: white; font-weight: 600;">Paid Amount</span><span style="color: #FF7A00; font-weight: 800; font-family: 'Poppins', sans-serif;">₹{o['amount']}</span>
 </div>
 </div>
-<div style="font-size: 12px; color: #9CA3AF; display: flex; flex-direction: column; gap: 6px;">
-<div>Txn: <span style="color: white;">{o['txn_id']}</span> • {o['date'][:10]}</div><div>Method: {o['method']}</div>
-</div>
-</div>
+<div style="font-size: 12px; color: #666; display: flex; flex-direction: column; gap: 8px; font-family: monospace;">
+<div>Txn: <span style="color: #AAA;">{o['txn_id']}</span> • {o['date'][:10]}</div><div>Method: {o['method']}</div>
 """
+                    if "payment_utr" in o: html += f"<div>Pay UTR: <span style='color: #AAA;'>{o['payment_utr']}</span></div>"
+                    if "recharge_utr" in o: html += f"<div>Rech UTR: <span style='color: #AAA;'>{o['recharge_utr']}</span></div>"
+                    html += "</div></div>"
                     st.markdown(html, unsafe_allow_html=True)
                 
                 with st.expander(f"Raise Support Ticket"):
@@ -723,38 +722,36 @@ else:
                             st.success("Ticket raised successfully. Check 'Support' tab.")
                             time.sleep(2)
                             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with tab_grievances:
-        st.markdown("<div class='premium-surface'><h2 style='margin-bottom:32px; font-size: 28px;'>Support Tickets</h2>", unsafe_allow_html=True)
+        st.markdown("<div class='section-title'>Support Tickets</div>", unsafe_allow_html=True)
         grievances_db = load_grievances()
         user_grievances = grievances_db.get(st.session_state.user_phone, [])
         if not user_grievances: st.info("No active support tickets.")
         else:
             for g in user_grievances:
                 html = f"""
-<div class="live-summary-card" style="margin-bottom: 24px;">
+<div style="background: #111111; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-<div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; color: white;">Ticket: {g['id']}</div>
-<div style="display: inline-flex; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255, 122, 0, 0.1); color: #FF7A00; border: 1px solid rgba(255, 122, 0, 0.2);">{g['status']}</div>
+<div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 18px; color: white;">Ticket: {g['id']}</div>
+<div style="display: inline-flex; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255, 122, 0, 0.1); color: #FF7A00; border: 1px solid rgba(255, 122, 0, 0.2);">{g['status']}</div>
 </div>
-<div style="font-size: 13px; color: #9CA3AF; margin-bottom: 20px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
-<div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); font-size: 14px; margin-bottom: 16px;">
-<span style="font-weight: 600; color: white;">{g['issue_type']}</span><br>
-<span style="color: #9CA3AF; margin-top: 8px; display: inline-block; line-height: 1.5;">{g['details']}</span>
+<div style="font-size: 13px; color: #888; font-family: monospace; margin-bottom: 24px;">Txn: {g['txn_id']} • {g['date'][:10]}</div>
+<div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); font-size: 14px; margin-bottom: 16px;">
+<span style="font-weight: 700; color: white;">{g['issue_type']}</span><br>
+<span style="color: #AAA; margin-top: 8px; display: inline-block; line-height: 1.6;">{g['details']}</span>
 </div>
-<div style="font-size: 14px; background: rgba(255,122,0,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,122,0,0.1);">
-<span style="font-weight: 600; color: #FF7A00;">Support Reply:</span><br>
-<span style="color: {'white' if g['admin_reply'] else '#9CA3AF'}; margin-top: 8px; display: inline-block; line-height: 1.5;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
+<div style="font-size: 14px; background: rgba(255,122,0,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,122,0,0.1);">
+<span style="font-weight: 700; color: #FF7A00; text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px;">Support Reply:</span><br>
+<span style="color: {'white' if g['admin_reply'] else '#888'}; margin-top: 8px; display: inline-block; line-height: 1.6; font-weight: 500;">{g['admin_reply'] if g['admin_reply'] else 'Awaiting agent response...'}</span>
 </div>
 </div>
 """
                 st.markdown(html, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
     if is_admin:
         with tab_admin:
-            st.markdown("<div class='premium-surface'><h2 style='margin-bottom:24px;'>🛠️ Admin Control Tower</h2>", unsafe_allow_html=True)
+            st.markdown("<div class='section-title'>🛠️ Admin Control Tower</div>", unsafe_allow_html=True)
             orders_db = load_orders()
             grievances_db = load_grievances()
             admin_tabs = st.tabs(["⏳ Pending", "📋 All Orders", "🚨 Tickets", "⚙️ Config"])
@@ -882,4 +879,3 @@ else:
                         st.cache_data.clear()
                         st.rerun()
                 else: st.info("No mobile operators found.")
-            st.markdown("</div>", unsafe_allow_html=True)
