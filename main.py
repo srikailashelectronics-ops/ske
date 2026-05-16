@@ -115,8 +115,8 @@ st.markdown("""
         --surface-2: #162032;
         --surface-3: #1C263B;
         --card: rgba(0, 0, 0, 0.2);
-        --border: rgba(255, 255, 255, 0.06);
-        --border-hover: rgba(255, 255, 255, 0.12);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(255, 255, 255, 0.16);
         --primary: #FF7A00;
         --primary-hover: #FF8F26;
         --text: #F9FAFB;
@@ -138,9 +138,10 @@ st.markdown("""
     /* Streamlit block container reset and compact desktop width fix */
     .block-container {
         width: 100% !important;
-        max-width: 600px !important; /* COMPACT FINTECH WIDTH */
+        max-width: 580px !important; /* COMPACT FINTECH WIDTH */
         margin: 0 auto !important;
         padding: 24px 16px !important;
+        position: relative !important; /* For absolute header elements */
     }
 
     /* Typography Hierarchy */
@@ -171,31 +172,13 @@ st.markdown("""
         padding-bottom: env(safe-area-inset-bottom);
     }
     
-    /* Header Single Flex Navbar */
-    [data-testid="stHorizontalBlock"]:first-of-type {
+    /* Header Container Flex Wrapper */
+    .header-native-flex {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        background: transparent !important;
-        margin-bottom: 32px !important;
-        height: 64px !important;
-        padding: 0 !important;
         width: 100% !important;
-        gap: 0 !important;
-    }
-    [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"]:first-child {
-        width: auto !important;
-        flex: 0 1 auto !important;
-        min-width: 0 !important;
-        padding: 0 !important;
-    }
-    [data-testid="stHorizontalBlock"]:first-of-type [data-testid="column"]:last-child {
-        width: auto !important;
-        flex: 0 1 auto !important;
-        min-width: 0 !important;
-        padding: 0 !important;
-        display: flex !important;
-        justify-content: flex-end !important;
+        margin-bottom: 32px !important;
     }
 
     .brand-wrap {
@@ -220,10 +203,14 @@ st.markdown("""
     }
     
     /* Logout button / Header tertiary */
-    .logout-btn-container button {
-        height: 32px !important;
-        min-height: 32px !important;
-        padding: 0 14px !important;
+    .logout-native-wrapper {
+        display: flex;
+        justify-content: flex-end;
+    }
+    .logout-native-wrapper button {
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 16px !important;
         border-radius: 8px !important;
         font-size: 13px !important;
         font-weight: 500 !important;
@@ -233,8 +220,9 @@ st.markdown("""
         border: 1px solid var(--border) !important;
         width: auto !important;
         transition: all 0.2s ease !important;
+        margin: 0 !important;
     }
-    .logout-btn-container button:hover {
+    .logout-native-wrapper button:hover {
         background: rgba(255,255,255,0.05) !important;
         color: var(--text) !important;
         border-color: var(--border-hover) !important;
@@ -279,19 +267,25 @@ st.markdown("""
         margin-bottom: 20px !important;
     }
 
+    /* Form Container Width */
+    .stForm > div {
+        max-width: 100% !important;
+        margin: 0 auto;
+    }
+
     /* Input Fields styling */
     .stTextInput input, 
     .stSelectbox div[data-baseweb="select"] > div,
     .stTextArea textarea {
         background: var(--card) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
         color: white !important;
         border-radius: 12px !important;
         min-height: 48px !important;
         font-size: 15px !important;
         padding: 0 16px !important;
         margin-bottom: 0 !important;
-        box-shadow: inset 0 2px 6px rgba(0,0,0,0.15) !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
     }
     .stTextInput input::placeholder, .stTextArea textarea::placeholder {
@@ -300,9 +294,9 @@ st.markdown("""
     .stTextInput input:focus, 
     .stSelectbox div[data-baseweb="select"] > div:focus-within,
     .stTextArea textarea:focus {
-        border-color: rgba(255, 122, 0, 0.4) !important;
-        box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.4), inset 0 2px 6px rgba(0,0,0,0.1) !important;
-        background: rgba(0, 0, 0, 0.3) !important;
+        border-color: rgba(255, 122, 0, 0.5) !important;
+        box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.5), inset 0 2px 4px rgba(0,0,0,0.1) !important;
+        background: rgba(0, 0, 0, 0.4) !important;
     }
     
     /* Labels */
@@ -322,7 +316,7 @@ st.markdown("""
         border-radius: 10px !important;
         font-weight: 600 !important;
         font-family: 'Poppins', sans-serif !important;
-        box-shadow: 0 2px 6px rgba(255, 122, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 2px 8px rgba(255, 122, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         transition: all 0.2s ease !important;
         padding: 14px 20px !important;
         min-height: 48px;
@@ -331,7 +325,7 @@ st.markdown("""
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(255, 122, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         filter: brightness(1.05);
     }
 
@@ -385,7 +379,7 @@ st.markdown("""
         border-radius: 10px;
         border: 1px solid var(--border);
         min-height: 44px;
-        box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
     }
     div[data-baseweb="tab"] {
         background: transparent !important;
@@ -494,7 +488,7 @@ st.markdown("""
 
     /* Fix spacing of forms */
     .stForm {
-        border-color: var(--border) !important;
+        border-color: transparent !important;
         background-color: transparent !important;
         padding: 0 !important;
         margin-bottom: 32px !important;
@@ -742,25 +736,21 @@ else:
 
 # --- MAIN APP FLOW ---
 
-# Header Section (Using Streamlit Columns but styled as flex navbar via CSS)
-st.markdown('<div class="header-container">', unsafe_allow_html=True)
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.markdown(f"""
-    <div class="brand-wrap">
-        <img src="data:image/png;base64,{flag_base64}" class="brand-flag">
-        <div class="brand-text">SKE Pay</div>
-    </div>
-    """, unsafe_allow_html=True)
-with col2:
-    st.markdown('<div class="logout-btn-container">', unsafe_allow_html=True)
-    if st.button("Logout", key="logout_btn", type="tertiary"):
-        authenticator.logout()
-        st.session_state.logged_in = False
-        st.session_state.user_phone = ""
-        st.session_state.checkout = None
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+# Header Section
+st.markdown(f"""
+<div class="brand-wrap" style="position: absolute; left: 16px; top: 24px; z-index: 10;">
+    <img src="data:image/png;base64,{flag_base64}" class="brand-flag">
+    <div class="brand-text">SKE Pay</div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="logout-native-wrapper" style="margin-bottom: 24px;">', unsafe_allow_html=True)
+if st.button("Logout", key="logout_btn", type="tertiary"):
+    authenticator.logout()
+    st.session_state.logged_in = False
+    st.session_state.user_phone = ""
+    st.session_state.checkout = None
+    st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
     
 
@@ -1054,7 +1044,7 @@ else:
                         all_orders_list.append({
                             "User": user, "Date": o['date'], "TXN ID": o['txn_id'], "Target": o['target'],
                             "Operator": o['operator'], "MRP": f"₹{o.get('mrp', o['amount'])}",
-                            "Discount": f"₹{o.get('discount', '0.00')}", "Paid": f"₹{o['amount']}",
+                            "Discount": f"₹{o.get('discount', '0.00')}", "Paid": f"₹o['amount']",
                             "Method": o['method'], "Status": o['status'],
                             "Pay UTR": o.get('payment_utr', 'N/A'), "Rech UTR": o.get('recharge_utr', 'N/A')
                         })
