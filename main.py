@@ -135,22 +135,65 @@ st.markdown("""
     }
 
     
-    /* Streamlit block container - desktop max-width, mobile full */
-    section.main {
-        padding-top: 0 !important;
+    /* Streamlit block container reset and desktop width fix */
+    .block-container {
+        padding-top: 0rem !important;
+        margin-top: 0rem !important;
     }
 
     .main .block-container {
-        max-width: 1200px !important;
-        padding: 16px 16px 0 16px !important;
+        padding-top: 0rem !important;
+        max-width: 1280px !important;
+        padding: 16px !important;
         margin: 0 auto;
     }
-    @media (min-width: 768px) {
-        .main .block-container {
-            padding: 32px 32px 0 32px !important;
-        }
+    
+    section.main > div {
+        padding-top: 0rem !important;
     }
 
+    @media (min-width: 768px) {
+        .main .block-container {
+            padding: 32px !important;
+        }
+        
+        .content-column {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+    }
+    
+    body {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Brand Logo / Navbar */
+    .ske-navbar {
+        height: 72px;
+        display: flex;
+        
+        justify-content: space-between;
+        background: transparent;
+        margin-bottom: 18px;
+    }
+    .brand-wrap {
+        display: flex;
+        
+        gap: 10px;
+    }
+    .brand-flag {
+        width: 28px;
+        height: 20px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    .brand-text {
+        color: white;
+        font-size: 22px;
+        font-weight: 700;
+        font-family: 'Poppins';
+    }
+    
     /* Dropdown Portal */
     div[data-baseweb="popover"] {
         background: #111827 !important;
@@ -236,7 +279,7 @@ st.markdown("""
         border-radius: 16px;
         border: 1px solid var(--border);
         min-height: 56px;
-        align-items: center;
+        
     }
     div[data-baseweb="tab"] {
         background: transparent !important;
@@ -248,8 +291,8 @@ st.markdown("""
         padding: 8px 12px !important;
         height: 48px;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        
+        
     }
     div[data-baseweb="tab"][aria-selected="true"] {
         background: var(--surface-2) !important;
@@ -269,12 +312,12 @@ st.markdown("""
     .hero-card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 18px;
+        border-radius: 22px;
+        padding: 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
     .hero-card::before {
         content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -294,7 +337,7 @@ st.markdown("""
         margin-bottom: 14px;
     }
     
-    .status-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
+    .status-badge { display: inline-flex;  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
     .status-success { background: rgba(34, 197, 94, 0.1); color: var(--success); }
     .status-pending { background: rgba(255, 122, 0, 0.1); color: var(--primary); }
 </style>
@@ -421,14 +464,14 @@ def patched_login(color='blue', justify_content="center"):
         authorization_url, state = flow.authorization_url(access_type="offline", include_granted_scopes="true")
         html_content = f"""
 <div style="display: flex; justify-content: {justify_content}; margin-top: 30px;">
-    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); transition: transform 0.3s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
+    <a href="{authorization_url}" target="_blank" style="background: linear-gradient(135deg, #FF7A00 0%, #FF9A3D 100%); color: #fff; text-decoration: none; text-align: center; font-size: 16px; cursor: pointer; padding: 16px 28px; border-radius: 16px; display: flex;   width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); transition: transform 0.3s ease; font-family: 'Poppins', sans-serif; font-weight: 600;">
         <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google" style="margin-right: 14px; width: 28px; height: 28px; background: white; border-radius: 50%; padding: 4px;">
         Secure Login with Google
     </a>
 </div>
 <div style="text-align: center; margin-top: 25px; font-size: 13px; color: #94A3B8; font-family: 'Inter', sans-serif;">
     <p>By continuing, you agree to SKE Pay's <br><b>Terms of Service</b> & <b>Privacy Policy</b></p>
-    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px; opacity: 0.6;">
+    <div style="display: flex;  gap: 10px; margin-top: 15px; opacity: 0.6;">
         <span>🔒 256-bit Secure</span> • <span>🇮🇳 Made in India</span>
     </div>
 </div>
@@ -441,7 +484,7 @@ authenticator.check_authentification()
 if not st.session_state.get('connected'):
     st.markdown("""
     <div style="text-align: center; padding: 40px 20px 20px 20px;">
-        <div style="font-size: 60px; margin-bottom: 10px; text-shadow: 0 10px 20px rgba(0,0,0,0.5);">🇮🇳</div>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/2560px-Flag_of_India.svg.png" style="width: 80px; height: 50px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
         <h1 style="color: #F9FAFB; font-weight: 800; font-size: 32px; margin-bottom: 5px;">SKE Pay</h1>
         <p style="color: #FF7A00; font-weight: 600; font-size: 16px; margin-top: 0; font-family: 'Poppins', sans-serif;">India's Next-Gen Payments</p>
         <p style="color: #94A3B8; font-size: 14px; margin-top: 15px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5;">Lightning fast mobile recharges, trusted by millions of Indians.</p>
@@ -456,33 +499,56 @@ else:
 
 # --- MAIN APP FLOW ---
 
-nav_col1, nav_col2 = st.columns([3, 1])
-with nav_col1:
-    st.markdown('<h2 style="margin:0; padding:0; font-size: 24px; color: var(--text);">🇮🇳 SKE Pay</h2>', unsafe_allow_html=True)
-with nav_col2:
+
+st.markdown("""
+    <style>
+        .logout-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 72px;
+            margin-bottom: 18px;
+        }
+        .logout-wrapper button {
+            height: 40px !important;
+            min-height: 40px !important;
+            padding: 0 16px !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            box-shadow: none !important;
+            width: auto !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border: none !important;
+        }
+        .logout-wrapper button:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+col1, col2 = st.columns([1, 1])
+with col1:
     st.markdown("""
-        <style>
-            div[data-testid="stButton"] {
-                display: flex;
-                justify-content: flex-end;
-            }
-            button[key="logout_btn"] {
-                height: 40px !important;
-                min-height: 40px !important;
-                padding: 0 16px !important;
-                border-radius: 12px !important;
-                font-size: 14px !important;
-                box-shadow: none !important;
-                width: auto !important;
-            }
-        </style>
+    <div class="ske-navbar">
+        <div class="brand-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/2560px-Flag_of_India.svg.png" class="brand-flag">
+            <div class="brand-text">SKE Pay</div>
+        </div>
+    </div>
     """, unsafe_allow_html=True)
+with col2:
+    st.markdown('<div class="logout-wrapper">', unsafe_allow_html=True)
     if st.button("Logout", key="logout_btn"):
         authenticator.logout()
         st.session_state.logged_in = False
         st.session_state.user_phone = ""
         st.session_state.checkout = None
         st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+# Apply the content column wrapper around the main body (excluding the top navbar)
+st.markdown('<div class="content-column">', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="hero-card">
@@ -526,7 +592,7 @@ if st.session_state.checkout:
                 <span>- ₹{discount:.2f}</span>
             </div>
             <hr style="margin: 0 0 16px 0; border-top: 1px dashed #EAECEF;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; ">
                 <span style="font-size: 18px; font-weight: 700; color: #F9FAFB;">Total Payable</span>
                 <span style="font-size: 24px; font-weight: 800; color: #FF7A00;">₹{c['final_price']}</span>
             </div>
@@ -888,3 +954,4 @@ else:
                         st.rerun()
                 else: st.info("No mobile operators found.")
 
+st.markdown('</div>', unsafe_allow_html=True)
